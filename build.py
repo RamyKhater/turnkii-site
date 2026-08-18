@@ -61,7 +61,14 @@ def bake_hero(text):
     snapshot (whose tag attributes differ). Wrap a word in **stars** to highlight."""
     hero = (CONTENT or {}).get("hero") or {}
     kicker, headline, sub = hero.get("kicker"), hero.get("headline"), hero.get("sub")
+    image = hero.get("image")
 
+    if image:
+        url = html.escape(image.strip(), quote=True)
+        # Swap the hero background <img> src (matched via its stable alt text),
+        # covering both the live template and the prerender snapshot.
+        text = re.sub(r'(<img[^>]*\bsrc=")[^"]*("[^>]*\balt="Delivered living room)',
+                      lambda m: m.group(1) + url + m.group(2), text)
     if kicker:
         repl = html.escape(kicker.strip())
         text = re.sub(r"Turnkey delivery · Cairo &(?:amp;)? North Coast",
