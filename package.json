@@ -1,0 +1,12 @@
+{
+  "name": "turnkii",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Turnkii — turnkey home finishing, furniture and handover. Static marketing + app-preview site.",
+  "scripts": {
+    "build": "python3 build.py",
+    "prerender": "node tools/prerender.mjs",
+    "serve": "python3 -m http.server 4173 --directory dist",
+    "preview": "npm run build && npm run serve"
+  }
+}

@@ -1,0 +1,9 @@
+# Build output — regenerate with `python3 build.py`
+/dist/
+
+# OS / editor cruft
+.DS_Store
+*.log
+.vercel
+.env*
+!.env.example

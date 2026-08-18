@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="./image-slot.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #FFFFFF; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #FFFFFF; color: #12130E; padding-bottom: 40px;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 12px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Marketplace</a>
+        <a href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+    </div>
+  </header>
+
+  <section id="shop" style="max-width: 1280px; margin: 0 auto; padding: clamp(26px, 3.5vw, 46px) clamp(16px, 3vw, 40px) 0;">
+    <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+      <div style="flex: 1 1 420px; min-width: 280px;">
+        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Marketplace</div>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.6vw, 60px); line-height: 1.02; letter-spacing: -0.02em; margin: 12px 0 0; max-width: 20ch;">Furniture and appliances, delivered with the job.</h1>
+        <p style="font-size: 15.5px; line-height: 1.6; color: #5E5F52; margin: 12px 0 0; max-width: 52ch;">Everything here is specified in our packages, so it arrives in the same delivery window as the fit-out — or on its own if the unit is already finished.</p>
+      </div>
+      <div style="flex: 0 1 260px; min-width: 220px; border: 1px solid #E4E0D5; border-radius: 18px; padding: 16px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Shipping to</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+          <sc-for list="{{ propertyChips }}" as="p" hint-placeholder-count="3">
+            <button type="button" onClick="{{ p.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 600; padding: 8px 13px; border-radius: 999px; border: 1px solid {{ p.bc }}; background: {{ p.bg }}; color: {{ p.fg }};" style-hover="border-color: #12130E;">{{ p.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 26px;">
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+        <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 600; padding: 10px 16px; border-radius: 999px; border: 1px solid #E4E0D5; background: {{ c.bg }}; color: {{ c.fg }};" style-hover="border-color: #12130E;">{{ c.name }}</button>
+      </sc-for>
+    </div>
+
+    <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); margin-top: 20px;">
+      <sc-for list="{{ items }}" as="it" hint-placeholder-count="8">
+        <div style="border: 1px solid #E4E0D5; border-radius: 18px; overflow: hidden; background: #FFFFFF; display: flex; flex-direction: column;">
+          <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+            <image-slot id="{{ it.slotId }}" shape="rect" placeholder="{{ it.name }}"></image-slot>
+            <button type="button" onClick="{{ it.onWish }}" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-family: Manrope, sans-serif; width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(18,19,14,0.1); display: flex; align-items: center; justify-content: center; font-size: 15px; background: {{ it.wishBg }};" style-hover="border-color: #12130E;">{{ it.wishMark }}</button>
+            <div style="position: absolute; left: 10px; top: 10px; background: rgba(255,255,255,0.94); font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; padding: 6px 11px; border-radius: 999px;">{{ it.cat }}</div>
+          </div>
+          <div style="padding: 15px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto;">
+            <div style="font-size: 15.5px; font-weight: 600; line-height: 1.3;">{{ it.name }}</div>
+            <div style="font-size: 12.5px; color: #5E5F52; line-height: 1.45;">{{ it.spec }}</div>
+            <div style="display: flex; gap: 10px; align-items: baseline; justify-content: space-between; margin-top: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">{{ it.price }}</span>
+              <span style="font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: {{ it.stockFg }};">{{ it.stock }}</span>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: auto; padding-top: 8px;">
+              <button type="button" onClick="{{ it.onAdd }}" style="flex: 1 1 auto; cursor: pointer; font-family: Manrope, sans-serif; border: 0; border-radius: 999px; padding: 12px 14px; font-size: 13.5px; font-weight: 700; background: {{ it.addBg }}; color: {{ it.addFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ it.addLabel }}</button>
+              <button type="button" onClick="{{ it.onWish }}" style="flex: 0 0 auto; cursor: pointer; font-family: Manrope, sans-serif; border: 1px solid #E4E0D5; background: transparent; border-radius: 999px; padding: 12px 14px; font-size: 13px; font-weight: 700; color: #5E5F52;" style-hover="border-color: #12130E; color: #12130E;">{{ it.wishLabel }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="position: sticky; bottom: 0; z-index: 70; margin-top: 26px;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px) 14px;">
+      <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: 15px clamp(16px, 2vw, 24px); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; box-shadow: 0 18px 44px rgba(18,19,14,0.3);">
+        <div style="flex: 1 1 260px; min-width: 200px;">
+          <div style="font-size: 15px; font-weight: 700;">{{ barTitle }}</div>
+          <div style="font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 4px; line-height: 1.45;">{{ barLine }}</div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 0 0 auto;">
+          <a href="Turnkii Account.dc.html#account" style="border: 1px solid rgba(246,243,236,0.35); color: #F6F3EC; font-size: 14px; font-weight: 600; padding: 13px 20px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">View wish list</a>
+          <a href="Turnkii v3.dc.html#brief" style="background: #D6F23C; color: #12130E; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="background: #E6FF6B;">{{ ctaLabel }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const ITEMS_DEFAULT = [
+  { id: 'i1', cat: 'Seating', img: 'assets/style-warm.jpg', zoom: 1.6, origin: '30% 65%', name: 'Bouclé modular sofa, 260cm', spec: 'Feather-wrapped foam, 3-year frame warranty', price: 'On request', stock: 'In stock' },
+  { id: 'i2', cat: 'Seating', img: 'assets/style-eclectic.jpg', zoom: 1.7, origin: '70% 40%', name: 'Cane-back armchair', spec: 'Oak frame, linen cushion, hand-woven cane', price: 'On request', stock: 'In stock' },
+  { id: 'i3', cat: 'Tables', img: 'assets/style-warm.jpg', zoom: 1.8, origin: '50% 78%', name: 'Nesting coffee tables, pair', spec: 'Walnut veneer, 90cm + 60cm round', price: 'On request', stock: 'In stock' },
+  { id: 'i4', cat: 'Tables', img: 'assets/style-neoclassic.png', zoom: 1.7, origin: '60% 75%', name: 'Oval dining table, 200cm', spec: 'Sculpted base, honed stone top', price: 'On request', stock: '6 weeks' },
+  { id: 'i5', cat: 'Beds', img: 'assets/style-majlis.jpg', zoom: 1.6, origin: '40% 60%', name: 'Padded headboard bed, 180×200', spec: 'Performance velvet, storage base', price: 'On request', stock: '4 weeks' },
+  { id: 'i6', cat: 'Lighting', img: 'assets/style-neoclassic.png', zoom: 1.9, origin: '55% 28%', name: 'Smoked glass pendant cluster', spec: 'Three pendants, brass canopy, dimmable', price: 'On request', stock: 'In stock' },
+  { id: 'i7', cat: 'Lighting', img: 'assets/style-majlis.jpg', zoom: 1.8, origin: '50% 22%', name: 'Faceted ring chandelier, 1.2m', spec: 'Champagne gold frame, 2700K', price: 'On request', stock: '8 weeks' },
+  { id: 'i8', cat: 'Appliances', img: 'assets/style-coastal.jpg', zoom: 1.7, origin: '35% 45%', name: 'Built-in oven and hob set', spec: '60cm pyrolytic oven, induction hob, hood', price: 'On request', stock: 'In stock' },
+  { id: 'i9', cat: 'Appliances', img: 'assets/style-warm.jpg', zoom: 1.9, origin: '18% 42%', name: 'Fridge freezer, 540L', spec: 'No-frost, water dispenser, inverter', price: 'On request', stock: 'In stock' },
+  { id: 'i10', cat: 'Appliances', img: 'assets/style-neoclassic.png', zoom: 1.9, origin: '30% 60%', name: 'Washer dryer, 10/7kg', spec: 'Inverter motor, 5-year motor warranty', price: 'On request', stock: '2 weeks' },
+  { id: 'i11', cat: 'Outdoor', img: 'assets/style-coastal.jpg', zoom: 1.5, origin: '78% 72%', name: 'Terrace lounge set, 4 seats', spec: 'Aluminium and rope, UV and salt rated', price: 'On request', stock: 'In stock' },
+  { id: 'i12', cat: 'Soft goods', img: 'assets/style-eclectic.jpg', zoom: 1.9, origin: '25% 78%', name: 'Curtain and cushion pack', spec: 'Blackout plus sheer, made to opening', price: 'On request', stock: '3 weeks' }
+];
+const ITEM_IMG_BY_CAT = { Seating: 'assets/style-warm.jpg', Tables: 'assets/style-warm.jpg', Beds: 'assets/style-majlis.jpg', Lighting: 'assets/style-neoclassic.png', Appliances: 'assets/style-coastal.jpg', Outdoor: 'assets/style-coastal.jpg', 'Soft goods': 'assets/style-eclectic.jpg' };
+const ITEMS = (window.TK) ? window.TK.replace(ITEMS_DEFAULT, (window.TK.content || {}).marketplace, function (it, i, defs) {
+  var d = defs[i] || {};
+  var img = window.TK.http(it.image) ? it.image : (d.img || ITEM_IMG_BY_CAT[it.category] || 'assets/style-warm.jpg');
+  return { id: 'i' + (i + 1), cat: it.category || 'All', img: img, zoom: d.zoom || 1.6, origin: d.origin || 'center', name: it.name, spec: it.spec || '', price: it.price || 'On request', stock: it.stock || 'In stock' };
+}) : ITEMS_DEFAULT;
+const CATS = ['All', 'Seating', 'Tables', 'Beds', 'Lighting', 'Appliances', 'Outdoor', 'Soft goods'];
+const PROPERTIES = ['Zed East 704', 'Hacienda Bay 12', 'Katameya Villa'];
+
+class Component extends DCLogic {
+  state = { cat: 'All', cart: [], wish: [], property: 'Zed East 704' };
+
+  toggle(key, id) {
+    this.setState(s => ({ [key]: s[key].indexOf(id) > -1 ? s[key].filter(x => x !== id) : s[key].concat([id]) }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    const visible = ITEMS.filter(i => s.cat === 'All' || i.cat === s.cat);
+    return {
+      cats: CATS.map(c => ({
+        name: c,
+        bg: c === s.cat ? '#12130E' : '#FFFFFF',
+        fg: c === s.cat ? '#F6F3EC' : '#5E5F52',
+        onPick: () => this.setState({ cat: c })
+      })),
+      propertyChips: PROPERTIES.map(p => ({
+        name: p,
+        bc: p === s.property ? '#12130E' : '#E4E0D5',
+        bg: p === s.property ? '#12130E' : '#FFFFFF',
+        fg: p === s.property ? '#F6F3EC' : '#5E5F52',
+        onPick: () => this.setState({ property: p })
+      })),
+      items: visible.map(i => {
+        const inCart = s.cart.indexOf(i.id) > -1;
+        const inWish = s.wish.indexOf(i.id) > -1;
+        return {
+          slotId: 'mkt-' + i.id, name: i.name, spec: i.spec, price: i.price, cat: i.cat, stock: i.stock,
+          stockFg: i.stock === 'In stock' ? '#6C7A20' : '#8A8A79',
+          addLabel: inCart ? 'In cart ✓' : 'Add to cart',
+          addBg: inCart ? '#D6F23C' : '#12130E',
+          addFg: inCart ? '#12130E' : '#F6F3EC',
+          onAdd: () => this.toggle('cart', i.id),
+          wishLabel: inWish ? 'Saved' : 'Wish list',
+          wishMark: inWish ? '✓' : '♡',
+          wishBg: inWish ? '#D6F23C' : 'rgba(255,255,255,0.92)',
+          onWish: () => this.toggle('wish', i.id)
+        };
+      }),
+      barTitle: s.cart.length === 0 && s.wish.length === 0
+        ? 'Cart empty'
+        : s.cart.length + ' in cart · ' + s.wish.length + ' on the wish list',
+      barLine: s.cart.length === 0
+        ? 'Add pieces to the cart, or save them to ' + s.property + ' for later.'
+        : 'Shipping to ' + s.property + ' · prices confirmed with your scope, delivered in one window.',
+      ctaLabel: s.cart.length === 0 ? 'Start a brief' : 'Request quote for ' + s.cart.length + ' item' + (s.cart.length === 1 ? '' : 's')
+    };
+  }
+}
+</script>
+</body>
+</html>

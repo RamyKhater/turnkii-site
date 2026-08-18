@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #12130E; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #F6F3EC; text-decoration: none; }
+  a:hover { color: #D6F23C; }
+  ::selection { background: #D6F23C; color: #12130E; }
+  input[type="range"] { accent-color: #D6F23C; }
+  @keyframes tkSpin { to { transform: rotate(360deg); } }
+</style>
+</helmet>
+
+<div style="background: #12130E; color: #F6F3EC; min-height: 100vh; padding-bottom: 60px;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+    </div>
+  </header>
+
+  <section id="studio" style="max-width: 1280px; margin: 0 auto; padding: clamp(28px, 4vw, 52px) clamp(16px, 3vw, 40px) 0;">
+    <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+      <div style="flex: 1 1 440px; min-width: 280px;">
+        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #D6F23C; font-weight: 700;">AI preview studio</div>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 20ch;">Simulate any style on your own room.</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: rgba(246,243,236,0.62); margin: 14px 0 0; max-width: 50ch; text-wrap: pretty;">Shoot the room on your phone or pick a photo from your device, choose a style, a saved inspiration or a single piece, and our AI simulates it in place. Drag the handle to compare — then carry it into the brief.</p>
+      </div>
+      <div style="flex: 0 1 300px; min-width: 240px; border: 1px solid rgba(246,243,236,0.16); border-radius: 18px; padding: 18px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,236,0.5); font-weight: 700;">AI simulation</div>
+        <div style="font-size: 14.5px; line-height: 1.55; color: rgba(246,243,236,0.66); margin-top: 10px;">Simulations are indicative — proportions and finishes are confirmed by the free site survey before anything is quoted.</div>
+      </div>
+    </div>
+
+    <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); align-items: start; margin-top: 32px;">
+
+      <div style="grid-column: span 2; min-width: 0;">
+        <div style="position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 16 / 10; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14);">
+          <img src="{{ roomImg }}" alt="Your space" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+          <div style="position: absolute; inset: 0; width: {{ mixWidth }}; overflow: hidden; border-right: 2px solid #D6F23C;">
+            <img src="{{ styleImg }}" alt="{{ styleName }} applied" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+            <div style="position: absolute; inset: 0; background: {{ tint }}; mix-blend-mode: soft-light;"></div>
+          </div>
+          <div style="position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span style="background: rgba(18,19,14,0.7); backdrop-filter: blur(6px); color: #F6F3EC; font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 7px 12px; border-radius: 999px;">{{ styleName }}</span>
+            <span style="background: rgba(214,242,60,0.9); color: #12130E; font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 7px 12px; border-radius: 999px;">AI simulation</span>
+          </div>
+          <div style="position: absolute; right: 14px; bottom: 14px; background: rgba(18,19,14,0.7); backdrop-filter: blur(6px); font-size: 12px; font-weight: 600; padding: 8px 13px; border-radius: 999px;">{{ mixLabel }}</div>
+          <sc-if value="{{ generating }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; inset: 0; background: rgba(18,19,14,0.72); backdrop-filter: blur(3px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;">
+              <div style="width: 46px; height: 46px; border-radius: 999px; border: 3px solid rgba(246,243,236,0.2); border-top-color: #D6F23C; animation: tkSpin 0.9s linear infinite;"></div>
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: 0.02em;">{{ runningLabel }}</div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: center; margin-top: 14px; flex-wrap: wrap;">
+          <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.45); flex: 0 0 auto;">Before</span>
+          <input type="range" min="0" max="100" step="1" value="{{ mix }}" onInput="{{ onMix }}" style="flex: 1 1 220px; min-width: 160px;" />
+          <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #D6F23C; flex: 0 0 auto;">After</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; min-width: 0;">
+        <div style="border: 1px solid rgba(246,243,236,0.14); border-radius: 18px; padding: 18px; background: rgba(246,243,236,0.03);">
+          <div style="font-size: 11.5px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.5);">1 · Your photo</div>
+          <label style="display: flex; gap: 12px; align-items: center; margin-top: 14px; cursor: pointer; border: 1px dashed rgba(246,243,236,0.3); border-radius: 14px; padding: 16px;" style-hover="border-color: #D6F23C;">
+            <span style="width: 34px; height: 34px; border-radius: 9px; background: rgba(214,242,60,0.14); color: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex: 0 0 auto;">↑</span>
+            <span style="min-width: 0;">
+              <span style="display: block; font-size: 14px; font-weight: 600;">{{ uploadLabel }}</span>
+              <span style="display: block; font-size: 12px; color: rgba(246,243,236,0.45); margin-top: 3px;">Camera or device library. Shoot from the doorway.</span>
+            </span>
+            <input type="file" accept="image/*" capture="environment" onChange="{{ onUpload }}" style="display: none;" />
+          </label>
+          <div style="font-size: 12.5px; color: rgba(246,243,236,0.45); margin-top: 10px; line-height: 1.45;">{{ uploadNote }}</div>
+        </div>
+
+        <div style="border: 1px solid rgba(246,243,236,0.14); border-radius: 18px; padding: 18px; background: rgba(246,243,236,0.03);">
+          <div style="display: flex; gap: 10px; align-items: baseline; justify-content: space-between;">
+            <div style="font-size: 11.5px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.5);">2 · What to simulate</div>
+            <div style="font-size: 12.5px; font-weight: 700; color: #D6F23C;">{{ styleName }}</div>
+          </div>
+          <div style="display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 88px), 1fr)); margin-top: 14px;">
+            <sc-for list="{{ styleChoices }}" as="c" hint-placeholder-count="5">
+              <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; padding: 0; border: 2px solid {{ c.bc }}; background: #12130E; border-radius: 12px; overflow: hidden; text-align: left; color: #F6F3EC; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C;">
+                <div style="aspect-ratio: 1 / 1; overflow: hidden;">
+                  <img src="{{ c.img }}" alt="{{ c.name }}" style="width: 100%; height: 100%; object-fit: cover; display: block; opacity: {{ c.opacity }};" />
+                </div>
+                <div style="padding: 7px 8px; font-size: 11px; font-weight: 600; line-height: 1.25;">{{ c.name }}</div>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+            <sc-for list="{{ modes }}" as="m" hint-placeholder-count="3">
+              <button type="button" onClick="{{ m.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; border: 1px solid {{ m.bc }}; background: {{ m.bg }}; color: #F6F3EC; border-radius: 999px; padding: 9px 14px; font-size: 12.5px; font-weight: 600;" style-hover="border-color: #D6F23C;">{{ m.name }}</button>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ onRun }}" style="width: 100%; margin-top: 14px; cursor: pointer; font-family: Manrope, sans-serif; border: 0; border-radius: 12px; padding: 14px; font-size: 14.5px; font-weight: 700; background: {{ runBg }}; color: {{ runFg }};" style-hover="background: #FFFFFF; color: #12130E;">{{ runLabel }}</button>
+          <div style="font-size: 12.5px; color: rgba(246,243,236,0.45); margin-top: 12px; line-height: 1.45;">{{ boardNote }}</div>
+        </div>
+
+        <div style="border: 3px solid #D6F23C; border-radius: 18px; padding: 18px; background: rgba(214,242,60,0.08);">
+          <div style="font-size: 11.5px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">3 · Take it further</div>
+          <div style="font-size: 15.5px; font-weight: 700; margin-top: 10px; line-height: 1.35;">{{ ctaTitle }}</div>
+          <div style="font-size: 13.5px; color: rgba(246,243,236,0.66); margin-top: 8px; line-height: 1.5;">{{ ctaLine }}</div>
+          <a href="Turnkii v3.dc.html#brief" onClick="{{ onSend }}" style="display: block; text-align: center; margin-top: 14px; background: #D6F23C; color: #12130E; font-weight: 700; font-size: 15px; padding: 15px 20px; border-radius: 14px;" style-hover="background: #FFFFFF;">Continue to my brief</a>
+          <a href="Turnkii Inspirations.dc.html#board" style="display: block; text-align: center; margin-top: 8px; font-size: 13px; font-weight: 600; color: rgba(246,243,236,0.6); padding: 8px;" style-hover="color: #D6F23C;">Back to inspiration board</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const STYLES = [
+  { key: 'warm', name: 'Warm Contemporary', img: 'assets/style-warm.jpg', tint: 'rgba(201,168,124,0.45)' },
+  { key: 'neoclassic', name: 'Neo-Classic Calm', img: 'assets/style-neoclassic.png', tint: 'rgba(141,151,121,0.4)' },
+  { key: 'majlis', name: 'Modern Majlis', img: 'assets/style-majlis.jpg', tint: 'rgba(184,137,92,0.45)' },
+  { key: 'eclectic', name: 'Layered Eclectic', img: 'assets/style-eclectic.jpg', tint: 'rgba(31,91,91,0.4)' },
+  { key: 'coastal', name: 'Coastal Light', img: 'assets/style-coastal.jpg', tint: 'rgba(127,167,155,0.4)' }
+];
+const STORE = 'turnkii.board';
+
+class Component extends DCLogic {
+  state = { key: 'warm', mix: 60, room: '', roomName: '', saved: 0, mode: 'Whole style', generating: false, runs: 0 };
+
+  componentDidMount() {
+    const h = (location.hash || '').replace('#', '');
+    let next = {};
+    if (h && STYLES.some(s => s.key === h)) next.key = h;
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (raw) {
+        const b = JSON.parse(raw);
+        if (b.style && STYLES.some(s => s.key === b.style) && !next.key) next.key = b.style;
+        if (b.liked) next.saved = b.liked.length;
+      }
+    } catch (e) {}
+    if (Object.keys(next).length) this.setState(next);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const st = STYLES.find(x => x.key === s.key) || STYLES[0];
+    return {
+      styleName: st.name,
+      styleImg: st.img,
+      tint: st.tint,
+      roomImg: s.room || 'assets/style-neoclassic.png',
+      mix: s.mix,
+      mixWidth: s.mix + '%',
+      mixLabel: s.mix > 88 ? 'Styled' : (s.mix < 12 ? 'Your space today' : s.mix + '% applied'),
+      onMix: e => this.setState({ mix: Number(e.target.value) }),
+      uploadLabel: s.roomName ? 'Replace photo' : 'Upload a photo of your room',
+      uploadNote: s.roomName ? 'Showing ' + s.roomName : 'No photo yet — the preview uses a sample room until you upload one.',
+      onUpload: e => {
+        const f = (e.target.files || [])[0];
+        if (!f) return;
+        this.setState({ room: URL.createObjectURL(f), roomName: f.name });
+      },
+      styleChoices: STYLES.map(x => ({
+        name: x.name, img: x.img,
+        bc: x.key === s.key ? '#D6F23C' : 'rgba(246,243,236,0.18)',
+        opacity: x.key === s.key ? 1 : 0.6,
+        onPick: () => this.setState({ key: x.key })
+      })),
+      modes: ['Whole style', 'Furniture only', 'Single piece'].map(m => ({
+        name: m,
+        bc: s.mode === m ? '#D6F23C' : 'rgba(246,243,236,0.2)',
+        bg: s.mode === m ? 'rgba(214,242,60,0.14)' : 'transparent',
+        onPick: () => this.setState({ mode: m })
+      })),
+      generating: s.generating,
+      runningLabel: 'Simulating ' + s.mode.toLowerCase() + '…',
+      runLabel: s.runs ? 'Simulate again' : 'Run AI simulation',
+      runBg: '#D6F23C',
+      runFg: '#12130E',
+      onRun: () => {
+        if (s.generating) return;
+        this.setState({ generating: true });
+        setTimeout(() => this.setState(st => ({ generating: false, runs: st.runs + 1, mix: 72 })), 1100);
+      },
+      boardNote: s.saved ? s.saved + ' saved images on your board set this direction.' : 'Save rooms on the inspiration board to set this automatically.',
+      ctaTitle: st.name + ' in your space',
+      ctaLine: 'Your brief opens with this style already chosen — add the property, a slot and your mobile and we call you within 24 hours.',
+      onSend: () => {
+        try {
+          const raw = localStorage.getItem(STORE);
+          const b = raw ? JSON.parse(raw) : {};
+          b.style = s.key;
+          b.previewed = true;
+          localStorage.setItem(STORE, JSON.stringify(b));
+        } catch (e) {}
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

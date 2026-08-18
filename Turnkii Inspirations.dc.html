@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #F6F3EC; color: #12130E; padding-bottom: 40px;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+    </div>
+  </header>
+
+  <section id="board" style="max-width: 1280px; margin: 0 auto; padding: clamp(30px, 4vw, 56px) clamp(16px, 3vw, 40px) 0;">
+    <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+      <div style="flex: 1 1 420px; min-width: 280px;">
+        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Inspiration board</div>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 20ch;">Save what you like. We cost it.</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 52ch; text-wrap: pretty;">Every room here was delivered by our crews, so a saved image is a real specification — not a mood board we cannot buy.</p>
+      </div>
+      <div style="flex: 0 1 300px; min-width: 240px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 18px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">How it works</div>
+        <div style="font-size: 14.5px; line-height: 1.55; color: #5E5F52; margin-top: 10px;">Tap the heart on anything you like, then send the board to your brief — or drop a photo of your own room and see it applied.</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px;">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
+        <button type="button" onClick="{{ f.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 600; padding: 10px 16px; border-radius: 999px; border: 1px solid #E4E0D5; background: {{ f.bg }}; color: {{ f.fg }};" style-hover="border-color: #12130E;">{{ f.name }}</button>
+      </sc-for>
+    </div>
+
+    <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); align-items: start; margin-top: 20px;">
+      <sc-for list="{{ shots }}" as="s" hint-placeholder-count="9">
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; overflow: hidden;">
+          <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+            <img src="{{ s.img }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transform: scale({{ s.zoom }}); transform-origin: {{ s.origin }};" />
+            <button type="button" onClick="{{ s.onLike }}" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-family: Manrope, sans-serif; width: 38px; height: 38px; border-radius: 999px; border: 1px solid rgba(18,19,14,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; background: {{ s.likeBg }}; color: {{ s.likeFg }};" style-hover="border-color: #12130E;">{{ s.likeMark }}</button>
+          </div>
+          <div style="padding: 14px 16px 16px;">
+            <div style="display: flex; gap: 10px; align-items: baseline; justify-content: space-between;">
+              <div style="font-size: 15.5px; font-weight: 600; line-height: 1.3;">{{ s.title }}</div>
+              <div style="font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; color: #8A8A79; flex: 0 0 auto;">{{ s.room }}</div>
+            </div>
+            <div style="font-size: 13px; color: #5E5F52; margin-top: 6px; line-height: 1.45;">{{ s.spec }}</div>
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px;">
+              <a href="{{ s.styleHref }}" style="font-size: 12.5px; font-weight: 700; color: #6C7A20;" style-hover="color: #12130E;">{{ s.style }} →</a>
+              <a href="{{ s.tryHref }}" style="font-size: 12.5px; font-weight: 700; color: #8A8A79; margin-left: auto;" style-hover="color: #12130E;">See in my space</a>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="position: sticky; bottom: 0; z-index: 70; margin-top: 26px;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px) 14px;">
+      <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: 16px clamp(16px, 2vw, 24px); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; box-shadow: 0 18px 44px rgba(18,19,14,0.3);">
+        <div style="flex: 1 1 260px; min-width: 200px;">
+          <div style="font-size: 15px; font-weight: 700;">{{ barTitle }}</div>
+          <div style="font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 4px; line-height: 1.45;">{{ barLine }}</div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 0 0 auto;">
+          <a href="Turnkii Visualiser.dc.html" style="border: 1px solid rgba(246,243,236,0.35); color: #F6F3EC; font-size: 14px; font-weight: 600; padding: 13px 20px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">See in my space</a>
+          <a href="Turnkii v3.dc.html#brief" onClick="{{ onSend }}" style="background: #D6F23C; color: #12130E; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="background: #E6FF6B;">{{ sendLabel }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const SHOTS_DEFAULT = [
+  { id: 'w1', img: 'assets/style-warm.jpg', zoom: 1, origin: 'center', room: 'Living', style: 'Warm Contemporary', key: 'warm', title: 'Bouclé sofa, walnut and olive', spec: 'Modular 3-seat, nesting tables, layered ceiling light' },
+  { id: 'w2', img: 'assets/style-warm.jpg', zoom: 1.9, origin: '25% 70%', room: 'Detail', style: 'Warm Contemporary', key: 'warm', title: 'Hand-loomed wool rug', spec: '12mm cut pile, sand and bone' },
+  { id: 'n1', img: 'assets/style-neoclassic.png', zoom: 1, origin: 'center', room: 'Reception', style: 'Neo-Classic Calm', key: 'neoclassic', title: 'Panelled walls in chalk and sage', spec: 'Sprayed MDF panels, brass sconces, stone table' },
+  { id: 'n2', img: 'assets/style-neoclassic.png', zoom: 1.9, origin: '55% 30%', room: 'Lighting', style: 'Neo-Classic Calm', key: 'neoclassic', title: 'Smoked glass cluster', spec: 'Three-pendant cluster, brass canopy' },
+  { id: 'm1', img: 'assets/style-majlis.jpg', zoom: 1, origin: 'center', room: 'Majlis', style: 'Modern Majlis', key: 'majlis', title: 'Perimeter seating in camel velvet', spec: '9m linear run, low stone tables, gold ring light' },
+  { id: 'm2', img: 'assets/style-majlis.jpg', zoom: 1.9, origin: '30% 65%', room: 'Detail', style: 'Modern Majlis', key: 'majlis', title: 'Channelled velvet back', spec: 'Performance velvet, 60k Martindale' },
+  { id: 'e1', img: 'assets/style-eclectic.jpg', zoom: 1, origin: 'center', room: 'Living', style: 'Layered Eclectic', key: 'eclectic', title: 'Teal velvet and rattan', spec: 'Cane-back chairs, open shelving, planting set' },
+  { id: 'e2', img: 'assets/style-eclectic.jpg', zoom: 1.9, origin: '75% 30%', room: 'Detail', style: 'Layered Eclectic', key: 'eclectic', title: 'Cane weave cabinet front', spec: 'Oak frame, hand-woven cane' },
+  { id: 'c1', img: 'assets/style-coastal.jpg', zoom: 1, origin: 'center', room: 'Living', style: 'Coastal Light', key: 'coastal', title: 'Bone, oak and sea green', spec: 'Washable loose covers, jute rug, sheer linen' },
+  { id: 'c2', img: 'assets/style-coastal.jpg', zoom: 1.9, origin: '30% 60%', room: 'Detail', style: 'Coastal Light', key: 'coastal', title: 'Washed cotton cover', spec: 'Removable, machine washable' },
+  { id: 'c3', img: 'assets/style-coastal.jpg', zoom: 1.5, origin: '80% 75%', room: 'Outdoor', style: 'Coastal Light', key: 'coastal', title: 'Terrace lounge set', spec: 'Aluminium and rope, UV and salt rated' },
+  { id: 'w3', img: 'assets/style-warm.jpg', zoom: 1.5, origin: '70% 35%', room: 'Bedroom', style: 'Warm Contemporary', key: 'warm', title: 'Low headboard, storage base', spec: '180×200cm, walnut bedsides, brass pulls' },
+  { id: 'k1', img: 'assets/style-warm.jpg', zoom: 1.6, origin: '15% 45%', room: 'Kitchen', style: 'Warm Contemporary', key: 'warm', title: 'Walnut fronts, quartz island', spec: 'Handleless doors, 40mm mitred edge, brass tap' },
+  { id: 'k2', img: 'assets/style-neoclassic.png', zoom: 1.6, origin: '35% 55%', room: 'Kitchen', style: 'Neo-Classic Calm', key: 'neoclassic', title: 'Shaker fronts in sage', spec: 'Sprayed satin, Statuario quartz, nickel fittings' },
+  { id: 'k3', img: 'assets/style-coastal.jpg', zoom: 1.6, origin: '60% 50%', room: 'Kitchen', style: 'Coastal Light', key: 'coastal', title: 'Limed oak galley', spec: 'Open shelving, bone quartz, marine-grade fittings' },
+  { id: 'kd1', img: 'assets/style-eclectic.jpg', zoom: 1.5, origin: '20% 45%', room: 'Kids room', style: 'Layered Eclectic', key: 'eclectic', title: 'Bunk wall with reading nook', spec: 'Oak frame, washable paint, soft lighting' },
+  { id: 'kd2', img: 'assets/style-coastal.jpg', zoom: 1.5, origin: '45% 40%', room: 'Kids room', style: 'Coastal Light', key: 'coastal', title: 'Twin beds, storage base', spec: '90×200cm, wipe-clean covers, rounded edges' },
+  { id: 'g1', img: 'assets/style-coastal.jpg', zoom: 1.2, origin: '75% 60%', room: 'Garden', style: 'Coastal Light', key: 'coastal', title: 'Shaded terrace lounge', spec: '3m parasol, rope loungers, deck tiles' },
+  { id: 'g2', img: 'assets/style-eclectic.jpg', zoom: 1.4, origin: '85% 25%', room: 'Garden', style: 'Layered Eclectic', key: 'eclectic', title: 'Planted courtyard corner', spec: 'Mixed planters, low-maintenance species' },
+  { id: 'l1', img: 'assets/style-coastal.jpg', zoom: 1.3, origin: '20% 85%', room: 'Landscaping', style: 'Coastal Light', key: 'coastal', title: 'Stepped deck and lawn', spec: 'Composite decking, irrigation, path lighting' },
+  { id: 'l2', img: 'assets/style-majlis.jpg', zoom: 1.4, origin: '15% 80%', room: 'Landscaping', style: 'Modern Majlis', key: 'majlis', title: 'Screened garden majlis', spec: 'Pergola, shade sails, uplit planting' },
+  { id: 'wf1', img: 'assets/style-majlis.jpg', zoom: 1.5, origin: '85% 55%', room: 'Water features', style: 'Modern Majlis', key: 'majlis', title: 'Stone spill wall', spec: 'Recirculating basin, night lighting' },
+  { id: 'wf2', img: 'assets/style-coastal.jpg', zoom: 1.4, origin: '90% 70%', room: 'Water features', style: 'Coastal Light', key: 'coastal', title: 'Plunge pool edge', spec: 'Porcelain coping, salt-rated fittings' }
+];
+const SHOT_STYLE_LABEL = { warm: 'Warm Contemporary', neoclassic: 'Neo-Classic Calm', majlis: 'Modern Majlis', eclectic: 'Layered Eclectic', coastal: 'Coastal Light' };
+const SHOT_IMG_BY_STYLE = { warm: 'assets/style-warm.jpg', neoclassic: 'assets/style-neoclassic.png', majlis: 'assets/style-majlis.jpg', eclectic: 'assets/style-eclectic.jpg', coastal: 'assets/style-coastal.jpg' };
+// Edited shots (matched by title) get their room/spec/image overlaid; admin-added shots are appended.
+const SHOTS = (window.TK) ? window.TK.merge(SHOTS_DEFAULT, (window.TK.content || {}).inspiration, 'title', 'title',
+  function (d, s) {
+    var o = Object.assign({}, d);
+    if (s.room) o.room = s.room;
+    if (s.spec) o.spec = s.spec;
+    if (window.TK.http(s.image)) o.img = s.image;
+    return o;
+  },
+  function (s, i) {
+    return { id: 'tk' + (i + 1), img: window.TK.http(s.image) ? s.image : (SHOT_IMG_BY_STYLE[s.style] || 'assets/style-warm.jpg'), zoom: 1, origin: 'center', room: s.room || 'Living', style: SHOT_STYLE_LABEL[s.style] || s.style || '', key: s.style || 'warm', title: s.title || 'Untitled', spec: s.spec || '' };
+  }) : SHOTS_DEFAULT;
+const ROOMS = ['All', 'Living', 'Reception', 'Majlis', 'Kitchen', 'Bedroom', 'Kids room', 'Garden', 'Landscaping', 'Water features', 'Outdoor', 'Detail', 'Lighting'];
+const STORE = 'turnkii.board';
+
+class Component extends DCLogic {
+  state = { liked: [], room: 'All' };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (raw) this.setState({ liked: JSON.parse(raw).liked || [] });
+    } catch (e) {}
+  }
+
+  persist(liked) {
+    const styles = {};
+    liked.forEach(id => {
+      const s = SHOTS.find(x => x.id === id);
+      if (s) styles[s.key] = (styles[s.key] || 0) + 1;
+    });
+    const top = Object.keys(styles).sort((a, b) => styles[b] - styles[a])[0] || '';
+    try { localStorage.setItem(STORE, JSON.stringify({ liked: liked, style: top })); } catch (e) {}
+  }
+
+  like(id) {
+    this.setState(s => {
+      const liked = s.liked.indexOf(id) > -1 ? s.liked.filter(x => x !== id) : s.liked.concat([id]);
+      this.persist(liked);
+      return { liked: liked };
+    });
+  }
+
+  renderVals() {
+    const { liked, room } = this.state;
+    const visible = SHOTS.filter(s => room === 'All' || s.room === room);
+    const topStyle = (() => {
+      const c = {};
+      liked.forEach(id => { const s = SHOTS.find(x => x.id === id); if (s) c[s.key] = (c[s.key] || 0) + 1; });
+      const k = Object.keys(c).sort((a, b) => c[b] - c[a])[0];
+      return k ? (SHOTS.find(x => x.key === k) || {}).style : '';
+    })();
+
+    return {
+      filters: ROOMS.map(r => ({
+        name: r,
+        bg: r === room ? '#12130E' : '#FFFFFF',
+        fg: r === room ? '#F6F3EC' : '#5E5F52',
+        onPick: () => this.setState({ room: r })
+      })),
+      shots: visible.map(s => {
+        const on = liked.indexOf(s.id) > -1;
+        return {
+          img: s.img, zoom: s.zoom, origin: s.origin, title: s.title, spec: s.spec, room: s.room, style: s.style,
+          styleHref: 'Turnkii Style.dc.html#' + s.key,
+          tryHref: 'Turnkii Visualiser.dc.html#' + s.key,
+          likeMark: on ? '✓' : '♡',
+          likeBg: on ? '#D6F23C' : 'rgba(255,255,255,0.92)',
+          likeFg: '#12130E',
+          onLike: () => this.like(s.id)
+        };
+      }),
+      barTitle: liked.length === 0 ? 'Nothing saved yet' : liked.length + ' saved' + (topStyle ? ' · mostly ' + topStyle : ''),
+      barLine: liked.length === 0
+        ? 'Tap the heart on any room to build your board.'
+        : 'Send the board and the brief opens with this direction already chosen.',
+      sendLabel: liked.length === 0 ? 'Start a brief' : 'Add ' + liked.length + ' to my brief',
+      onSend: () => this.persist(this.state.liked)
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #FFFFFF; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #FFFFFF; color: #12130E; padding-bottom: 96px;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid #EDE9DE;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 12px clamp(16px, 3vw, 44px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;" data-comment-anchor="1f35b83723-div">
+      <a href="Turnkii v3.dc.html#top" style="background: #12130E; border-radius: 999px; padding: 9px 16px; display: flex; align-items: center; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 17px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a href="Turnkii v3.dc.html#services" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: #12130E; font-size: 14px; font-weight: 700;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">Marketplace</a>
+        <a href="Turnkii v3.dc.html#financing" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: #5E5F52; font-size: 14px; font-weight: 600;" style-hover="color: #12130E;">My account</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; border: 1px solid #12130E; color: #12130E; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 999px;" style-hover="background: #D6F23C;">Start a brief</a>
+    </div>
+  </header>
+
+  <section style="max-width: 1400px; margin: 0 auto; padding: clamp(18px, 2.4vw, 30px) clamp(16px, 3vw, 44px) 0;">
+    <div style="display: flex; gap: 8px; align-items: center; font-size: 13px; color: #8A8A79; margin-bottom: 14px;">
+      <a href="Turnkii v3.dc.html#top" style="color: #8A8A79; font-weight: 600;" style-hover="color: #12130E;">Home</a>
+      <span>/</span>
+      <a href="Turnkii v3.dc.html#styles" style="color: #8A8A79; font-weight: 600;" style-hover="color: #12130E;">Styles</a>
+      <span>/</span>
+      <span style="color: #12130E; font-weight: 700;">{{ name }}</span>
+    </div>
+    <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+        <button type="button" onClick="{{ t.onPick }}" style="flex: 0 0 auto; cursor: pointer; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 700; padding: 10px 18px; border-radius: 999px; border: 1px solid #EDE9DE; background: {{ t.bg }}; color: {{ t.fg }};" style-hover="border-color: #12130E;">{{ t.name }}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width: 1400px; margin: 0 auto; padding: clamp(22px, 3vw, 38px) clamp(16px, 3vw, 44px) 0;">
+    <div style="display: grid; gap: clamp(18px, 2.4vw, 34px); grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start;" data-comment-anchor="e5ad798ffd-div">
+      <div style="position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; background: #F2EFE6;">
+        <img src="{{ hero }}" alt="{{ name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+      </div>
+      <div>
+        <div style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Design style</div>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5vw, 68px); line-height: 1; letter-spacing: -0.02em; margin: 14px 0 0;">{{ name }}</h1>
+        <p style="font-size: clamp(15px, 1.2vw, 18px); line-height: 1.65; color: #5E5F52; margin: 18px 0 0; max-width: 48ch; text-wrap: pretty;">{{ blurb }}</p>
+        <div style="display: inline-flex; gap: 12px; align-items: baseline; border: 1px solid #EDE9DE; background: #FAF8F2; border-radius: 14px; padding: 12px 16px; margin-top: 18px;">
+          <span style="font-size: 13px; color: #8A8A79; font-weight: 600;">Starting from</span>
+          <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; line-height: 1;">{{ fromPrice }}</span>
+          <span style="font-size: 13px; color: #8A8A79; font-weight: 600;">EGP / m², finished &amp; furnished</span>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
+          <sc-for list="{{ swatches }}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 9px; border: 1px solid #EDE9DE; border-radius: 999px; padding: 6px 14px 6px 7px;">
+              <span style="width: 20px; height: 20px; border-radius: 999px; display: block; background: {{ s.hex }};"></span>
+              <span style="font-size: 13px; font-weight: 600;">{{ s.name }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); border: 1px solid #EDE9DE; border-radius: 16px; margin-top: 26px; overflow: hidden;">
+          <div style="padding: 16px 18px; border-right: 1px solid #EDE9DE;">
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; line-height: 1;">{{ leadTime }}</div>
+            <div style="font-size: 12.5px; color: #8A8A79; margin-top: 4px;">Furnishing lead time</div>
+          </div>
+          <div style="padding: 16px 18px; border-right: 1px solid #EDE9DE;">
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; line-height: 1;">{{ pieceCount }}</div>
+            <div style="font-size: 12.5px; color: #8A8A79; margin-top: 4px;">Pieces, 2-bed unit</div>
+          </div>
+          <div style="padding: 16px 18px;">
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; line-height: 1;">{{ fromPrice }}</div>
+            <div style="font-size: 12.5px; color: #8A8A79; margin-top: 4px;">From, EGP per m²</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1400px; margin: 0 auto; padding: clamp(48px, 6vw, 84px) clamp(16px, 3vw, 44px) 0;">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3vw, 40px); line-height: 1.05; margin: 0;">Close up</h2>
+      <p style="font-size: 14.5px; color: #8A8A79; margin: 0; max-width: 40ch;">Detail crops from delivered units — weave, grain, edge profile and joint.</p>
+    </div>
+    <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); margin-top: 24px;">
+      <sc-for list="{{ closeups }}" as="c" hint-placeholder-count="4">
+        <div>
+          <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 1 / 1; background: #F2EFE6;">
+            <img src="{{ c.img }}" alt="{{ c.label }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(2.1); transform-origin: {{ c.origin }};" />
+          </div>
+          <div style="font-size: 13.5px; font-weight: 600; margin-top: 10px;">{{ c.label }}</div>
+          <div style="font-size: 12.5px; color: #8A8A79; margin-top: 3px;">{{ c.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width: 1400px; margin: 0 auto; padding: clamp(48px, 6vw, 84px) clamp(16px, 3vw, 44px) 0;">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3vw, 40px); line-height: 1.05; margin: 0;">Materials — pick your options</h2>
+      <p style="font-size: 14.5px; color: #8A8A79; margin: 0; max-width: 44ch;">Options marked <strong style="color: #6C7A20;">In stock</strong> are held on the platform and can be selected now. Anything else we quote against your unit.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 28px;">
+      <sc-for list="{{ materials }}" as="m" hint-placeholder-count="5">
+        <div style="border: 1px solid #EDE9DE; border-radius: 20px; padding: clamp(16px, 2vw, 24px); background: #FFFFFF;">
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+            <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">{{ m.group }}</div>
+            <div style="font-size: 13px; font-weight: 700; color: {{ m.statusColor }};">{{ m.status }}</div>
+          </div>
+          <div style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); margin-top: 16px;">
+            <sc-for list="{{ m.options }}" as="o">
+              <button type="button" onClick="{{ o.onPick }}" style="cursor: pointer; text-align: left; font-family: Manrope, sans-serif; display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px; border: 1px solid #EDE9DE; background: #FAF8F2; outline: {{ o.outline }}; outline-offset: -1px;" style-hover="border-color: #12130E;">
+                <span style="width: 34px; height: 34px; border-radius: 9px; flex: 0 0 auto; background: {{ o.hex }}; border: 1px solid rgba(18,19,14,0.12);"></span>
+                <span style="flex: 1 1 auto; min-width: 0;">
+                  <span style="display: flex; gap: 8px; align-items: baseline; justify-content: space-between;">
+                    <span style="font-size: 14.5px; font-weight: 600; color: #12130E;">{{ o.name }}</span>
+                    <span style="font-size: 15px; font-weight: 700; color: #6C7A20;">{{ o.mark }}</span>
+                  </span>
+                  <span style="display: block; font-size: 12.5px; color: #5E5F52; margin-top: 4px; line-height: 1.45;">{{ o.spec }}</span>
+                  <span style="display: inline-block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-top: 8px; padding: 3px 8px; border-radius: 999px; background: {{ o.badgeBg }}; color: {{ o.badgeFg }};">{{ o.badge }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width: 1400px; margin: 0 auto; padding: clamp(48px, 6vw, 84px) clamp(16px, 3vw, 44px) 0;">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3vw, 40px); line-height: 1.05; margin: 0;">Furniture list</h2>
+      <p style="font-size: 14.5px; color: #8A8A79; margin: 0; max-width: 40ch;">Standard specification for a two-bedroom unit. Quantities scale with the layout.</p>
+    </div>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; border: 1px solid #EDE9DE; border-radius: 16px; background: #FAF8F2; padding: 16px 18px; margin-top: 20px;">
+      <div style="flex: 1 1 300px; min-width: 240px;">
+        <div style="font-size: 15px; font-weight: 700;">{{ furnTitle }}</div>
+        <div style="font-size: 13.5px; color: #5E5F52; margin-top: 4px; line-height: 1.45;">{{ furnLine }}</div>
+      </div>
+      <button type="button" onClick="{{ onToggleFurniture }}" style="flex: 0 0 auto; cursor: pointer; font-family: Manrope, sans-serif; border: 1px solid #12130E; border-radius: 999px; padding: 12px 20px; font-size: 14px; font-weight: 700; background: {{ furnBtnBg }}; color: {{ furnBtnFg }};" style-hover="background: #12130E; color: #F6F3EC;">{{ furnBtn }}</button>
+    </div>
+    <div style="border-top: 1px solid #EDE9DE; margin-top: 24px; opacity: {{ furnOpacity }};">
+      <sc-for list="{{ furniture }}" as="f" hint-placeholder-count="8">
+        <div style="display: flex; gap: clamp(10px, 2.4vw, 32px); align-items: baseline; padding: 16px 4px; border-bottom: 1px solid #EDE9DE; flex-wrap: wrap;">
+          <span style="font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #B6B2A4; flex: 0 0 110px;">{{ f.room }}</span>
+          <span style="font-size: clamp(16px, 1.6vw, 19px); font-weight: 600; flex: 1 1 200px;">{{ f.item }}</span>
+          <span style="font-size: 14px; color: #5E5F52; line-height: 1.5; flex: 1 1 280px; max-width: 44ch;">{{ f.spec }}</span>
+          <span style="font-size: 13px; font-weight: 700; color: #12130E; flex: 0 0 auto;">{{ f.qty }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <sc-if value="{{ offerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 90; background: rgba(18,19,14,0.62); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+      <div style="max-width: 460px; width: 100%; background: #FFFFFF; border: 3px solid #D6F23C; border-radius: 22px; padding: clamp(20px, 3vw, 30px); box-shadow: 0 30px 70px rgba(18,19,14,0.4);">
+        <div style="display: inline-block; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #12130E; background: #D6F23C; padding: 5px 11px; border-radius: 999px;">Before you drop it</div>
+        <h3 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3.4vw, 36px); line-height: 1.06; margin: 16px 0 0;">Keep the furniture and take 5% off.</h3>
+        <p style="font-size: 15px; line-height: 1.6; color: #5E5F52; margin: 12px 0 0;">{{ offerBody }}</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
+          <button type="button" onClick="{{ onKeep }}" style="cursor: pointer; font-family: Manrope, sans-serif; border: 0; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700;" style-hover="background: #D6F23C; color: #12130E;">Keep furniture · 5% off</button>
+          <button type="button" onClick="{{ onDrop }}" style="cursor: pointer; font-family: Manrope, sans-serif; border: 1px solid #E0DCCE; background: transparent; color: #5E5F52; border-radius: 999px; padding: 14px 20px; font-size: 14px; font-weight: 600;" style-hover="border-color: #12130E; color: #12130E;">Finishing only, thanks</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="position: sticky; bottom: 0; z-index: 70; margin-top: clamp(40px, 5vw, 64px);">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 44px) clamp(14px, 2vw, 22px);">
+      <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: 16px clamp(16px, 2vw, 26px); display: flex; gap: 18px; flex-wrap: wrap; align-items: center; justify-content: space-between; box-shadow: 0 18px 40px rgba(18,19,14,0.22);">
+        <div style="flex: 1 1 260px; min-width: 200px;">
+          <div style="font-size: 15px; font-weight: 700;">{{ summaryTitle }}</div>
+          <div style="font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 4px; line-height: 1.45;">{{ summaryLine }}</div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 0 0 auto;">
+          <button type="button" onClick="{{ reset }}" style="cursor: pointer; font-family: Manrope, sans-serif; background: transparent; border: 1px solid rgba(246,243,236,0.35); color: #F6F3EC; font-size: 14px; font-weight: 600; padding: 12px 18px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">Clear</button>
+          <a href="Turnkii v3.dc.html#brief" style="background: #D6F23C; color: #12130E; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="background: #E6FF6B;">Take this into the brief</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { key: 'warm', picks: {}, noFurniture: false, offerOpen: false, discount: false };
+
+  componentDidMount() {
+    const h = (location.hash || '').replace('#', '');
+    if (h && this.data()[h]) this.setState({ key: h });
+  }
+
+  data() {
+    return {
+      warm: {
+        from: '11,500', name: 'Warm Contemporary', hero: 'assets/style-warm.jpg', leadTime: '4 wks', pieceCount: '38',
+        blurb: 'Soft mass and warm timber. Rounded upholstery in sand and bone, walnut casegoods, olive accents and layered ceiling light — the most rentable of the five and the fastest to deliver.',
+        swatches: [{ name: 'Sand', hex: '#D9CDB8' }, { name: 'Walnut', hex: '#6B4A33' }, { name: 'Olive', hex: '#6C7A20' }, { name: 'Bone', hex: '#F1EBDF' }],
+        closeups: [
+          { img: 'assets/style-warm.jpg', origin: '30% 70%', label: 'Bouclé weave', note: 'Sofa and lounge chair upholstery' },
+          { img: 'assets/style-warm.jpg', origin: '60% 78%', label: 'Wool rug pile', note: 'Hand-loomed, 12mm cut pile' },
+          { img: 'assets/style-warm.jpg', origin: '20% 40%', label: 'Walnut veneer', note: 'Crown-cut, matt lacquer' },
+          { img: 'assets/style-warm.jpg', origin: '75% 30%', label: 'Opal glass pendant', note: 'Brushed brass stem' }
+        ],
+        materials: [
+          { group: 'Flooring', options: [
+            { name: 'Engineered oak', spec: '14mm, 190mm board, brushed matt', hex: '#C9A87C', avail: true },
+            { name: 'Warm grey porcelain', spec: '60×120cm rectified, R10', hex: '#B8B2A6', avail: true },
+            { name: 'Travertine slab', spec: 'Vein-cut, honed, 20mm', hex: '#DCCDB2', avail: false }
+          ]},
+          { group: 'Wall finish', options: [
+            { name: 'Lime wash — Sand', spec: 'Two-coat mineral, matt', hex: '#DED2BC', avail: true },
+            { name: 'Micro-cement', spec: 'Trowelled, sealed, 3mm', hex: '#C4BCAE', avail: true },
+            { name: 'Walnut slat panel', spec: '20mm battens on acoustic felt', hex: '#7A5439', avail: false }
+          ]},
+          { group: 'Kitchen counter', options: [
+            { name: 'Quartz — Bone', spec: '20mm, mitred 40mm edge', hex: '#EFE8DA', avail: true },
+            { name: 'Sintered stone', spec: '12mm, veined, matt', hex: '#D6CFC2', avail: true },
+            { name: 'Solid walnut butcher block', spec: '40mm, oiled', hex: '#6B4A33', avail: false }
+          ]},
+          { group: 'Upholstery', options: [
+            { name: 'Bouclé — Oat', spec: 'Poly-cotton, 40k Martindale', hex: '#E4DAC6', avail: true },
+            { name: 'Linen blend — Clay', spec: 'Stain-treated, 50k', hex: '#C2A188', avail: true },
+            { name: 'Olive velvet', spec: 'Performance velvet, 60k', hex: '#5F6B27', avail: false }
+          ]},
+          { group: 'Hardware & lighting', options: [
+            { name: 'Brushed brass', spec: 'Handles, taps, pendant stems', hex: '#B79150', avail: true },
+            { name: 'Matt black', spec: 'Handles, taps, track light', hex: '#26251F', avail: true },
+            { name: 'Antique bronze', spec: 'Hand-patinated, made to order', hex: '#6E4F2E', avail: false }
+          ]}
+        ],
+        furniture: [
+          { room: 'Living', item: 'Modular 3-seat sofa', spec: '260×95cm, bouclé, feather-wrapped foam', qty: '×1' },
+          { room: 'Living', item: 'Lounge chair', spec: 'Solid oak frame, webbed seat', qty: '×2' },
+          { room: 'Living', item: 'Nesting coffee tables', spec: 'Walnut veneer, 90 + 60cm round', qty: '×2' },
+          { room: 'Living', item: 'Wool area rug', spec: '300×200cm, hand-loomed', qty: '×1' },
+          { room: 'Dining', item: 'Dining table', spec: '180×90cm, walnut top, blade legs', qty: '×1' },
+          { room: 'Dining', item: 'Dining chairs', spec: 'Upholstered seat, oak frame', qty: '×6' },
+          { room: 'Bedroom', item: 'Upholstered bed', spec: '180×200cm, low headboard, storage base', qty: '×1' },
+          { room: 'Bedroom', item: 'Bedside tables', spec: 'Two-drawer, walnut, brass pull', qty: '×2' },
+          { room: 'Bedroom', item: 'Wardrobe', spec: '240cm, hinged, internal drawer block', qty: '×1' },
+          { room: 'Bedroom 2', item: 'Twin beds + nightstand', spec: '120×200cm, fabric base', qty: '×2 + 1' },
+          { room: 'Lighting', item: 'Pendant, floor and table lights', spec: 'Opal glass, brass, dimmable 2700K', qty: '×9' },
+          { room: 'Soft goods', item: 'Curtains, cushions, bedding set', spec: 'Blackout + sheer, full dress pack', qty: 'Unit set' }
+        ]
+      },
+      neoclassic: {
+        from: '14,800', name: 'Neo-Classic Calm', hero: 'assets/style-neoclassic.png', leadTime: '6 wks', pieceCount: '41',
+        blurb: 'Panelled walls, quiet symmetry and sage. Built joinery does the work — cornice, wall panels and full-height wardrobes — with brass and smoked glass as the only ornament.',
+        swatches: [{ name: 'Chalk', hex: '#EDE9E0' }, { name: 'Sage', hex: '#8D9779' }, { name: 'Brass', hex: '#B79150' }, { name: 'Graphite', hex: '#3C3C36' }],
+        closeups: [
+          { img: 'assets/style-neoclassic.png', origin: '25% 35%', label: 'Wall panel profile', note: 'MDF frame, sprayed satin' },
+          { img: 'assets/style-neoclassic.png', origin: '55% 30%', label: 'Smoked glass pendant', note: 'Brass canopy, cluster of three' },
+          { img: 'assets/style-neoclassic.png', origin: '45% 70%', label: 'Sage weave', note: 'Sofa upholstery, 50k Martindale' },
+          { img: 'assets/style-neoclassic.png', origin: '70% 80%', label: 'Stone table edge', note: 'Sculpted base, honed top' }
+        ],
+        materials: [
+          { group: 'Flooring', options: [
+            { name: 'Chevron oak', spec: '600×120mm blocks, natural oil', hex: '#C3A175', avail: true },
+            { name: 'Marble-look porcelain', spec: '80×80cm polished', hex: '#E4E0D6', avail: true },
+            { name: 'Carrara marble', spec: '20mm slab, honed', hex: '#E9E9E4', avail: false }
+          ]},
+          { group: 'Wall finish', options: [
+            { name: 'Panelled MDF — Chalk', spec: 'Sprayed satin, 12mm frame', hex: '#EDE9E0', avail: true },
+            { name: 'Panelled MDF — Sage', spec: 'Sprayed satin, tone-on-tone', hex: '#8D9779', avail: true },
+            { name: 'Silk-effect wallcovering', spec: 'Imported, 68cm roll', hex: '#D7CFC0', avail: false }
+          ]},
+          { group: 'Kitchen counter', options: [
+            { name: 'Quartz — Statuario', spec: '20mm, waterfall end', hex: '#EFEDE6', avail: true },
+            { name: 'Sage lacquer + quartz', spec: 'Shaker fronts, stone top', hex: '#8D9779', avail: true },
+            { name: 'Calacatta marble', spec: 'Book-matched slab', hex: '#EDE6D8', avail: false }
+          ]},
+          { group: 'Upholstery', options: [
+            { name: 'Sage weave', spec: 'Cotton blend, 50k Martindale', hex: '#8D9779', avail: true },
+            { name: 'Chalk linen', spec: 'Loose cover, washable', hex: '#E4DFD2', avail: true },
+            { name: 'Silk-blend jacquard', spec: 'Feature chairs only', hex: '#BFA97F', avail: false }
+          ]},
+          { group: 'Hardware & lighting', options: [
+            { name: 'Polished brass', spec: 'Knobs, taps, picture lights', hex: '#C39B48', avail: true },
+            { name: 'Nickel', spec: 'Brushed, all wet areas', hex: '#B9BCBB', avail: true },
+            { name: 'Crystal + brass chandelier', spec: 'Reception feature, made to order', hex: '#E7DFC6', avail: false }
+          ]}
+        ],
+        furniture: [
+          { room: 'Reception', item: 'Two-seat sofas, facing pair', spec: '200×90cm, sage weave, turned legs', qty: '×2' },
+          { room: 'Reception', item: 'Occasional armchairs', spec: 'Chalk linen, brass sabots', qty: '×2' },
+          { room: 'Reception', item: 'Stone coffee table', spec: '120×70cm, sculpted base', qty: '×1' },
+          { room: 'Reception', item: 'Console + mirror', spec: '140cm console, arched mirror', qty: '×1 set' },
+          { room: 'Dining', item: 'Oval dining table', spec: '200×100cm, stone top', qty: '×1' },
+          { room: 'Dining', item: 'Dining chairs', spec: 'Upholstered back and seat', qty: '×8' },
+          { room: 'Dining', item: 'Sideboard', spec: '180cm, panelled fronts, brass pulls', qty: '×1' },
+          { room: 'Bedroom', item: 'Panelled headboard bed', spec: '180×200cm, buttoned', qty: '×1' },
+          { room: 'Bedroom', item: 'Fitted wardrobe', spec: 'Full height, panelled, internal lighting', qty: '×1' },
+          { room: 'Joinery', item: 'Wall panelling + cornice', spec: 'Reception, hall, master', qty: 'Unit set' },
+          { room: 'Lighting', item: 'Chandelier, wall and table lights', spec: 'Smoked glass, brass, dimmable', qty: '×11' },
+          { room: 'Soft goods', item: 'Curtains, cushions, bedding set', spec: 'Pinch pleat, sheer inner layer', qty: 'Unit set' }
+        ]
+      },
+      majlis: {
+        from: '16,200', name: 'Modern Majlis', hero: 'assets/style-majlis.jpg', leadTime: '6 wks', pieceCount: '34',
+        blurb: 'Deep seating on a perimeter, low tables and gold. Built for hosting large groups — heavier upholstery, more seats per square metre, and lighting tuned for evening.',
+        swatches: [{ name: 'Cocoa', hex: '#4A3227' }, { name: 'Camel', hex: '#B8895C' }, { name: 'Gold', hex: '#C2A055' }, { name: 'Cream', hex: '#EFE5D5' }],
+        closeups: [
+          { img: 'assets/style-majlis.jpg', origin: '30% 65%', label: 'Channelled velvet', note: 'Majlis seat, 60k Martindale' },
+          { img: 'assets/style-majlis.jpg', origin: '50% 25%', label: 'Ring chandelier', note: 'Faceted glass, gold frame' },
+          { img: 'assets/style-majlis.jpg', origin: '20% 30%', label: 'Sheer + blackout stack', note: 'Full-height curtain wall' },
+          { img: 'assets/style-majlis.jpg', origin: '75% 70%', label: 'Stone low table', note: 'Cocoa marble, bullnose edge' }
+        ],
+        materials: [
+          { group: 'Flooring', options: [
+            { name: 'Large-format porcelain', spec: '120×120cm, matt cream', hex: '#E3D9C7', avail: true },
+            { name: 'Dark oak engineered', spec: '14mm, smoked, 220mm board', hex: '#5A3F2C', avail: true },
+            { name: 'Emperador marble', spec: '20mm slab, polished', hex: '#5C3F30', avail: false }
+          ]},
+          { group: 'Wall finish', options: [
+            { name: 'Venetian plaster — Cream', spec: 'Polished, three coats', hex: '#EFE5D5', avail: true },
+            { name: 'Upholstered wall panel', spec: 'Camel weave, 40mm padded', hex: '#B8895C', avail: true },
+            { name: 'Fluted stone cladding', spec: 'Feature wall, made to order', hex: '#D3C4AB', avail: false }
+          ]},
+          { group: 'Kitchen counter', options: [
+            { name: 'Sintered stone — Cocoa', spec: '12mm, matt, mitred edge', hex: '#5B4436', avail: true },
+            { name: 'Quartz — Cream', spec: '20mm, 40mm edge', hex: '#E8DFCC', avail: true },
+            { name: 'Brass-inlay stone', spec: 'Island top, made to order', hex: '#C2A055', avail: false }
+          ]},
+          { group: 'Upholstery', options: [
+            { name: 'Camel velvet', spec: 'Performance, 60k Martindale', hex: '#B8895C', avail: true },
+            { name: 'Cocoa chenille', spec: 'Heavy weave, 80k', hex: '#4A3227', avail: true },
+            { name: 'Hand-woven kilim', spec: 'Floor cushions, imported', hex: '#8E5A3C', avail: false }
+          ]},
+          { group: 'Hardware & lighting', options: [
+            { name: 'Champagne gold', spec: 'Handles, taps, light frames', hex: '#C2A055', avail: true },
+            { name: 'Bronze', spec: 'Handles and joinery only', hex: '#6E4F2E', avail: true },
+            { name: 'Faceted glass chandelier', spec: '1.4m ring, made to order', hex: '#E9DEC4', avail: false }
+          ]}
+        ],
+        furniture: [
+          { room: 'Majlis', item: 'Perimeter seating run', spec: '9m linear, deep seat, channelled back', qty: '×1 set' },
+          { room: 'Majlis', item: 'Low stone tables', spec: '110cm and 80cm round', qty: '×3' },
+          { room: 'Majlis', item: 'Floor cushions + poufs', spec: 'Velvet and leather mix', qty: '×8' },
+          { room: 'Majlis', item: 'Silk-blend rug', spec: '400×300cm', qty: '×1' },
+          { room: 'Dining', item: 'Dining table', spec: '260×110cm, stone top', qty: '×1' },
+          { room: 'Dining', item: 'Dining chairs', spec: 'High back, camel velvet', qty: '×10' },
+          { room: 'Family', item: 'Sofa + armchairs', spec: '3-seat + 2 chairs, chenille', qty: '×1 set' },
+          { room: 'Bedroom', item: 'Padded headboard bed', spec: '200×200cm, gold trim', qty: '×1' },
+          { room: 'Bedroom', item: 'Dresser + mirror', spec: '160cm, stone top', qty: '×1 set' },
+          { room: 'Lighting', item: 'Chandeliers, sconces, floor lights', spec: 'Gold and faceted glass, 2700K', qty: '×14' },
+          { room: 'Soft goods', item: 'Curtains, cushions, bedding set', spec: 'Blackout + sheer, wall-to-wall track', qty: 'Unit set' }
+        ]
+      },
+      eclectic: {
+        from: '12,400', name: 'Layered Eclectic', hero: 'assets/style-eclectic.jpg', leadTime: '5 wks', pieceCount: '46',
+        blurb: 'Teal, rattan and plants. Mixed provenance on purpose — vintage-look casegoods, open shelving dressed with objects, and a photograph-ready character that suits short-stay listings.',
+        swatches: [{ name: 'Teal', hex: '#1F5B5B' }, { name: 'Rattan', hex: '#C79B62' }, { name: 'Linen', hex: '#E6DFD0' }, { name: 'Terracotta', hex: '#B5613C' }],
+        closeups: [
+          { img: 'assets/style-eclectic.jpg', origin: '30% 60%', label: 'Teal velvet', note: 'Sofa upholstery, 60k Martindale' },
+          { img: 'assets/style-eclectic.jpg', origin: '70% 35%', label: 'Rattan cane weave', note: 'Cabinet fronts and chair backs' },
+          { img: 'assets/style-eclectic.jpg', origin: '80% 25%', label: 'Open shelf dressing', note: 'Ceramics, books, planting' },
+          { img: 'assets/style-eclectic.jpg', origin: '20% 80%', label: 'Chunky wool throw', note: 'Hand-knitted, undyed' }
+        ],
+        materials: [
+          { group: 'Flooring', options: [
+            { name: 'Natural oak engineered', spec: '14mm, matt oil, 190mm board', hex: '#C9A87C', avail: true },
+            { name: 'Patterned cement tile', spec: '20×20cm, wet areas and hall', hex: '#9FA9A4', avail: true },
+            { name: 'Reclaimed terracotta', spec: 'Sourced per project', hex: '#B5613C', avail: false }
+          ]},
+          { group: 'Wall finish', options: [
+            { name: 'Flat matt — Linen', spec: 'Washable emulsion', hex: '#E6DFD0', avail: true },
+            { name: 'Flat matt — Teal', spec: 'Feature wall, washable', hex: '#1F5B5B', avail: true },
+            { name: 'Botanical mural', spec: 'Printed panel, made to order', hex: '#6B7F63', avail: false }
+          ]},
+          { group: 'Kitchen counter', options: [
+            { name: 'Quartz — Pebble', spec: '20mm, square edge', hex: '#CFC9BC', avail: true },
+            { name: 'Teal lacquer + oak top', spec: 'Slab fronts, 40mm oak', hex: '#1F5B5B', avail: true },
+            { name: 'Zellige-tiled counter', spec: 'Hand-glazed, made to order', hex: '#7FA7A0', avail: false }
+          ]},
+          { group: 'Upholstery', options: [
+            { name: 'Teal velvet', spec: 'Performance, 60k Martindale', hex: '#1F5B5B', avail: true },
+            { name: 'Natural linen', spec: 'Loose cover, washable', hex: '#E0D8C6', avail: true },
+            { name: 'Vintage kilim panels', spec: 'Accent chairs, sourced', hex: '#A85C3E', avail: false }
+          ]},
+          { group: 'Hardware & lighting', options: [
+            { name: 'Aged brass', spec: 'Handles, taps, pendant stems', hex: '#A98A4E', avail: true },
+            { name: 'Matt black', spec: 'Track light and shelving', hex: '#26251F', avail: true },
+            { name: 'Rattan pendant cluster', spec: 'Hand-woven, made to order', hex: '#C79B62', avail: false }
+          ]}
+        ],
+        furniture: [
+          { room: 'Living', item: 'Teal velvet sofa', spec: '230×90cm, tight back', qty: '×1' },
+          { room: 'Living', item: 'Cane-back armchairs', spec: 'Oak frame, linen cushion', qty: '×2' },
+          { room: 'Living', item: 'Coffee table + side tables', spec: 'Oak and cane, mixed heights', qty: '×3' },
+          { room: 'Living', item: 'Open shelving unit', spec: '200cm, dressed with objects', qty: '×1' },
+          { room: 'Living', item: 'Planting set', spec: '5 planters, low-maintenance species', qty: '×1 set' },
+          { room: 'Dining', item: 'Round dining table', spec: '130cm, oak pedestal', qty: '×1' },
+          { room: 'Dining', item: 'Mixed dining chairs', spec: 'Two designs, cane and upholstered', qty: '×4' },
+          { room: 'Bedroom', item: 'Cane headboard bed', spec: '180×200cm, oak frame', qty: '×1' },
+          { room: 'Bedroom', item: 'Vintage-look dresser', spec: '120cm, six drawers', qty: '×1' },
+          { room: 'Bedroom 2', item: 'Twin beds + shared nightstand', spec: '120×200cm', qty: '×2 + 1' },
+          { room: 'Lighting', item: 'Pendants, sconces, floor lights', spec: 'Rattan, glass, brass, 2700K', qty: '×10' },
+          { room: 'Soft goods', item: 'Curtains, cushions, throws, bedding', spec: 'Layered, mixed texture pack', qty: 'Unit set' }
+        ]
+      },
+      coastal: {
+        from: '10,900', name: 'Coastal Light', hero: 'assets/style-coastal.jpg', leadTime: '4 wks', pieceCount: '36',
+        blurb: 'Bone, oak and sea green, built for salt and sun. Washable covers, UV-stable outdoor pieces and finishes that survive a North Coast season of short lets.',
+        swatches: [{ name: 'Bone', hex: '#F1EBDF' }, { name: 'Oak', hex: '#C9A87C' }, { name: 'Sea green', hex: '#7FA79B' }, { name: 'Slate', hex: '#5C6B70' }],
+        closeups: [
+          { img: 'assets/style-coastal.jpg', origin: '35% 60%', label: 'Washed cotton cover', note: 'Removable, machine washable' },
+          { img: 'assets/style-coastal.jpg', origin: '65% 30%', label: 'Limed oak grain', note: 'Open pore, UV-stable finish' },
+          { img: 'assets/style-coastal.jpg', origin: '25% 25%', label: 'Sheer linen curtain', note: 'Full height, sun-filtering' },
+          { img: 'assets/style-coastal.jpg', origin: '80% 75%', label: 'Jute rug edge', note: 'Flat weave, bound edge' }
+        ],
+        materials: [
+          { group: 'Flooring', options: [
+            { name: 'Limed oak engineered', spec: '14mm, UV lacquer, 190mm', hex: '#DCC9AC', avail: true },
+            { name: 'Sand porcelain', spec: '60×120cm, R10, indoor/outdoor', hex: '#DDD3C1', avail: true },
+            { name: 'Micro-cement floor', spec: 'Seamless, sealed, on request', hex: '#C4BCAE', avail: false }
+          ]},
+          { group: 'Wall finish', options: [
+            { name: 'Matt emulsion — Bone', spec: 'Anti-mould, coastal grade', hex: '#F1EBDF', avail: true },
+            { name: 'Lime wash — Sea green', spec: 'Mineral, feature wall', hex: '#7FA79B', avail: true },
+            { name: 'Tongue-and-groove panel', spec: 'Painted, 1.2m dado', hex: '#E7E2D6', avail: false }
+          ]},
+          { group: 'Kitchen counter', options: [
+            { name: 'Quartz — Bone', spec: '20mm, square edge', hex: '#EFE8DA', avail: true },
+            { name: 'Sea green lacquer + quartz', spec: 'Slab fronts, stone top', hex: '#7FA79B', avail: true },
+            { name: 'Solid oak worktop', spec: '40mm, marine-oiled', hex: '#C9A87C', avail: false }
+          ]},
+          { group: 'Upholstery', options: [
+            { name: 'Washed cotton — Bone', spec: 'Removable cover, washable', hex: '#EDE6D8', avail: true },
+            { name: 'Outdoor acrylic — Slate', spec: 'UV and salt rated, 60k', hex: '#5C6B70', avail: true },
+            { name: 'Sea green linen', spec: 'Yarn-dyed, on request', hex: '#7FA79B', avail: false }
+          ]},
+          { group: 'Hardware & lighting', options: [
+            { name: 'Brushed stainless', spec: 'Marine grade 316, all wet areas', hex: '#B7BBBA', avail: true },
+            { name: 'Powder-coated white', spec: 'Outdoor lighting and rails', hex: '#EFEFEA', avail: true },
+            { name: 'Rope and oak pendants', spec: 'Made to order', hex: '#CBB08A', avail: false }
+          ]}
+        ],
+        furniture: [
+          { room: 'Living', item: 'Loose-cover sofa', spec: '240×95cm, washable cotton', qty: '×1' },
+          { room: 'Living', item: 'Oak lounge chairs', spec: 'Limed oak, canvas sling', qty: '×2' },
+          { room: 'Living', item: 'Coffee table', spec: '110cm, limed oak', qty: '×1' },
+          { room: 'Living', item: 'Jute rug', spec: '300×200cm, flat weave', qty: '×1' },
+          { room: 'Dining', item: 'Dining table', spec: '200×90cm, oak, indoor/outdoor', qty: '×1' },
+          { room: 'Dining', item: 'Dining chairs', spec: 'Oak and woven cord seat', qty: '×6' },
+          { room: 'Bedroom', item: 'Slat headboard bed', spec: '180×200cm, limed oak', qty: '×1' },
+          { room: 'Bedroom', item: 'Bedside tables', spec: 'Oak, open shelf', qty: '×2' },
+          { room: 'Bedroom 2', item: 'Bunk or twin set', spec: '90×200cm, oak frame', qty: '×1 set' },
+          { room: 'Outdoor', item: 'Terrace lounge set', spec: 'Aluminium and rope, acrylic cushions', qty: '×1 set' },
+          { room: 'Outdoor', item: 'Shade and side tables', spec: 'Parasol 3m, two side tables', qty: '×3' },
+          { room: 'Soft goods', item: 'Curtains, cushions, bedding set', spec: 'Sheer linen + blackout roller', qty: 'Unit set' }
+        ]
+      }
+    };
+  }
+
+  persist(furniture) {
+    try {
+      const raw = localStorage.getItem('turnkii.board');
+      const b = raw ? JSON.parse(raw) : {};
+      b.furniture = furniture;
+      b.style = this.state.key;
+      localStorage.setItem('turnkii.board', JSON.stringify(b));
+    } catch (e) {}
+  }
+
+  pick(group, name, avail) {
+    this.setState(s => {
+      const picks = Object.assign({}, s.picks);
+      const cur = picks[group];
+      if (cur && cur.name === name) delete picks[group];
+      else picks[group] = { name: name, avail: avail };
+      return { picks: picks };
+    });
+  }
+
+  renderVals() {
+    const all = this.data();
+    // Overlay admin-published style copy (name/blurb/price/lead/pieces/swatches) by key.
+    const _tkc = (window.TK && window.TK.content && window.TK.content.styles) || null;
+    if (_tkc) _tkc.forEach(function (s) {
+      const d = all[s.key];
+      if (!d) return;
+      if (s.name) d.name = s.name;
+      if (s.blurb) d.blurb = s.blurb;
+      if (s.fromPrice) d.from = s.fromPrice;
+      if (s.leadTime) d.leadTime = s.leadTime;
+      if (s.pieceCount) d.pieceCount = s.pieceCount;
+      if (s.palette && s.palette.length) d.swatches = s.palette;
+    });
+    const st = all[this.state.key] || all.warm;
+    const picks = this.state.picks;
+
+    const tabs = Object.keys(all).map(k => ({
+      name: all[k].name,
+      bg: k === this.state.key ? '#12130E' : '#FFFFFF',
+      fg: k === this.state.key ? '#F6F3EC' : '#5E5F52',
+      onPick: () => this.setState({ key: k, picks: {} })
+    }));
+
+    const materials = st.materials.map(m => {
+      const p = picks[m.group];
+      return {
+        group: m.group,
+        status: p ? (p.avail ? 'Selected · in stock' : 'Selected · quote on request') : 'Not selected',
+        statusColor: p ? (p.avail ? '#6C7A20' : '#A9741F') : '#B6B2A4',
+        options: m.options.map(o => {
+          const on = p && p.name === o.name;
+          return {
+            name: o.name, spec: o.spec, hex: o.hex,
+            mark: on ? '✓' : '',
+            outline: on ? '2px solid #12130E' : '0px solid transparent',
+            badge: o.avail ? 'In stock' : 'On request',
+            badgeBg: o.avail ? '#E8F4C4' : '#F0EBDF',
+            badgeFg: o.avail ? '#4E5A16' : '#8A7A55',
+            onPick: () => this.pick(m.group, o.name, o.avail)
+          };
+        })
+      };
+    });
+
+    const keys = Object.keys(picks);
+    const reqs = keys.filter(k => !picks[k].avail).length;
+
+    const nf = this.state.noFurniture;
+    return {
+      fromPrice: st.from,
+      furnTitle: nf ? 'Finishing only — furniture excluded' : (this.state.discount ? 'Furniture included · 5% discount applied' : 'Furniture included in this style'),
+      furnLine: nf
+        ? 'We deliver the finishing scope and hand over an empty, cleaned unit. You can add furniture back at any point before the survey.'
+        : (this.state.discount ? 'Your 5% retention discount is held against the furniture line of the quote.' : 'The list below is delivered, assembled and styled as one package.'),
+      furnBtn: nf ? 'Add furniture back' : 'Exclude furniture',
+      furnBtnBg: nf ? '#D6F23C' : 'transparent',
+      furnBtnFg: '#12130E',
+      furnOpacity: nf ? 0.42 : 1,
+      offerOpen: this.state.offerOpen,
+      offerBody: 'Furnishing this unit with us is what turns a finished shell into a photographed, rent-ready handover — one delivery window, one warranty, one contact. Keep it in the scope now and we take 5% off the furniture line.',
+      onToggleFurniture: () => {
+        if (this.state.noFurniture) { this.persist('keep'); this.setState({ noFurniture: false }); }
+        else this.setState({ offerOpen: true });
+      },
+      onKeep: () => { this.persist('keep5'); this.setState({ offerOpen: false, noFurniture: false, discount: true }); },
+      onDrop: () => { this.persist('none'); this.setState({ offerOpen: false, noFurniture: true, discount: false }); },
+      tabs: tabs,
+      name: st.name, hero: st.hero, blurb: st.blurb, leadTime: st.leadTime, pieceCount: st.pieceCount,
+      swatches: st.swatches, closeups: st.closeups, furniture: st.furniture,
+      materials: materials,
+      summaryTitle: st.name + (nf ? ' — finishing only' : (this.state.discount ? ' — furniture kept, 5% off' : '')) + ' · ' + keys.length + ' of ' + st.materials.length + ' material choices made',
+      summaryLine: keys.length === 0
+        ? 'Select a material in each group, or take the standard specification as-is.'
+        : (reqs === 0 ? 'All selections are held in stock — no lead-time risk.' : reqs + ' selection(s) need a quote against your unit.'),
+      reset: () => this.setState({ picks: {} })
+    };
+  }
+}
+</script>
+</body>
+</html>
