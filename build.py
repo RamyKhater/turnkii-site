@@ -154,7 +154,18 @@ def meta_block(slug, title, desc):
     ) + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
-    )
+    ) + sections_style()
+
+
+def sections_style():
+    """Hide any site vertical/section the admin disabled (sections flag = false).
+    Elements opt in with data-vertical="<name>" (sections + nav links)."""
+    secs = (CONTENT or {}).get("sections") or {}
+    off = [k for k, v in secs.items() if v is False]
+    if not off:
+        return ""
+    sel = ", ".join(f'[data-vertical="{html.escape(k, quote=True)}"]' for k in off)
+    return f'\n<style>{sel}{{display:none !important}}</style>'
 
 
 # Small runtime helper the page scripts use to overlay published content onto

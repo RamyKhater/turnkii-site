@@ -508,6 +508,16 @@ class Component extends DCLogic {
       if (s.leadTime) d.leadTime = s.leadTime;
       if (s.pieceCount) d.pieceCount = s.pieceCount;
       if (s.palette && s.palette.length) d.swatches = s.palette;
+      if (s.closeups && s.closeups.length) {
+        const defc = d.closeups || [];
+        d.closeups = s.closeups.map(function (c, i) {
+          return {
+            img: window.TK.http(c.image) ? c.image : ((defc[i] && defc[i].img) || d.hero || 'assets/style-warm.jpg'),
+            origin: (defc[i] && defc[i].origin) || 'center',
+            label: c.label || '', note: c.note || ''
+          };
+        });
+      }
     });
     const st = all[this.state.key] || all.warm;
     const picks = this.state.picks;
