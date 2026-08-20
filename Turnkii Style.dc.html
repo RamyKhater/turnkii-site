@@ -507,6 +507,7 @@ class Component extends DCLogic {
       if (s.fromPrice) d.from = s.fromPrice;
       if (s.leadTime) d.leadTime = s.leadTime;
       if (s.pieceCount) d.pieceCount = s.pieceCount;
+      if (window.TK.http(s.image)) d.hero = s.image;
       if (s.palette && s.palette.length) d.swatches = s.palette;
       if (s.closeups && s.closeups.length) {
         const defc = d.closeups || [];

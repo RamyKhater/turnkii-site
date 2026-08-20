@@ -58,7 +58,7 @@
             <p style="font-size: clamp(15px, 1.2vw, 18px); line-height: 1.6; color: rgba(255,255,255,0.84); margin: 0;">Finishing, furniture, kitchens, HVAC, shutters and outdoor — one contract, one programme, photographed handover.</p>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
               <a href="#services" style="background: #D6F23C; color: #12130E; font-weight: 700; font-size: 15px; padding: 15px 24px; border-radius: 999px;" style-hover="background: #FFFFFF;">Build your brief</a>
-              <a href="Turnkii Inspirations.dc.html#board" style="border: 1px solid rgba(255,255,255,0.5); color: #FFFFFF; font-weight: 600; font-size: 15px; padding: 15px 24px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">Browse inspiration</a>
+              <a href="Turnkii Inspirations.dc.html#board" data-vertical="inspiration" style="border: 1px solid rgba(255,255,255,0.5); color: #FFFFFF; font-weight: 600; font-size: 15px; padding: 15px 24px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">Browse inspiration</a>
             </div>
           </div>
         </div>
@@ -278,7 +278,7 @@
         <p style="font-size: 15px; line-height: 1.6; color: rgba(246,243,236,0.55); max-width: 34ch; margin: 0;">Both feed the brief automatically — whatever you save or preview arrives with your request.</p>
       </div>
       <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); margin-top: 30px;">
-        <a href="Turnkii Inspirations.dc.html#board" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
+        <a href="Turnkii Inspirations.dc.html#board" data-vertical="inspiration" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
           <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
             <img src="assets/style-eclectic.jpg" alt="Inspiration board" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
             <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,14,0) 40%, rgba(18,19,14,0.85) 100%);"></div>
@@ -290,7 +290,7 @@
             <div style="font-size: 13.5px; font-weight: 700; color: #D6F23C; margin-top: 14px;">Open the inspiration board →</div>
           </div>
         </a>
-        <a href="Turnkii Visualiser.dc.html" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
+        <a href="Turnkii Visualiser.dc.html" data-vertical="ai_studio" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
           <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
             <img src="assets/style-warm.jpg" alt="Preview studio" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
             <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,19,14,0.72) 0%, rgba(18,19,14,0) 46%, rgba(18,19,14,0) 100%);"></div>
@@ -966,7 +966,7 @@ const STYLES_DEFAULT = [
   { id: 'eclectic', name: 'Layered Eclectic', img: 'assets/style-eclectic.jpg', blurb: 'Teal upholstery, rattan and greenery. Character-led, short-stay friendly.', palette: 'Teal · Rattan · Linen' },
   { id: 'coastal', name: 'Coastal Light', img: 'assets/style-coastal.jpg', blurb: 'Bouclé, pale oak and open doors. Built for Sahel and North Coast.', palette: 'Bone · Oak · Sea green' }
 ];
-const STYLES = (window.TK) ? window.TK.overlay(STYLES_DEFAULT, (window.TK.content || {}).styles, 'id', 'key', { name: 'name', blurb: 'blurb' }) : STYLES_DEFAULT;
+const STYLES = (window.TK) ? window.TK.overlay(STYLES_DEFAULT, (window.TK.content || {}).styles, 'id', 'key', { name: 'name', blurb: 'blurb', img: 'image' }) : STYLES_DEFAULT;
 
 const PACKAGES = [
   { id: 'none', name: 'No furniture', kicker: 'Finishing only', blurb: 'Finishing and fixed works only — you furnish the unit yourself.', items: ['Finishing, joinery and MEP scope', 'Kitchen and wardrobes if selected', 'No loose furniture or styling', 'Handover cleaned and photographed'] },
