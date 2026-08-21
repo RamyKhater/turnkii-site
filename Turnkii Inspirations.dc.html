@@ -45,12 +45,12 @@
     </div>
   </header>
 
-  <section id="board" style="max-width: 1280px; margin: 0 auto; padding: clamp(30px, 4vw, 56px) clamp(16px, 3vw, 40px) 0;">
+  <section id="board" style="max-width: 1280px; margin: 0 auto; padding: clamp(20px, 2.4vw, 32px) clamp(16px, 3vw, 40px) 0;">
     <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
       <div style="flex: 1 1 420px; min-width: 280px;">
         <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Inspiration board</div>
-        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 18ch;">Save what you like. We cost it.</h1>
-        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 50ch; text-wrap: pretty;">Every room here was delivered by our crews &#8212; so a saved image is a real, priced specification, not a mood board.</p>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(27px, 3vw, 40px); line-height: 1.05; letter-spacing: -0.02em; margin: 8px 0 0; max-width: 22ch;">Save what you like. We cost it.</h1>
+        <p style="font-size: 15px; line-height: 1.55; color: #5E5F52; margin: 9px 0 0; max-width: 46ch; text-wrap: pretty;">Every room was delivered by our crews &#8212; a saved image is a real, priced spec, not a mood board.</p>
       </div>
       <sc-if value="{{ hasSaved }}" hint-placeholder-val="{{ false }}">
         <a href="Turnkii v3.dc.html#brief" onClick="{{ onSend }}" style="flex: 0 0 auto; display: flex; align-items: center; gap: 12px; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 10px 10px 10px 18px; font-size: 13.5px; font-weight: 700;">
@@ -160,7 +160,7 @@ const ROOM_GROUPS = [
   ['Outdoor', ['Garden', 'Landscaping', 'Water features', 'Outdoor']],
   ['Details', ['Detail', 'Lighting']]
 ];
-const RATIOS = ['3 / 4', '1 / 1', '4 / 5', '5 / 6', '3 / 4', '1 / 1', '4 / 5', '1 / 1'];
+const RATIOS = ['3 / 4', '1 / 1', '4 / 5', '2 / 3', '1 / 1', '5 / 6', '3 / 4', '4 / 5', '2 / 3', '1 / 1', '4 / 5', '3 / 4'];
 const STORE = 'turnkii.board';
 
 class Component extends DCLogic {
@@ -223,7 +223,7 @@ class Component extends DCLogic {
       shots: visible.map((s, i) => {
         const on = liked.indexOf(s.id) > -1;
         return {
-          img: s.img, zoom: s.zoom, origin: s.origin,
+          img: s.img, zoom: Math.min(s.zoom || 1, 1.35), origin: s.origin,
           ratio: RATIOS[i % RATIOS.length],
           title: s.title,
           meta: s.room + (s.style ? ' · ' + s.style : ''),
