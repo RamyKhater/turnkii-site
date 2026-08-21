@@ -19,6 +19,9 @@
   a { color: #12130E; text-decoration: none; }
   a:hover { color: #6C7A20; }
   ::selection { background: #D6F23C; color: #12130E; }
+  .tk-masonry { column-count: 3; column-gap: 14px; }
+  @media (max-width: 900px) { .tk-masonry { column-count: 2; } }
+  @media (max-width: 560px) { .tk-masonry { column-count: 1; } }
 </style>
 </helmet>
 
@@ -46,42 +49,50 @@
     <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
       <div style="flex: 1 1 420px; min-width: 280px;">
         <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Inspiration board</div>
-        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 20ch;">Save what you like. We cost it.</h1>
-        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 52ch; text-wrap: pretty;">Every room here was delivered by our crews, so a saved image is a real specification — not a mood board we cannot buy.</p>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 18ch;">Save what you like. We cost it.</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 50ch; text-wrap: pretty;">Every room here was delivered by our crews &#8212; so a saved image is a real, priced specification, not a mood board.</p>
       </div>
-      <div style="flex: 0 1 300px; min-width: 240px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 18px;">
-        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">How it works</div>
-        <div style="font-size: 14.5px; line-height: 1.55; color: #5E5F52; margin-top: 10px;">Tap the heart on anything you like, then send the board to your brief — or drop a photo of your own room and see it applied.</div>
+      <sc-if value="{{ hasSaved }}" hint-placeholder-val="{{ false }}">
+        <a href="Turnkii v3.dc.html#brief" onClick="{{ onSend }}" style="flex: 0 0 auto; display: flex; align-items: center; gap: 12px; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 10px 10px 10px 18px; font-size: 13.5px; font-weight: 700;">
+          <span>{{ savedChip }}</span>
+          <span style="background: #D6F23C; color: #12130E; border-radius: 999px; padding: 8px 14px;">Send to brief &#8594;</span>
+        </a>
+      </sc-if>
+    </div>
+
+    <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79; width: 46px; flex: 0 0 auto;">Style</span>
+        <sc-for list="{{ styleFilters }}" as="f" hint-placeholder-count="6">
+          <button type="button" onClick="{{ f.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 600; padding: 9px 15px; border-radius: 999px; border: 1px solid {{ f.bc }}; background: {{ f.bg }}; color: {{ f.fg }};" style-hover="border-color: #12130E;">{{ f.name }}</button>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79; width: 46px; flex: 0 0 auto;">Room</span>
+        <sc-for list="{{ roomFilters }}" as="f" hint-placeholder-count="7">
+          <button type="button" onClick="{{ f.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 600; padding: 9px 15px; border-radius: 999px; border: 1px solid {{ f.bc }}; background: {{ f.bg }}; color: {{ f.fg }};" style-hover="border-color: #12130E;">{{ f.name }}</button>
+        </sc-for>
       </div>
     </div>
 
-    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px;">
-      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
-        <button type="button" onClick="{{ f.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 600; padding: 10px 16px; border-radius: 999px; border: 1px solid #E4E0D5; background: {{ f.bg }}; color: {{ f.fg }};" style-hover="border-color: #12130E;">{{ f.name }}</button>
-      </sc-for>
-    </div>
-
-    <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); align-items: start; margin-top: 20px;">
+    <div class="tk-masonry" style="margin-top: 22px;">
       <sc-for list="{{ shots }}" as="s" hint-placeholder-count="9">
-        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; overflow: hidden;">
-          <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+        <div style="break-inside: avoid; margin-bottom: 14px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid #E4E0D5; background: #FFFFFF;">
+          <div style="position: relative; aspect-ratio: {{ s.ratio }}; background: #EFEBE1;">
             <img src="{{ s.img }}" alt="{{ s.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transform: scale({{ s.zoom }}); transform-origin: {{ s.origin }};" />
-            <button type="button" onClick="{{ s.onLike }}" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-family: Manrope, sans-serif; width: 38px; height: 38px; border-radius: 999px; border: 1px solid rgba(18,19,14,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; background: {{ s.likeBg }}; color: {{ s.likeFg }};" style-hover="border-color: #12130E;">{{ s.likeMark }}</button>
-          </div>
-          <div style="padding: 14px 16px 16px;">
-            <div style="display: flex; gap: 10px; align-items: baseline; justify-content: space-between;">
-              <div style="font-size: 15.5px; font-weight: 600; line-height: 1.3;">{{ s.title }}</div>
-              <div style="font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; color: #8A8A79; flex: 0 0 auto;">{{ s.room }}</div>
-            </div>
-            <div style="font-size: 13px; color: #5E5F52; margin-top: 6px; line-height: 1.45;">{{ s.spec }}</div>
-            <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px;">
-              <a href="{{ s.styleHref }}" style="font-size: 12.5px; font-weight: 700; color: #6C7A20;" style-hover="color: #12130E;">{{ s.style }} →</a>
-              <a href="{{ s.tryHref }}" style="font-size: 12.5px; font-weight: 700; color: #8A8A79; margin-left: auto;" style-hover="color: #12130E;">See in my space</a>
+            <button type="button" onClick="{{ s.onLike }}" aria-label="Save" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-family: Manrope, sans-serif; width: 38px; height: 38px; border-radius: 999px; border: none; display: flex; align-items: center; justify-content: center; font-size: 17px; background: {{ s.likeBg }}; color: {{ s.likeFg }};">{{ s.likeMark }}</button>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 14px 12px; background: linear-gradient(180deg, rgba(18,19,14,0) 0%, rgba(18,19,14,0.78) 100%); color: #FFFFFF;">
+              <div style="font-size: 14.5px; font-weight: 600; line-height: 1.25;">{{ s.title }}</div>
+              <div style="font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.72); margin-top: 3px;">{{ s.meta }}</div>
             </div>
           </div>
         </div>
       </sc-for>
     </div>
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; color: #8A8A79; font-size: 15px; padding: 44px 0;">No rooms match those filters yet.</div>
+    </sc-if>
+  
   </section>
 
   <div style="position: sticky; bottom: 0; z-index: 70; margin-top: 26px;">
@@ -140,11 +151,20 @@ const SHOTS = (window.TK) ? window.TK.merge(SHOTS_DEFAULT, (window.TK.content ||
   function (s, i) {
     return { id: 'tk' + (i + 1), img: window.TK.http(s.image) ? s.image : (SHOT_IMG_BY_STYLE[s.style] || 'assets/style-warm.jpg'), zoom: 1, origin: 'center', room: s.room || 'Living', style: SHOT_STYLE_LABEL[s.style] || s.style || '', key: s.style || 'warm', title: s.title || 'Untitled', spec: s.spec || '' };
   }) : SHOTS_DEFAULT;
-const ROOMS = ['All', 'Living', 'Reception', 'Majlis', 'Kitchen', 'Bedroom', 'Kids room', 'Garden', 'Landscaping', 'Water features', 'Outdoor', 'Detail', 'Lighting'];
+const ROOM_GROUPS = [
+  ['All', null],
+  ['Living', ['Living', 'Reception']],
+  ['Kitchen', ['Kitchen']],
+  ['Bedroom', ['Bedroom', 'Kids room']],
+  ['Majlis', ['Majlis']],
+  ['Outdoor', ['Garden', 'Landscaping', 'Water features', 'Outdoor']],
+  ['Details', ['Detail', 'Lighting']]
+];
+const RATIOS = ['3 / 4', '1 / 1', '4 / 5', '5 / 6', '3 / 4', '1 / 1', '4 / 5', '1 / 1'];
 const STORE = 'turnkii.board';
 
 class Component extends DCLogic {
-  state = { liked: [], room: 'All' };
+  state = { liked: [], room: 'All', style: 'All' };
 
   componentDidMount() {
     try {
@@ -155,10 +175,7 @@ class Component extends DCLogic {
 
   persist(liked) {
     const styles = {};
-    liked.forEach(id => {
-      const s = SHOTS.find(x => x.id === id);
-      if (s) styles[s.key] = (styles[s.key] || 0) + 1;
-    });
+    liked.forEach(id => { const s = SHOTS.find(x => x.id === id); if (s) styles[s.key] = (styles[s.key] || 0) + 1; });
     const top = Object.keys(styles).sort((a, b) => styles[b] - styles[a])[0] || '';
     try { localStorage.setItem(STORE, JSON.stringify({ liked: liked, style: top })); } catch (e) {}
   }
@@ -172,8 +189,13 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { liked, room } = this.state;
-    const visible = SHOTS.filter(s => room === 'All' || s.room === room);
+    const { liked, room, style } = this.state;
+    const styleNames = ['All'].concat(SHOTS.map(s => s.style).filter((v, i, a) => v && a.indexOf(v) === i));
+    const group = ROOM_GROUPS.find(g => g[0] === room);
+    const visible = SHOTS.filter(s =>
+      (style === 'All' || s.style === style) &&
+      (room === 'All' || (group && group[1] && group[1].indexOf(s.room) > -1))
+    );
     const topStyle = (() => {
       const c = {};
       liked.forEach(id => { const s = SHOTS.find(x => x.id === id); if (s) c[s.key] = (c[s.key] || 0) + 1; });
@@ -182,24 +204,36 @@ class Component extends DCLogic {
     })();
 
     return {
-      filters: ROOMS.map(r => ({
-        name: r,
-        bg: r === room ? '#12130E' : '#FFFFFF',
-        fg: r === room ? '#F6F3EC' : '#5E5F52',
-        onPick: () => this.setState({ room: r })
+      hasSaved: liked.length > 0,
+      savedChip: '♥ ' + liked.length + ' saved',
+      styleFilters: styleNames.map(n => ({
+        name: n,
+        bg: n === style ? '#D6F23C' : '#FFFFFF',
+        fg: n === style ? '#12130E' : '#5E5F52',
+        bc: n === style ? '#D6F23C' : '#E4E0D5',
+        onPick: () => this.setState({ style: n })
       })),
-      shots: visible.map(s => {
+      roomFilters: ROOM_GROUPS.map(g => ({
+        name: g[0],
+        bg: g[0] === room ? '#12130E' : '#FFFFFF',
+        fg: g[0] === room ? '#F6F3EC' : '#5E5F52',
+        bc: g[0] === room ? '#12130E' : '#E4E0D5',
+        onPick: () => this.setState({ room: g[0] })
+      })),
+      shots: visible.map((s, i) => {
         const on = liked.indexOf(s.id) > -1;
         return {
-          img: s.img, zoom: s.zoom, origin: s.origin, title: s.title, spec: s.spec, room: s.room, style: s.style,
-          styleHref: 'Turnkii Style.dc.html#' + s.key,
-          tryHref: 'Turnkii Visualiser.dc.html#' + s.key,
-          likeMark: on ? '✓' : '♡',
+          img: s.img, zoom: s.zoom, origin: s.origin,
+          ratio: RATIOS[i % RATIOS.length],
+          title: s.title,
+          meta: s.room + (s.style ? ' · ' + s.style : ''),
+          likeMark: on ? '♥' : '♡',
           likeBg: on ? '#D6F23C' : 'rgba(255,255,255,0.92)',
           likeFg: '#12130E',
           onLike: () => this.like(s.id)
         };
       }),
+      empty: visible.length === 0,
       barTitle: liked.length === 0 ? 'Nothing saved yet' : liked.length + ' saved' + (topStyle ? ' · mostly ' + topStyle : ''),
       barLine: liked.length === 0
         ? 'Tap the heart on any room to build your board.'
