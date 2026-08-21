@@ -7,3 +7,6 @@
 .vercel
 .env*
 !.env.example
+
+# node deps (prerender tooling)
+/node_modules

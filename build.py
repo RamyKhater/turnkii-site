@@ -37,6 +37,16 @@ INTAKE_URL = os.environ.get("TURNKII_INTAKE_URL", "").strip()
 #   TURNKII_CONTENT_URL=https://<admin-host>/api/site-content python3 build.py
 CONTENT_URL = os.environ.get("TURNKII_CONTENT_URL", "").strip()
 
+# Pages that belong to a toggleable vertical — when the admin disables that
+# vertical, the page redirects home (so "hidden" means unreachable, not just
+# missing from the nav).
+PAGE_VERTICAL = {
+    "styles.html": "styles",
+    "marketplace.html": "marketplace",
+    "inspiration.html": "inspiration",
+    "ai-studio.html": "ai_studio",
+}
+
 
 def fetch_content(url):
     """Best-effort fetch of the admin's published content. Never fails the build."""
@@ -249,6 +259,11 @@ def build_page(src_name):
     # bake published hero copy into the landing page (template + snapshot)
     if slug == "index.html":
         text = bake_hero(text)
+
+    # redirect a disabled vertical's page to home (baked from the section flags)
+    vert = PAGE_VERTICAL.get(slug)
+    if vert and CONTENT and (CONTENT.get("sections") or {}).get(vert) is False:
+        text = text.replace("<head>", '<head>\n<script>location.replace("/")</script>', 1)
 
     with open(os.path.join(DIST, slug), "w", encoding="utf-8") as f:
         f.write(text)
