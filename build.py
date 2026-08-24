@@ -130,7 +130,12 @@ def analytics_head():
         "services:svcs,channel:'Website',referrer:document.referrer||undefined,"
         "utmSource:a.utm_source||undefined,utmMedium:a.utm_medium||undefined,utmCampaign:a.utm_campaign||undefined,utmTerm:a.utm_term||undefined,utmContent:a.utm_content||undefined,gclid:a.gclid||undefined,fbclid:a.fbclid||undefined,"
         "message:'Aftercare: '+(svcs.join(', ')||'general enquiry')})}).catch(function(){});}"
-        "var m=document.getElementById('tk-aftercare-msg');if(m)m.textContent='Thanks \\u2014 we will call within one working day.';f.reset();},true);"
+        "var m=document.getElementById('tk-aftercare-msg');if(m)m.textContent='Thanks \\u2014 we will call within one working day.';f.reset();"
+        "var mo=document.getElementById('tk-aftercare-modal');if(mo)setTimeout(function(){mo.style.display='none';},1600);},true);"
+        "document.addEventListener('click',function(e){if(!e.target.closest)return;var op=e.target.closest('[data-aftercare]');var m2=document.getElementById('tk-aftercare-modal');"
+        "if(op&&m2){e.preventDefault();var v=op.getAttribute('data-aftercare');var cbs=m2.querySelectorAll('input[name=svc]');for(var i=0;i<cbs.length;i++)cbs[i].checked=(cbs[i].value===v);"
+        "var mg=document.getElementById('tk-aftercare-msg');if(mg)mg.textContent='';m2.style.display='flex';var nm=m2.querySelector('input[name=name]');if(nm)setTimeout(function(){nm.focus()},60);return;}"
+        "if(m2&&(e.target.closest('[data-aftercare-close]')||e.target===m2))m2.style.display='none';},true);"
         "})();</script>"
     ).replace("__GADS__", gads_conv)
     parts.append(helper)
