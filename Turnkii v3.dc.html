@@ -38,7 +38,7 @@
         <a href="#styles" data-vertical="styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
         <a href="Turnkii Marketplace.dc.html" data-vertical="marketplace" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
         <a href="#financing" data-vertical="financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
-        <a href="https://turnkii-admin.vercel.app/portal/login" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Sign in</a>
+        <a data-track="sign_in_click" href="https://turnkii-admin.vercel.app/portal/login" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Sign in</a>
       </nav>
       <a href="#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B; color: #12130E;">Start a brief</a>
     </div>
@@ -1422,6 +1422,10 @@ class Component extends DCLogic {
       onSubmit: () => {
         if (canSend) {
           this.setState({ submitted: true, tried: false });
+          // Attribution captured on landing (utm_*, gclid, fbclid).
+          var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+          // Fire the conversion event (GA4 generate_lead + mapped pixel events).
+          try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', property_type: s.ptype || '', style: s.style || '', services: (Array.isArray(s.services) ? s.services : []).join(','), budget_plan: s.plan || '' }); } catch (e) {}
           // Best-effort: send the brief to the Turnkii admin intake API.
           // Endpoint is injected at build time via window.TURNKII_INTAKE_URL.
           try {
@@ -1442,6 +1446,13 @@ class Component extends DCLogic {
                   budgetPlan: s.plan || undefined,
                   channel: 'Website',
                   referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                  utmSource: attrib.utm_source || undefined,
+                  utmMedium: attrib.utm_medium || undefined,
+                  utmCampaign: attrib.utm_campaign || undefined,
+                  utmTerm: attrib.utm_term || undefined,
+                  utmContent: attrib.utm_content || undefined,
+                  gclid: attrib.gclid || undefined,
+                  fbclid: attrib.fbclid || undefined,
                   message: s.notes || undefined
                 })
               }).catch(function () {});

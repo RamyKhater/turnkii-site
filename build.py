@@ -48,6 +48,86 @@ PAGE_VERTICAL = {
 }
 
 
+# ── Analytics / marketing tags. All optional — each vendor activates only when
+#    its env var is set at build time. Direct gtag.js (no GTM), plus a small
+#    UTM-attribution + event helper (window.tkTrack) that also fires the matching
+#    pixel conversion events. Set in Vercel → turnkii-site → Environment Variables.
+GA4_ID = os.environ.get("GA4_ID", "").strip()                    # G-XXXXXXXXXX
+META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "").strip()      # numeric
+GADS_ID = os.environ.get("GADS_ID", "").strip()                  # AW-XXXXXXXXX
+GADS_LEAD_LABEL = os.environ.get("GADS_LEAD_LABEL", "").strip()  # conversion label
+TIKTOK_PIXEL_ID = os.environ.get("TIKTOK_PIXEL_ID", "").strip()
+LINKEDIN_PARTNER_ID = os.environ.get("LINKEDIN_PARTNER_ID", "").strip()
+
+
+def analytics_head():
+    """HTML injected into <head> on every page: vendor tags (conditional) + the
+    always-present tkTrack/UTM helper so component event calls never error."""
+    parts = []
+    google_ids = [i for i in (GA4_ID, GADS_ID) if i]
+    if google_ids:
+        configs = "".join(f"gtag('config','{i}');" for i in google_ids)
+        parts.append(
+            f'<script async src="https://www.googletagmanager.com/gtag/js?id={google_ids[0]}"></script>\n'
+            "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
+            "gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});"
+            f"gtag('js',new Date());{configs}</script>"
+        )
+    if META_PIXEL_ID:
+        parts.append(
+            "<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
+            "n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;"
+            "n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;"
+            "s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',"
+            "'https://connect.facebook.net/en_US/fbevents.js');"
+            f"fbq('init','{META_PIXEL_ID}');fbq('track','PageView');</script>"
+        )
+    if TIKTOK_PIXEL_ID:
+        parts.append(
+            "<script>!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];"
+            "ttq.methods=['page','track','identify','instances','debug','on','off','once','ready','alias','group','enableCookie','disableCookie'];"
+            "ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};"
+            "for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);"
+            "ttq.load=function(e,n){var i='https://analytics.tiktok.com/i18n/pixel/events.js';ttq._i=ttq._i||{};"
+            "ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};"
+            "var o=d.createElement('script');o.type='text/javascript';o.async=!0;o.src=i+'?sdkid='+e+'&lib='+t;"
+            "var a=d.getElementsByTagName('script')[0];a.parentNode.insertBefore(o,a)};"
+            f"ttq.load('{TIKTOK_PIXEL_ID}');ttq.page();}}(window,document,'ttq');</script>"
+        )
+    if LINKEDIN_PARTNER_ID:
+        parts.append(
+            f"<script>_linkedin_partner_id='{LINKEDIN_PARTNER_ID}';window._linkedin_data_partner_ids="
+            "window._linkedin_data_partner_ids||[];window._linkedin_data_partner_ids.push(_linkedin_partner_id);"
+            "(function(l){if(!l){window.lintrk=function(a,b){window.lintrk.q.push([a,b])};window.lintrk.q=[]}"
+            "var s=document.getElementsByTagName('script')[0];var b=document.createElement('script');b.type='text/javascript';"
+            "b.async=true;b.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';s.parentNode.insertBefore(b,s)})(window.lintrk);</script>"
+        )
+    gads_conv = (
+        f"if(window.gtag)gtag('event','conversion',{{send_to:'{GADS_ID}/{GADS_LEAD_LABEL}'}});"
+        if (GADS_ID and GADS_LEAD_LABEL) else ""
+    )
+    helper = (
+        "<script>(function(){var qs=new URLSearchParams(location.search);"
+        "var K=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];"
+        "var cur={};K.forEach(function(k){var v=qs.get(k);if(v)cur[k]=v;});"
+        "var s={};try{s=JSON.parse(localStorage.getItem('tk_attrib')||'{}')}catch(e){}"
+        "if(Object.keys(cur).length){cur.ts=Date.now();cur.referrer=document.referrer||'';cur.landing=location.pathname;"
+        "s.last=cur;if(!s.first)s.first=cur;try{localStorage.setItem('tk_attrib',JSON.stringify(s))}catch(e){}}"
+        "window.TK_ATTRIB=s;"
+        "window.tkAttrib=function(){var a=s.last||s.first||{};return{utm_source:a.utm_source,utm_medium:a.utm_medium,"
+        "utm_campaign:a.utm_campaign,utm_term:a.utm_term,utm_content:a.utm_content,gclid:a.gclid,fbclid:a.fbclid};};"
+        "window.tkTrack=function(name,params){params=params||{};try{if(window.gtag)gtag('event',name,params)}catch(e){}"
+        "try{if(name==='generate_lead'){if(window.fbq)fbq('track','Lead');if(window.ttq)ttq.track('SubmitForm');"
+        "if(window.lintrk)lintrk('track');__GADS__}}catch(e){}"
+        "};"
+        "document.addEventListener('click',function(e){if(!e.target.closest)return;var el=e.target.closest('[data-track]');"
+        "if(el){var n=el.getAttribute('data-track');var lbl=el.getAttribute('data-track-label');window.tkTrack(n,lbl?{label:lbl}:{});}},true);"
+        "})();</script>"
+    ).replace("__GADS__", gads_conv)
+    parts.append(helper)
+    return "\n" + "\n".join(parts)
+
+
 def fetch_content(url):
     """Best-effort fetch of the admin's published content. Never fails the build."""
     if not url:
@@ -171,7 +251,7 @@ def meta_block(slug, title, desc):
     ) + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
-    ) + sections_style()
+    ) + sections_style() + analytics_head()
 
 
 def sections_style():
