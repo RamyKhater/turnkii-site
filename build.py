@@ -47,6 +47,13 @@ PAGE_VERTICAL = {
     "ai-studio.html": "ai_studio",
 }
 
+# A/B experiment. These slugs are the "variant B" experience (clean cart-forward
+# homepage + dedicated brief checkout). They are tagged experiment_variant='B' in
+# GA4 (every other page defaults to 'A'), and kept out of the sitemap + noindexed
+# so the control (production) stays the only indexed home. The 50/50 live split is
+# added later at the edge — until then B lives at /b and /brief for testing.
+VARIANT_PAGES = {"b.html", "brief.html"}
+
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
 #    its env var is set at build time. Direct gtag.js (no GTM), plus a small
@@ -60,6 +67,98 @@ TIKTOK_PIXEL_ID = os.environ.get("TIKTOK_PIXEL_ID", "").strip()
 LINKEDIN_PARTNER_ID = os.environ.get("LINKEDIN_PARTNER_ID", "").strip()
 
 
+# ── Brief basket engine. Injected into <head> on every page so the "brief cart"
+#    survives design-canvas re-renders and works site-wide. Selections (services,
+#    style, package, financing plan, saved boards) live in localStorage 'tk_brief';
+#    [data-brief-add] tiles toggle items, a floating bar shows the running count,
+#    and the /brief checkout renders the basket + posts it to the intake API.
+BRIEF_ENGINE = (
+    "<script>(function(){"
+    "var KEY='tk_brief';"
+    "function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]});}"
+    "function read(){var b;try{b=JSON.parse(localStorage.getItem(KEY))}catch(e){}b=b||{};"
+    "b.services=Array.isArray(b.services)?b.services:[];b.board=Array.isArray(b.board)?b.board:[];return b;}"
+    "function write(b){try{localStorage.setItem(KEY,JSON.stringify(b))}catch(e){}emit();}"
+    "function count(){var b=read();return b.services.length+(b.style?1:0)+(b.package?1:0)+(b.plan?1:0)+b.board.length;}"
+    "function hasS(k){return read().services.some(function(s){return s.key===k});}"
+    "var api={read:read,count:count,hasService:hasS,"
+    "addService:function(k,l){var b=read();if(!hasS(k))b.services.push({key:k,label:l});write(b);},"
+    "removeService:function(k){var b=read();b.services=b.services.filter(function(s){return s.key!==k});write(b);},"
+    "toggleService:function(k,l){hasS(k)?api.removeService(k):api.addService(k,l);},"
+    "setStyle:function(k,l,img){var b=read();b.style=(b.style&&b.style.key===k)?null:{key:k,label:l,img:img};write(b);},"
+    "setOne:function(kind,k,l){var b=read();b[kind]=(b[kind]&&b[kind].key===k)?null:{key:k,label:l};write(b);},"
+    "toggleBoard:function(img){var b=read();b.board=b.board.indexOf(img)>=0?b.board.filter(function(x){return x!==img;}):b.board.concat([img]);write(b);},"
+    "remove:function(kind,k){var b=read();if(kind==='service')b.services=b.services.filter(function(s){return s.key!==k;});"
+    "else if(kind==='board')b.board=b.board.filter(function(x){return x!==k;});else b[kind]=null;write(b);},"
+    "clear:function(){write({});}};"
+    "window.tkBrief=api;"
+    "var onBrief=/(?:^|\\/)brief(?:\\.html)?$/.test(location.pathname)||!!document.getElementById('tk-brief-checkout');"
+    # floating count bar (all pages except the checkout itself)
+    "var bar;function ensureBar(){if(onBrief||bar)return;bar=document.createElement('a');bar.id='tk-brief-bar';"
+    "bar.href='brief.html';bar.setAttribute('data-track','brief_bar_open');"
+    "bar.style.cssText='position:fixed;right:16px;bottom:16px;z-index:95;display:none;align-items:center;gap:10px;"
+    "background:#12130E;color:#F6F3EC;border:1px solid rgba(214,242,60,0.5);border-radius:999px;padding:9px 9px 9px 16px;"
+    "font-family:Manrope,system-ui,sans-serif;font-weight:600;font-size:14px;box-shadow:0 8px 26px rgba(0,0,0,0.28);text-decoration:none;';"
+    "bar.innerHTML='<span>Your brief</span><span style=\"background:#D6F23C;color:#12130E;border-radius:999px;padding:5px 11px;font-weight:700;\">'"
+    "+'<span data-brief-count>0</span> \\u2192</span>';document.body.appendChild(bar);}"
+    "function emit(){var n=count();"
+    "var cs=document.querySelectorAll('[data-brief-count]');for(var i=0;i<cs.length;i++)cs[i].textContent=n;"
+    "ensureBar();if(bar)bar.style.display=n>0?'inline-flex':'none';"
+    "var adds=document.querySelectorAll('[data-brief-add]');var b=read();"
+    "for(var j=0;j<adds.length;j++){var el=adds[j];var kind=el.getAttribute('data-brief-kind');var key=el.getAttribute('data-brief-key');"
+    "var on=kind==='service'?b.services.some(function(s){return s.key===key;}):(b[kind]&&b[kind].key===key);"
+    "el.setAttribute('aria-pressed',on?'true':'false');var mk=el.querySelector('[data-brief-mark]');if(mk)mk.textContent=on?'\\u2713':'+';}"
+    "renderItems();try{if(window.dispatchEvent)window.dispatchEvent(new CustomEvent('tkbrief:change',{detail:{count:n}}));}catch(e){}}"
+    # checkout list rendering
+    "function itemRow(kind,key,cat,label){return '<div class=\"tkb-item\"><div class=\"tkb-meta\"><span class=\"tkb-cat\">'+esc(cat)+"
+    "'</span><span class=\"tkb-lbl\">'+esc(label)+'</span></div><button type=\"button\" class=\"tkb-x\" data-brief-remove data-kind=\"'+esc(kind)+"
+    "'\" data-key=\"'+esc(key)+'\" aria-label=\"Remove\">\\u00d7</button></div>';}"
+    "function renderItems(){var host=document.getElementById('tk-brief-items');if(!host)return;var b=read();var r=[];"
+    "b.services.forEach(function(s){r.push(itemRow('service',s.key,'Service',s.label));});"
+    "if(b.style)r.push(itemRow('style',b.style.key,'Style',b.style.label));"
+    "if(b.package)r.push(itemRow('package',b.package.key,'Package',b.package.label));"
+    "if(b.plan)r.push(itemRow('plan',b.plan.key,'Financing',b.plan.label));"
+    "b.board.forEach(function(img){r.push(itemRow('board',img,'Inspiration','Saved room'));});"
+    "var empty=document.getElementById('tk-brief-empty');"
+    "if(!r.length){host.innerHTML='';if(empty)empty.style.display='block';}else{if(empty)empty.style.display='none';host.innerHTML=r.join('');}}"
+    # delegated add/remove
+    "document.addEventListener('click',function(e){if(!e.target.closest)return;"
+    "var a=e.target.closest('[data-brief-add]');if(a){e.preventDefault();var kind=a.getAttribute('data-brief-kind');"
+    "var key=a.getAttribute('data-brief-key');var label=a.getAttribute('data-brief-label')||key;"
+    "if(kind==='service')api.toggleService(key,label);else if(kind==='style')api.setStyle(key,label,a.getAttribute('data-brief-img')||'');"
+    "else api.setOne(kind,key,label);toast('Added to your brief');return;}"
+    "var rm=e.target.closest('[data-brief-remove]');if(rm){e.preventDefault();api.remove(rm.getAttribute('data-kind'),rm.getAttribute('data-key'));return;}"
+    "var cl=e.target.closest('[data-brief-clear]');if(cl){e.preventDefault();api.clear();}},true);"
+    # toast
+    "var tEl;function toast(msg){if(onBrief)return;if(!tEl){tEl=document.createElement('div');"
+    "tEl.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:74px;z-index:96;background:#12130E;color:#F6F3EC;"
+    "font-family:Manrope,system-ui,sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:999px;opacity:0;"
+    "transition:opacity .2s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,0.28);';document.body.appendChild(tEl);}"
+    "tEl.textContent=msg;tEl.style.opacity='1';clearTimeout(tEl._t);tEl._t=setTimeout(function(){tEl.style.opacity='0';},1400);}"
+    # checkout submit
+    "document.addEventListener('submit',function(e){var f=e.target;if(!f||f.id!=='tk-brief-checkout')return;e.preventDefault();"
+    "var b=read();var fd=new FormData(f);var at=window.tkAttrib?window.tkAttrib():{};"
+    "var services=b.services.map(function(s){return s.label;});"
+    "if(window.tkTrack)window.tkTrack('generate_lead',{currency:'EGP',type:'brief',style:b.style?b.style.label:'',services:services.join(','),budget_plan:b.plan?b.plan.label:''});"
+    "var extra=[];if(b.package)extra.push('Package: '+b.package.label);if(b.plan)extra.push('Financing: '+b.plan.label);if(b.board.length)extra.push(b.board.length+' saved rooms');"
+    "var note=(fd.get('notes')||'').trim();if(extra.length)note=(note?note+' \\u2014 ':'')+extra.join('; ');"
+    "var u=window.TURNKII_INTAKE_URL;if(u){fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({"
+    "contactName:fd.get('name'),phone:fd.get('phone'),email:fd.get('email')||undefined,"
+    "propertyType:fd.get('ptype')||undefined,area:Number(fd.get('area'))||undefined,units:Number(fd.get('units'))||undefined,"
+    "location:fd.get('location')||undefined,style:b.style?b.style.key:undefined,services:services,budgetPlan:b.plan?b.plan.label:undefined,"
+    "channel:'Website',referrer:document.referrer||undefined,"
+    "utmSource:at.utm_source||undefined,utmMedium:at.utm_medium||undefined,utmCampaign:at.utm_campaign||undefined,"
+    "utmTerm:at.utm_term||undefined,utmContent:at.utm_content||undefined,gclid:at.gclid||undefined,fbclid:at.fbclid||undefined,"
+    "message:note||undefined})}).catch(function(){});}"
+    "var panel=document.getElementById('tk-brief-panel');var thanks=document.getElementById('tk-brief-thanks');"
+    "if(panel)panel.style.display='none';if(thanks){thanks.style.display='block';try{thanks.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){}}"
+    "api.clear();},true);"
+    "if(document.readyState!=='loading')emit();else document.addEventListener('DOMContentLoaded',emit);"
+    "window.addEventListener('storage',function(e){if(e.key===KEY)emit();});"
+    "})();</script>"
+)
+
+
 def analytics_head():
     """HTML injected into <head> on every page: vendor tags (conditional) + the
     always-present tkTrack/UTM helper so component event calls never error."""
@@ -71,6 +170,7 @@ def analytics_head():
             f'<script async src="https://www.googletagmanager.com/gtag/js?id={google_ids[0]}"></script>\n'
             "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
             "gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});"
+            "gtag('set','user_properties',{experiment_variant:(window.TK_VARIANT||'A')});"
             f"gtag('js',new Date());{configs}</script>"
         )
     if META_PIXEL_ID:
@@ -139,6 +239,7 @@ def analytics_head():
         "})();</script>"
     ).replace("__GADS__", gads_conv)
     parts.append(helper)
+    parts.append(BRIEF_ENGINE)
     return "\n" + "\n".join(parts)
 
 
@@ -228,6 +329,17 @@ PAGES = {
         "Turnkii on mobile — phone-first design",
         "Phone-first Turnkii: responsive mobile web now, native app in phase two — the screens and flows.",
     ),
+    # ── A/B variant B (noindex, out of sitemap) — clean cart-forward experience.
+    "Turnkii B.dc.html": (
+        "b.html",
+        "Turnkii — hand us the keys, get back a finished home",
+        "Turnkey home finishing, furniture and handover. Pick your services and style, build a brief, and get a costed plan within a working day.",
+    ),
+    "Turnkii Brief.dc.html": (
+        "brief.html",
+        "Your brief — Turnkii",
+        "Review the services and style in your Turnkii brief and send it to our team. No payment now; a real person reviews every brief.",
+    ),
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
@@ -244,7 +356,11 @@ def meta_block(slug, title, desc):
     og_img = f"{SITE_ORIGIN}/og-image.png"
     t = html.escape(title, quote=True)
     d = html.escape(desc, quote=True)
-    return f"""<title>{t}</title>
+    # Variant-B pages: tag GA4 events with experiment_variant='B' (set before any
+    # gtag config runs) and keep them out of the index.
+    variant = ('<script>window.TK_VARIANT="B";</script>\n'
+               '<meta name="robots" content="noindex,follow" />\n') if slug in VARIANT_PAGES else ""
+    return variant + f"""<title>{t}</title>
 <meta name="description" content="{d}" />
 <meta name="theme-color" content="{THEME_COLOR}" />
 <link rel="canonical" href="{url}" />
@@ -404,6 +520,8 @@ def write_static():
     # sitemap
     urls = []
     for src, (slug, *_rest) in PAGES.items():
+        if slug in VARIANT_PAGES:
+            continue  # experiment pages stay out of the index
         loc = SITE_ORIGIN + "/" + ("" if slug == "index.html" else slug)
         urls.append(f"  <url><loc>{loc}</loc><changefreq>weekly</changefreq></url>")
     open(os.path.join(DIST, "sitemap.xml"), "w").write(
