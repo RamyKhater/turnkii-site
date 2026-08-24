@@ -122,6 +122,15 @@ def analytics_head():
         "};"
         "document.addEventListener('click',function(e){if(!e.target.closest)return;var el=e.target.closest('[data-track]');"
         "if(el){var n=el.getAttribute('data-track');var lbl=el.getAttribute('data-track-label');window.tkTrack(n,lbl?{label:lbl}:{});}},true);"
+        "document.addEventListener('submit',function(e){var f=e.target;if(!f||f.id!=='tk-aftercare')return;e.preventDefault();"
+        "var fd=new FormData(f);var svcs=fd.getAll('svc');var a=window.tkAttrib?window.tkAttrib():{};"
+        "if(window.tkTrack)window.tkTrack('generate_lead',{type:'aftercare',services:svcs.join(',')});"
+        "var u=window.TURNKII_INTAKE_URL;if(u){fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({"
+        "contactName:fd.get('name'),phone:fd.get('phone'),propertyType:fd.get('unit')||undefined,location:fd.get('location')||undefined,"
+        "services:svcs,channel:'Website',referrer:document.referrer||undefined,"
+        "utmSource:a.utm_source||undefined,utmMedium:a.utm_medium||undefined,utmCampaign:a.utm_campaign||undefined,utmTerm:a.utm_term||undefined,utmContent:a.utm_content||undefined,gclid:a.gclid||undefined,fbclid:a.fbclid||undefined,"
+        "message:'Aftercare: '+(svcs.join(', ')||'general enquiry')})}).catch(function(){});}"
+        "var m=document.getElementById('tk-aftercare-msg');if(m)m.textContent='Thanks \\u2014 we will call within one working day.';f.reset();},true);"
         "})();</script>"
     ).replace("__GADS__", gads_conv)
     parts.append(helper)
