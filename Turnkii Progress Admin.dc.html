@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="progress.js"></script>
+<style>
+  body { margin: 0; background: #EFEBE1; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #12130E; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  ::selection { background: #D6F23C; color: #12130E; }
+  input, textarea, button { font-family: inherit; }
+  ::placeholder { color: #B4B2A4; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh;">
+  <div style="position: sticky; top: 0; z-index: 40; background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 32px); display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+      <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
+      <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Progress console</span>
+      <span style="flex: 1 1 auto; font-size: 13.5px; color: rgba(246,243,236,0.6);">{{ statusLine }}</span>
+      <a href="Turnkii Pricing Admin.dc.html" style="color: rgba(246,243,236,0.72); font-size: 13.5px; font-weight: 600;">Pricing admin</a>
+      <a href="Turnkii Account.dc.html" style="color: rgba(246,243,236,0.72); font-size: 13.5px; font-weight: 600;">Client view</a>
+    </div>
+  </div>
+
+  <div style="max-width: 1400px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 32px) 90px; display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start;">
+
+    <div style="flex: 1 1 260px; min-width: 240px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Projects</div>
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+        <button type="button" onClick="{{ p.onPick }}" style="{{ p.style }}">
+          <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+            <span style="font-size: 15px; font-weight: 700;">{{ p.title }}</span>
+            <span style="{{ p.dotStyle }}">{{ p.pending }}</span>
+          </span>
+          <span style="display: block; font-size: 12.5px; opacity: 0.66; margin-top: 4px;">{{ p.meta }}</span>
+          <span style="display: block; font-size: 11.5px; opacity: 0.55; margin-top: 8px;">{{ p.counts }}</span>
+        </button>
+      </sc-for>
+      <button type="button" onClick="{{ onReset }}" style="cursor: pointer; margin-top: 6px; font-size: 12.5px; font-weight: 700; color: #A34A3A; background: transparent; border: none; padding: 10px; text-align: left;">Reset demo data</button>
+    </div>
+
+    <div style="flex: 3 1 520px; min-width: 320px; display: flex; flex-direction: column; gap: 16px;">
+
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 22px; padding: clamp(18px, 2.4vw, 26px);">
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Send an update</div>
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(24px, 3vw, 34px); line-height: 1.05; margin-top: 8px;">{{ activeTitle }}</div>
+          </div>
+          <div style="font-size: 13px; color: #8A8A79;">{{ activeMeta }}</div>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 20px;">
+          <label style="flex: 2 1 280px; min-width: 240px; display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Stage title</span>
+            <input value="{{ draftStage }}" onInput="{{ onStage }}" placeholder="Week 6 · Kitchen install" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px; font-size: 15px; font-weight: 600; outline: none;" style-focus="border-color: #12130E;" />
+          </label>
+          <label style="flex: 1 1 160px; min-width: 150px; display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Date shown</span>
+            <input value="{{ draftDate }}" onInput="{{ onDate }}" placeholder="25 Aug 2026" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px; font-size: 15px; font-weight: 600; outline: none;" style-focus="border-color: #12130E;" />
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px;">
+          <label style="flex: 2 1 280px; min-width: 240px; display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Milestone this signs off</span>
+            <input value="{{ draftMilestone }}" onInput="{{ onMilestone }}" placeholder="Milestone 4 · Kitchen install" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px; font-size: 15px; font-weight: 600; outline: none;" style-focus="border-color: #12130E;" />
+          </label>
+          <label style="flex: 1 1 160px; min-width: 150px; display: flex; flex-direction: column; gap: 7px;">
+            <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Payment released, EGP</span>
+            <input type="number" value="{{ draftAmount }}" onInput="{{ onAmount }}" placeholder="412000" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px; font-size: 15px; font-weight: 600; outline: none;" style-focus="border-color: #12130E;" />
+          </label>
+        </div>
+
+        <label style="display: flex; flex-direction: column; gap: 7px; margin-top: 14px;">
+          <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Note to the client</span>
+          <textarea value="{{ draftNote }}" onInput="{{ onNote }}" rows="2" placeholder="What was done this week, what happens next." style="width: 100%; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px; font-size: 15px; line-height: 1.5; outline: none; resize: vertical;" style-focus="border-color: #12130E;"></textarea>
+        </label>
+
+        <div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="{{ dropStyle }}">
+          <div style="flex: 1 1 260px; min-width: 220px;">
+            <div style="font-size: 15.5px; font-weight: 700;">{{ uploadTitle }}</div>
+            <div style="font-size: 13px; color: #5E5F52; line-height: 1.5; margin-top: 5px;">{{ uploadHint }}</div>
+          </div>
+          <label style="flex: 0 0 auto; cursor: pointer; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 9px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7.5 8.5 12 4l4.5 4.5"></path><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"></path></svg>
+            <span>Upload photos or video</span>
+            <input type="file" multiple="{{ yes }}" accept="image/*,video/*" onChange="{{ onFiles }}" style="display: none;" />
+          </label>
+        </div>
+
+        <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52; margin-top: 20px;">Media library — tap to attach</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; margin-top: 12px;">
+          <sc-for list="{{ library }}" as="l" hint-placeholder-count="5">
+            <button type="button" onClick="{{ l.onPick }}" style="{{ l.style }}">
+              <span style="display: block; position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+                <span style="{{ l.imgStyle }}"></span>
+                <span style="{{ l.pickedStyle }}">{{ l.pickedMark }}</span>
+              </span>
+              <span style="display: block; padding: 9px 11px; font-size: 12px; font-weight: 600; line-height: 1.3; text-align: left;">{{ l.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 18px; padding-top: 18px; border-top: 1px solid #EFEBE1;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <sc-for list="{{ kinds }}" as="k" hint-placeholder-count="2">
+              <button type="button" onClick="{{ k.onPick }}" style="{{ k.style }}">{{ k.label }}</button>
+            </sc-for>
+          </div>
+          <div style="flex: 1 1 auto; font-size: 13px; color: #8A8A79;">{{ draftSummary }}</div>
+          <button type="button" onClick="{{ onSend }}" style="{{ sendStyle }}">{{ sendLabel }}</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Shared media &amp; client decisions</div>
+
+        <sc-for list="{{ updates }}" as="u" hint-placeholder-count="2">
+          <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; overflow: hidden;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid #EFEBE1; display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline;">
+              <div style="flex: 1 1 260px; min-width: 220px;">
+                <div style="font-size: 16.5px; font-weight: 700;">{{ u.stage }}</div>
+                <div style="font-size: 13px; color: #5E5F52; line-height: 1.5; margin-top: 4px;">{{ u.note }}</div>
+              </div>
+              <div style="flex: 0 0 auto; font-size: 12.5px; color: #8A8A79; font-weight: 600;">{{ u.sentAt }}</div>
+            </div>
+            <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px;">
+              <sc-for list="{{ u.items }}" as="it" hint-placeholder-count="3">
+                <div style="{{ it.cardStyle }}">
+                  <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+                    <div role="img" aria-label="{{ it.caption }}" style="{{ it.imgStyle }}"></div>
+                    <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                    <sc-if value="{{ it.isVideo }}" hint-placeholder-val="{{ false }}">
+                      <span style="position: absolute; right: 10px; bottom: 10px; font-size: 11px; font-weight: 700; background: rgba(18,19,14,0.72); color: #FFFFFF; padding: 5px 9px; border-radius: 999px;">Video</span>
+                    </sc-if>
+                  </div>
+                  <div style="padding: 13px 15px 15px;">
+                    <div style="font-size: 14px; font-weight: 600; line-height: 1.35;">{{ it.caption }}</div>
+                    <div style="font-size: 12.5px; color: {{ it.feedbackColor }}; line-height: 1.45; margin-top: 7px;">{{ it.feedback }}</div>
+                    <div style="display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px;">
+                      <sc-if value="{{ it.needsAction }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ it.onResolve }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; border: none; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 9px 14px;">{{ it.resolveLabel }}</button>
+                      </sc-if>
+                      <button type="button" onClick="{{ it.onUnshare }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; border: 1px solid #E4E0D5; background: #FFFFFF; color: #A34A3A; border-radius: 999px; padding: 9px 14px;">Unshare</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="{{ u.signStyle }}">
+              <div style="flex: 1 1 280px; min-width: 240px;">
+                <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: {{ u.signKickerColor }};">{{ u.signKicker }}</div>
+                <div style="font-size: 15.5px; font-weight: 700; margin-top: 6px;">{{ u.signTitle }}</div>
+                <div style="font-size: 13px; line-height: 1.5; margin-top: 5px; color: {{ u.signBodyColor }};">{{ u.signBody }}</div>
+              </div>
+              <div style="flex: 0 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <span style="{{ u.payStyle }}">{{ u.payLabel }}</span>
+                <sc-if value="{{ u.signed }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{ u.onWithdraw }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; border: 1px solid rgba(246,243,236,0.28); background: transparent; color: rgba(246,243,236,0.75); border-radius: 999px; padding: 10px 15px;">Void certificate</button>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+          <div style="border: 1px dashed #C9C4B4; border-radius: 20px; background: #F6F3EC; padding: 26px; text-align: center;">
+            <div style="font-size: 16px; font-weight: 700;">Nothing shared on this project yet</div>
+            <div style="font-size: 13.5px; color: #5E5F52; margin-top: 6px;">Attach media above and send the first update.</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="flex: 1 1 260px; min-width: 240px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: 22px;">
+        <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">This project</div>
+        <div style="display: flex; flex-direction: column; gap: 11px; margin-top: 16px;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <span style="font-size: 13px; color: rgba(246,243,236,0.55);">{{ s.label }}</span>
+              <span style="font-size: 15px; font-weight: 700; color: {{ s.color }};">{{ s.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: 20px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Action queue</div>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;">
+          <sc-for list="{{ queue }}" as="q" hint-placeholder-count="3">
+            <div style="display: flex; gap: 11px; align-items: flex-start;">
+              <span style="width: 8px; height: 8px; border-radius: 999px; margin-top: 6px; flex: 0 0 auto; background: {{ q.dot }};"></span>
+              <span style="min-width: 0;">
+                <span style="display: block; font-size: 13.5px; font-weight: 700; line-height: 1.35;">{{ q.title }}</span>
+                <span style="display: block; font-size: 12.5px; color: #8A8A79; line-height: 1.45; margin-top: 3px;">{{ q.meta }}</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const bgImg = src => 'position: absolute; inset: 0; width: 100%; height: 100%; background-image: url(' + src + '); background-size: cover; background-position: center;';
+
+const STATUS = {
+  pending: { badge: 'Awaiting client', bg: '#D6F23C', fg: '#12130E', dot: '#D6F23C' },
+  accepted: { badge: 'Accepted', bg: '#12130E', fg: '#D6F23C', dot: '#A3BE2A' },
+  rejected: { badge: 'Rejected', bg: '#A34A3A', fg: '#FFFFFF', dot: '#A34A3A' },
+  reshoot: { badge: 'Re-shoot asked', bg: '#E0B21F', fg: '#12130E', dot: '#E0B21F' }
+};
+
+class Component extends DCLogic {
+  state = { ref: 'TK-2418', stage: '', date: '', note: '', milestone: '', amount: '', picks: [], kind: 'photo', sent: false, uploads: [], dragging: false, uploadMsg: '' };
+
+  /* Reads dropped/selected files into the draft. Data URLs keep the prototype
+     self-contained; production replaces this with a direct-to-storage upload. */
+  ingest(files) {
+    const list = Array.from(files || []).slice(0, 8);
+    if (!list.length) return;
+    const lib = window.TurnkiiProgress.LIBRARY.length;
+    let tooBig = 0;
+    list.forEach(file => {
+      if (file.size > 1.5 * 1024 * 1024) { tooBig++; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState(s => {
+          const uploads = s.uploads.concat([{
+            src: reader.result,
+            label: file.name.replace(/\.[^.]+$/, ''),
+            type: /^video\//.test(file.type) ? 'video' : 'photo',
+            uploaded: true
+          }]);
+          return {
+            uploads,
+            picks: s.picks.concat([lib + uploads.length - 1]),
+            sent: false,
+            uploadMsg: uploads.length + ' file' + (uploads.length === 1 ? '' : 's') + ' ready to send'
+          };
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+    if (tooBig) this.setState({ uploadMsg: tooBig + ' file' + (tooBig === 1 ? '' : 's') + ' skipped — over 1.5 MB. Compress before sending.' });
+    this.setState({ dragging: false });
+  }
+
+  componentDidMount() {
+    const bump = () => this.forceUpdate();
+    window.addEventListener('turnkii-progress-ready', bump);
+    window.addEventListener('turnkii-progress-changed', bump);
+  }
+
+  set(k, v) { this.setState({ [k]: v, sent: false }); }
+
+  renderVals() {
+    const G = window.TurnkiiProgress;
+    if (!G) return { projects: [], updates: [], library: [], kinds: [], stats: [], queue: [], statusLine: 'Loading…', empty: false };
+
+    const st = this.state;
+    const all = G.list();
+    const mine = all.filter(u => u.ref === st.ref);
+    const proj = G.PROJECTS.find(p => p.ref === st.ref) || G.PROJECTS[0];
+    const c = G.counts(st.ref);
+    const total = G.counts();
+    const canSend = !!(st.stage.trim() && st.picks.length);
+    const n = (count, word, plural) => count + ' ' + (count === 1 ? word : (plural || word + 's'));
+
+    const queue = [];
+    all.forEach(u => u.items.forEach(it => {
+      if (it.status === 'rejected' || it.status === 'reshoot') {
+        queue.push({
+          title: (it.status === 'rejected' ? 'Rejected · ' : 'Re-shoot · ') + it.caption,
+          meta: u.ref + ' · ' + it.reason + (it.comment ? ' · “' + it.comment + '”' : ''),
+          dot: STATUS[it.status].dot
+        });
+      }
+    }));
+    all.forEach(u => {
+      if (G.canSign(u)) queue.push({
+        title: 'Awaiting sign-off · ' + (u.milestone || u.stage),
+        meta: u.ref + ' · all items accepted · EGP ' + (u.amount || 0).toLocaleString('en-US') + ' held',
+        dot: '#6C7A20'
+      });
+    });
+    if (!queue.length) queue.push({ title: 'Nothing outstanding', meta: 'Every shared item is accepted or waiting on the client.', dot: '#D3CEC0' });
+
+    return {
+      statusLine: n(total.pending, 'item') + ' awaiting clients · ' + n(total.rejected + total.reshoot, 'item') + ' back with the crew · ' + n(total.signable, 'milestone') + ' ready to sign',
+      projects: G.PROJECTS.map(p => {
+        const pc = G.counts(p.ref);
+        const on = p.ref === st.ref;
+        return {
+          title: p.title, meta: p.property + ' · ' + p.ref,
+          counts: n(pc.updates, 'update') + ' · ' + n(pc.total, 'item'),
+          pending: pc.pending || '',
+          dotStyle: pc.pending
+            ? 'font-size: 11.5px; font-weight: 700; background: #D6F23C; color: #12130E; padding: 4px 9px; border-radius: 999px;'
+            : 'display: none;',
+          onPick: () => this.setState({ ref: p.ref, sent: false }),
+          style: 'cursor: pointer; width: 100%; text-align: left; font-family: Manrope, sans-serif; border-radius: 16px; padding: 16px; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#12130E') + ';'
+        };
+      }),
+
+      activeTitle: proj.title,
+      activeMeta: proj.property + ' · ' + proj.ref + ' · PM ' + proj.pm,
+      draftStage: st.stage, draftDate: st.date, draftNote: st.note,
+      draftMilestone: st.milestone, draftAmount: st.amount,
+      onStage: e => this.set('stage', e.target.value),
+      onDate: e => this.set('date', e.target.value),
+      onNote: e => this.set('note', e.target.value),
+      onMilestone: e => this.set('milestone', e.target.value),
+      onAmount: e => this.set('amount', e.target.value),
+      kinds: [{ id: 'photo', label: 'Photos' }, { id: 'video', label: 'Mark last as video' }].map(k => ({
+        label: k.label, onPick: () => this.set('kind', k.id),
+        style: 'cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border-radius: 999px; padding: 10px 15px; border: 1px solid ' + (st.kind === k.id ? '#12130E' : '#E4E0D5') + '; background: ' + (st.kind === k.id ? '#12130E' : '#FFFFFF') + '; color: ' + (st.kind === k.id ? '#F6F3EC' : '#5E5F52') + ';'
+      })),
+      yes: true,
+      dropStyle: 'display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin-top: 20px; border-radius: 18px; padding: 20px; border: 2px dashed ' + (st.dragging ? '#6C7A20' : '#C9C4B4') + '; background: ' + (st.dragging ? '#F1F6DC' : '#F6F3EC') + ';',
+      uploadTitle: st.dragging ? 'Drop the files here' : 'Upload from this device',
+      uploadHint: st.uploadMsg || 'Drag photos or video in, or pick several from the phone the crew shot on. Up to 1.5 MB per file in this prototype — production posts straight to storage with no cap.',
+      onDragOver: e => { e.preventDefault(); if (!st.dragging) this.setState({ dragging: true }); },
+      onDragLeave: e => { e.preventDefault(); this.setState({ dragging: false }); },
+      onDrop: e => { e.preventDefault(); this.ingest(e.dataTransfer && e.dataTransfer.files); },
+      onFiles: e => this.ingest(e.target.files),
+
+      library: G.LIBRARY.concat(st.uploads).map((l, i) => {
+        const on = st.picks.indexOf(i) !== -1;
+        return {
+          label: l.label + (l.uploaded ? (l.type === 'video' ? ' · uploaded video' : ' · uploaded') : ''),
+          imgStyle: bgImg(l.src),
+          pickedMark: on ? '✓' : '',
+          pickedStyle: on
+            ? 'position: absolute; right: 8px; top: 8px; width: 24px; height: 24px; border-radius: 999px; background: #D6F23C; color: #12130E; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;'
+            : 'display: none;',
+          onPick: () => this.setState(s => ({
+            picks: s.picks.indexOf(i) !== -1 ? s.picks.filter(x => x !== i) : s.picks.concat([i]),
+            sent: false
+          })),
+          style: 'cursor: pointer; padding: 0; overflow: hidden; font-family: Manrope, sans-serif; border-radius: 14px; background: #FFFFFF; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; color: #12130E;'
+        };
+      }),
+      draftSummary: st.sent
+        ? 'Sent — the client sees it in their account now.'
+        : st.picks.length
+          ? st.picks.length + ' item' + (st.picks.length === 1 ? '' : 's') + ' attached' + (st.kind === 'video' ? ', last one as video' : '')
+          : 'Attach at least one photo and name the stage.',
+      sendLabel: st.sent ? 'Sent ✓' : 'Send to client',
+      sendStyle: 'cursor: ' + (canSend ? 'pointer' : 'default') + '; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 999px; padding: 15px 24px; background: ' + (st.sent ? '#A3BE2A' : canSend ? '#D6F23C' : '#E4E0D5') + '; color: ' + (st.sent || canSend ? '#12130E' : '#A5A292') + ';',
+      onSend: () => {
+        if (!canSend) return;
+        const stamp = Date.now();
+        const ok = G.addUpdate({
+          id: 'u-' + stamp, ref: st.ref,
+          stage: st.stage.trim(),
+          sentAt: st.date.trim() || new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+          note: st.note.trim(),
+          milestone: st.milestone.trim() || st.stage.trim(),
+          amount: Number(st.amount) || 0,
+          visit: 'the milestone visit',
+          signoff: null,
+          items: st.picks.map((idx, n) => {
+            const m = G.LIBRARY.concat(st.uploads)[idx];
+            return {
+              id: 'i' + (n + 1),
+              type: m.type === 'video' || (st.kind === 'video' && n === st.picks.length - 1) ? 'video' : 'photo',
+              src: m.src,
+              caption: m.label,
+              status: 'pending', reason: '', comment: ''
+            };
+          })
+        });
+        if (!ok) {
+          this.setState({ sent: false, uploadMsg: 'Not sent — the attached media is too large to store. Remove a video or compress it, then send again.' });
+          return;
+        }
+        this.setState({ stage: '', note: '', date: '', milestone: '', amount: '', picks: [], uploads: [], uploadMsg: '', sent: true });
+      },
+
+      empty: mine.length === 0,
+      updates: mine.map(u => {
+        const signed = !!u.signoff;
+        const signable = G.canSign(u);
+        const acc = G.acceptedCount(u);
+        const money = 'EGP ' + (u.amount || 0).toLocaleString('en-US');
+        return {
+        stage: u.stage, note: u.note, sentAt: u.sentAt, signed,
+        signStyle: 'display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; padding: 16px 20px; border-top: 1px solid #EFEBE1; background: ' + (signed ? '#12130E' : signable ? '#F1F6DC' : '#F6F3EC') + '; color: ' + (signed ? '#F6F3EC' : '#12130E') + ';',
+        signKicker: signed ? 'Client signed · ' + u.signoff.ref : signable ? 'Awaiting client sign-off' : 'Sign-off blocked',
+        signKickerColor: signed ? '#D6F23C' : '#6C7A20',
+        signTitle: u.milestone || u.stage,
+        signBody: signed
+          ? u.signoff.name + ' (' + u.signoff.role + ') · ' + u.signoff.at + ' · ' + n(u.signoff.items, 'item') + ' · ' + u.signoff.method + '. Attach to the invoice for ' + money + '.'
+          : signable
+            ? 'All items accepted — the client can sign. ' + money + ' releases on their signature, then book ' + (u.visit || 'the milestone visit') + '.'
+            : acc + ' of ' + n(u.items.length, 'item') + ' accepted. Clear the rejected and re-shoot items before the client can sign.',
+        signBodyColor: signed ? 'rgba(246,243,236,0.68)' : '#5E5F52',
+        payLabel: signed ? 'Payment cleared · ' + money : 'Payment held · ' + money,
+        payStyle: 'font-size: 12.5px; font-weight: 700; padding: 10px 15px; border-radius: 999px; background: ' + (signed ? '#D6F23C' : '#EFEBE1') + '; color: ' + (signed ? '#12130E' : '#8A8A79') + ';',
+        onWithdraw: () => G.withdrawSignoff(u.id),
+        items: u.items.map(it => {
+          const s = STATUS[it.status] || STATUS.pending;
+          const needs = it.status === 'rejected' || it.status === 'reshoot';
+          return {
+            caption: it.caption, isVideo: it.type === 'video',
+            imgStyle: bgImg(it.src).replace('position: absolute; inset: 0; ', ''),
+            badge: s.badge,
+            badgeStyle: 'position: absolute; left: 10px; top: 10px; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: ' + s.bg + '; color: ' + s.fg + ';',
+            cardStyle: 'border-radius: 14px; overflow: hidden; background: #FFFFFF; border: 1px solid ' + (needs ? '#A34A3A' : '#E4E0D5') + ';',
+            feedback: it.status === 'pending'
+              ? 'No answer yet.'
+              : it.status === 'accepted'
+                ? 'Client accepted.'
+                : it.reason + (it.comment ? ' · “' + it.comment + '”' : ''),
+            feedbackColor: needs ? '#A34A3A' : '#8A8A79',
+            needsAction: needs,
+            resolveLabel: it.status === 'reshoot' ? 'Mark re-shot' : 'Mark redone',
+            onResolve: () => G.mutate(u.id, it.id, { status: 'pending', reason: '', comment: '' }),
+            onUnshare: () => G.removeItem(u.id, it.id)
+          };
+        })
+        };
+      }),
+
+      stats: [
+        { label: 'Updates shared', value: String(c.updates), color: '#F6F3EC' },
+        { label: 'Awaiting client', value: String(c.pending || 0), color: '#D6F23C' },
+        { label: 'Accepted', value: String(c.accepted || 0), color: '#A3BE2A' },
+        { label: 'Rejected', value: String(c.rejected || 0), color: '#E38A78' },
+        { label: 'Re-shoots asked', value: String(c.reshoot || 0), color: '#E0B21F' },
+        { label: 'Milestones signed', value: String(c.signed || 0), color: '#D6F23C' },
+        { label: 'Payment cleared', value: 'EGP ' + (c.valueSigned || 0).toLocaleString('en-US'), color: '#A3BE2A' },
+        { label: 'Payment held', value: 'EGP ' + (c.valueHeld || 0).toLocaleString('en-US'), color: '#E0B21F' }
+      ],
+      queue: queue,
+      onReset: () => { G.reset(); this.setState({ sent: false }); }
+    };
+  }
+}
+
+</script>
+</body>
+</html>

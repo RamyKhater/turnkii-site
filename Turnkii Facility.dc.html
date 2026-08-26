@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  input, select, textarea, button { font-family: inherit; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #F6F3EC; color: #12130E; overflow-x: hidden;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a href="Turnkii Facility.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Facility management</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="#request" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B; color: #12130E;">Request a proposal</a>
+    </div>
+  </header>
+
+  <section id="top" style="background: #151C35; color: #F6F3EC;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(44px, 6vw, 84px) clamp(16px, 3vw, 40px);">
+      <div style="display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start; justify-content: space-between;">
+        <div style="flex: 1 1 480px; min-width: 300px;">
+          <div style="display: flex; gap: 16px; align-items: center;">
+            <span style="flex: 0 0 auto; width: 64px; height: 64px; border-radius: 14px; background: #151C35; border: 1px solid rgba(246,243,236,0.16); overflow: hidden; display: flex; align-items: center; justify-content: center;"><img src="assets/eltizam-logo.jpeg" alt="Eltizam Asset Management" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.55); display: block;" /></span>
+            <span style="font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #7FD4C1; line-height: 1.5;">Facility management<br />powered by Eltizam Asset Management</span>
+          </div>
+          <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 26px 0 0; max-width: 20ch;">One operator for the whole building, not a folder of contractors</h1>
+          <p style="font-size: 16.5px; line-height: 1.65; color: rgba(246,243,236,0.7); margin: 20px 0 0; max-width: 56ch; text-wrap: pretty;">Hard and soft FM, security, landscaping and asset management for residential communities, commercial buildings and corporate headquarters across Greater Cairo and the coast.</p>
+          <div style="display: flex; gap: 26px; flex-wrap: wrap; margin-top: 32px;">
+            <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+              <span style="display: block;">
+                <span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1;">{{ st.n }}</span>
+                <span style="display: block; font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 6px;">{{ st.l }}</span>
+              </span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex: 0 1 360px; min-width: 260px; display: flex; flex-direction: column; gap: 14px;">
+          <sc-for list="{{ promises }}" as="p" hint-placeholder-count="3">
+            <span style="display: flex; gap: 14px; align-items: flex-start; border-left: 2px solid #7FD4C1; padding: 4px 0 4px 18px;">
+              <span style="min-width: 0;">
+                <span style="display: block; font-size: 15.5px; font-weight: 700;">{{ p.t }}</span>
+                <span style="display: block; font-size: 14px; color: rgba(246,243,236,0.62); line-height: 1.55; margin-top: 5px;">{{ p.d }}</span>
+              </span>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scope" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);">
+    <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Scope</div>
+    <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1.04; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 26ch;">What Eltizam takes off your plate</h2>
+    <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 34px;">
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5a4.5 4.5 0 00-6 6L4 14v5h5l4.5-4.5a4.5 4.5 0 006-6l-3 3-3-3z"></path></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Hard FM and MEP</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Chillers, lifts, pumps, generators, fire systems — a planned maintenance calendar with a named engineer per asset.</span>
+        </span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V9l6-5 6 5v12z"></path><path d="M10 21v-6h4v6"></path></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Soft FM and housekeeping</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Common area cleaning, waste, pest control, façade and glazing, staffed to a written scope.</span>
+        </span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Security and access</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Vetted guarding, gate and visitor control, CCTV monitoring, incident logs shared with the board.</span>
+        </span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"></path><path d="M12 11c0-4 3-7 7-7 0 4-3 7-7 7z"></path><path d="M12 14c0-3.3-2.5-6-6-6 0 3.3 2.5 6 6 6z"></path></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Landscaping and water features</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Irrigation, softscape, pools and fountains, with water and chemical consumption tracked.</span>
+        </span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3L5 14h6l-1 7 8-11h-6z"></path></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Energy and consumption</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Metering, tariff review and retrofit proposals with a payback figure before any spend.</span>
+        </span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V6"></path><path d="M4 20h16"></path><rect x="7" y="12" width="3" height="5"></rect><rect x="12.5" y="8" width="3" height="9"></rect><rect x="18" y="10" width="3" height="7"></rect></svg></span>
+        <span style="min-width: 0;">
+          <span style="display: block; font-size: 16px; font-weight: 700;">Reporting and asset registry</span>
+          <span style="display: block; font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 5px;">Monthly pack: SLA performance, spend against budget, open tickets and an asset register with remaining life.</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section id="request" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
+    <div style="max-width: 1000px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);">
+      <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Request a proposal</div>
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1.04; letter-spacing: -0.02em; margin: 14px 0 26px; max-width: 24ch;">Four answers and we can price it</h2>
+
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(22px, 3vw, 34px);">
+          <div style="display: flex; gap: 14px; align-items: flex-start; border-left: 2px solid #2E8C77; padding: 4px 0 4px 18px;">
+            <span style="flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: #E4F3EE; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E8C77" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"></path></svg></span>
+            <span style="min-width: 0;">
+              <span style="display: block; font-size: 17px; font-weight: 700;">Request logged with Eltizam</span>
+              <span style="display: block; font-size: 15px; color: #5E5F52; line-height: 1.6; margin-top: 6px;">{{ summary }}</span>
+              <span style="display: block; font-size: 15px; color: #5E5F52; line-height: 1.6; margin-top: 10px;">Reference {{ ref }} — an asset manager calls {{ contactName }} on {{ contactPhone }} within one business day. A site walk is booked before any figure is quoted.</span>
+            </span>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
+            <button type="button" onClick="{{ onReset }}" style="cursor: pointer; border: 1px solid #12130E; background: transparent; color: #12130E; border-radius: 999px; padding: 13px 22px; font-size: 15px; font-weight: 700;" style-hover="background: #12130E; color: #F6F3EC;">Submit another property</button>
+            <a href="Turnkii v3.dc.html#brief" style="border: 1px solid #E0DCCE; border-radius: 999px; padding: 13px 22px; font-size: 15px; font-weight: 600; color: #5E5F52;" style-hover="border-color: #12130E; color: #12130E;">Back to unit finishing</a>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ form }}" hint-placeholder-val="{{ true }}">
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(22px, 3vw, 34px); display: grid; gap: 26px;">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Service needed</div>
+            <div style="font-size: 13.5px; color: #8A8A79; margin-top: 5px;">Pick as many as apply.</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+              <sc-for list="{{ serviceChoices }}" as="c" hint-placeholder-count="6">
+                <button onClick="{{ c.onPick }}" style="cursor: pointer; border: 1px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 999px; padding: 11px 17px; font-size: 14px; font-weight: 600;">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Property type</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+              <sc-for list="{{ typeChoices }}" as="c" hint-placeholder-count="4">
+                <button onClick="{{ c.onPick }}" style="cursor: pointer; border: 1px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 999px; padding: 11px 17px; font-size: 14px; font-weight: 600;">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Current arrangement</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+              <sc-for list="{{ statusChoices }}" as="c" hint-placeholder-count="3">
+                <button onClick="{{ c.onPick }}" style="cursor: pointer; border: 1px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 999px; padding: 11px 17px; font-size: 14px; font-weight: 600;">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));">
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Property or community</span>
+              <input type="text" placeholder="e.g. Zed East, Tower B" onInput="{{ onSite }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Size (units or m²)</span>
+              <input type="text" placeholder="e.g. 240 units" onInput="{{ onSize }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Location</span>
+              <input type="text" placeholder="e.g. New Cairo" onInput="{{ onLoc }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Contact name</span>
+              <input type="text" placeholder="Board, owner or FM lead" onInput="{{ onName }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Phone</span>
+              <input type="tel" placeholder="01x xxxx xxxx" onInput="{{ onPhone }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Work email</span>
+              <input type="email" placeholder="name@company.com" onInput="{{ onEmail }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+            </label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+            <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Anything specific</span>
+            <textarea rows="3" placeholder="Lift contracts expiring, chiller replacement, security headcount…" onInput="{{ onNotes }}" style="background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%; resize: vertical;" style-focus="border-color: #12130E;"></textarea>
+          </label>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <button type="button" onClick="{{ onSubmit }}" style="cursor: pointer; background: #12130E; color: #F6F3EC; border: none; border-radius: 999px; padding: 15px 28px; font-size: 15px; font-weight: 700;" style-hover="background: #2E8C77;">Send to Eltizam</button>
+            <span style="font-size: 13.5px; color: {{ hintColor }}; max-width: 44ch; line-height: 1.5;">{{ hint }}</span>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section id="faq" style="scroll-margin-top: 104px; max-width: 1000px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) clamp(16px, 3vw, 40px);">
+    <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.6vw, 46px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 28px;">Questions from boards and asset owners</h2>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 16px; overflow: hidden;">
+          <button onClick="{{ f.onToggle }}" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 17px; font-weight: 600; color: #12130E;">
+            <span>{{ f.q }}</span>
+            <span style="font-size: 22px; color: #2E8C77; line-height: 1; flex: 0 0 auto;">{{ f.icon }}</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 0 22px 22px; font-size: 15.5px; line-height: 1.65; color: #5E5F52; max-width: 66ch;">{{ f.a }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(44px, 5vw, 72px) clamp(16px, 3vw, 40px) 34px;">
+      <div style="display: flex; gap: clamp(28px, 5vw, 64px); flex-wrap: wrap; justify-content: space-between; align-items: flex-start;">
+        <div style="flex: 1 1 320px; min-width: 260px;">
+          <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 24px; width: auto; display: block;" />
+          <p style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(24px, 2.6vw, 34px); line-height: 1.1; margin: 22px 0 0; max-width: 24ch;">Units finished by Turnkii. Buildings run by Eltizam.</p>
+          <a href="Turnkii v3.dc.html#brief" style="display: inline-block; margin-top: 22px; background: #D6F23C; color: #12130E; font-weight: 700; font-size: 15px; padding: 14px 24px; border-radius: 999px;" style-hover="background: #E6FF6B; color: #12130E;">Start a unit brief</a>
+        </div>
+        <div style="display: flex; gap: clamp(28px, 4vw, 56px); flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 11px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,236,0.42); font-weight: 700;">Facility management</div>
+            <a href="#scope" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Scope of services</a>
+            <a href="#request" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Request a proposal</a>
+            <a href="#faq" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Questions</a>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 11px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,236,0.42); font-weight: 700;">Talk to us</div>
+            <a href="https://wa.me/201221188000" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">0122 118 8000</a>
+            <a href="mailto:fm@turnkii.app" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">fm@turnkii.app</a>
+            <span style="color: rgba(246,243,236,0.5); font-size: 14.5px; line-height: 1.5;">Sun–Thu, 09:00–18:00<br />New Cairo · Sheikh Zayed · North Coast</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding-top: 22px; border-top: 1px solid rgba(246,243,236,0.12); display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; font-size: 13px; color: rgba(246,243,236,0.42);">
+        <span>© 2026 Turnkii</span>
+        <span>Facility management delivered by Eltizam Asset Management</span>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const SERVICES = ['Full facility management', 'Hard FM / MEP', 'Soft FM / cleaning', 'Security', 'Landscaping & pools', 'Energy & asset registry'];
+const TYPES = ['Residential community', 'Commercial building', 'Corporate HQ', 'Mixed-use / retail'];
+const STATUS = ['No FM in place', 'Self-managed by the board', 'Switching from another operator', 'Contract renewal coming up'];
+const FAQS = [
+  { q: 'Is this the same team that finishes units?', a: 'No. Unit finishing and furnishing is Turnkii. Building-level facility management is delivered by Eltizam Asset Management under its own contract, staff and insurance. One introduction, two separate agreements.' },
+  { q: 'What is the minimum size you take on?', a: 'Roughly 60 units for residential communities, or 3,000 m² of gross floor area for commercial and corporate buildings. Smaller assets are better served by the Turnkii maintenance plans.' },
+  { q: 'How is the fee structured?', a: 'Either a fixed monthly management fee with pass-through costs and an open book, or an all-in per-m² rate. Which one is right depends on the asset condition found at the site walk.' },
+  { q: 'How long does mobilisation take?', a: 'Two to six weeks after signature, depending on staffing and whether an outgoing operator has to be handed over from. A mobilisation plan with dated milestones is part of the proposal.' }
+];
+
+class Component extends DCLogic {
+  state = { svc: [], type: '', status: '', site: '', size: '', loc: '', name: '', phone: '', email: '', notes: '', sent: false, tried: false, ref: '', openFaq: -1 };
+
+  chip(on) {
+    return on
+      ? { bc: '#2E8C77', bg: '#E4F3EE', fg: '#12130E' }
+      : { bc: '#E4E0D5', bg: '#F6F3EC', fg: '#5E5F52' };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const ok = !!(s.svc.length && s.type && s.phone.trim().length > 5);
+    return {
+      stats: [
+        { n: '1,900+', l: 'units under management' },
+        { n: '24/7', l: 'helpdesk and callout' },
+        { n: '48h', l: 'proposal after the site walk' }
+      ],
+      promises: [
+        { t: 'A written SLA, not a retainer', d: 'Response and rectification times per asset class, with credits when they are missed.' },
+        { t: 'Open-book spend', d: 'Every pass-through cost visible to the board, with three quotes on anything above a set threshold.' },
+        { t: 'One monthly report', d: 'SLA performance, spend against budget and open tickets — sent on the fifth of each month.' }
+      ],
+      serviceChoices: SERVICES.map(x => {
+        const c = this.chip(s.svc.includes(x));
+        return { label: x, bc: c.bc, bg: c.bg, fg: c.fg, onPick: () => this.setState(st => ({ svc: st.svc.includes(x) ? st.svc.filter(v => v !== x) : st.svc.concat([x]) })) };
+      }),
+      typeChoices: TYPES.map(x => {
+        const c = this.chip(s.type === x);
+        return { label: x, bc: c.bc, bg: c.bg, fg: c.fg, onPick: () => this.setState({ type: x }) };
+      }),
+      statusChoices: STATUS.map(x => {
+        const c = this.chip(s.status === x);
+        return { label: x, bc: c.bc, bg: c.bg, fg: c.fg, onPick: () => this.setState({ status: x }) };
+      }),
+      onSite: e => this.setState({ site: e.target.value }),
+      onSize: e => this.setState({ size: e.target.value }),
+      onLoc: e => this.setState({ loc: e.target.value }),
+      onName: e => this.setState({ name: e.target.value }),
+      onPhone: e => this.setState({ phone: e.target.value }),
+      onEmail: e => this.setState({ email: e.target.value }),
+      onNotes: e => this.setState({ notes: e.target.value }),
+      hint: ok
+        ? 'Goes to Eltizam Asset Management. It does not touch your Turnkii unit brief.'
+        : (s.tried ? 'Pick at least one service, a property type, and leave a phone number.' : 'Service, property type and a phone number is the minimum.'),
+      hintColor: !ok && s.tried ? '#9A3B24' : '#8A8A79',
+      form: !s.sent,
+      sent: s.sent,
+      summary: [s.svc.join(', '), s.type, s.site, s.size, s.loc].filter(x => x && String(x).trim()).join(' · ') + '.',
+      ref: s.ref,
+      contactName: s.name.trim() || 'you',
+      contactPhone: s.phone.trim(),
+      onSubmit: () => {
+        if (!ok) { this.setState({ tried: true }); return; }
+        this.setState({ sent: true, ref: 'FM-' + String(Date.now()).slice(-6) });
+      },
+      onReset: () => this.setState({ svc: [], type: '', status: '', site: '', size: '', loc: '', notes: '', sent: false, tried: false }),
+      faqs: FAQS.map((f, i) => ({
+        q: f.q, a: f.a, open: s.openFaq === i, icon: s.openFaq === i ? '−' : '+',
+        onToggle: () => this.setState(st => ({ openFaq: st.openFaq === i ? -1 : i }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

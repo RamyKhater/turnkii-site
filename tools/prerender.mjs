@@ -18,7 +18,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
-const PAGES = ["index", "inspiration", "ai-studio", "styles", "marketplace", "account"];
+const PAGES = ["index", "inspiration", "ai-studio", "styles", "marketplace", "account", "facility"];
 
 const run = (cmd, args, env = {}) =>
   execFileSync(cmd, args, { cwd: ROOT, stdio: "inherit", env: { ...process.env, ...env } });

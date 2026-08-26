@@ -13,12 +13,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="./image-slot.js"></script>
+<script src="pricing.js"></script>
+<script src="progress.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   * { box-sizing: border-box; }
   a { color: #12130E; text-decoration: none; }
   a:hover { color: #6C7A20; }
+  input, select, textarea, button { font-family: inherit; }
   ::selection { background: #D6F23C; color: #12130E; }
 </style>
 </helmet>
@@ -31,15 +34,15 @@
         <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
       </a>
       <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
-        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
-        <a data-vertical="inspiration" href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
-        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
-        <a data-vertical="styles" href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
-        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
-        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
-        <a data-track="sign_in_click" href="https://turnkii-admin.vercel.app/portal/login" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Sign in</a>
+        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: #D6F23C; font-size: 14px; font-weight: 700;">My account</a>
       </nav>
-      <a data-track="cta_start_brief" href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
     </div>
   </header>
 
@@ -53,8 +56,8 @@
         </span>
       </div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <a data-track="cta_start_brief" href="Turnkii v3.dc.html#brief" style="background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Add a property</a>
-        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="border: 1px solid #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C;">Shop marketplace</a>
+        <a href="Turnkii v3.dc.html#brief" style="background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Add a property</a>
+        <a href="Turnkii Marketplace.dc.html" style="border: 1px solid #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C;">Shop marketplace</a>
       </div>
     </div>
 
@@ -78,7 +81,7 @@
         <sc-for list="{{ properties }}" as="p" hint-placeholder-count="3">
           <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; overflow: hidden;">
             <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #EFEBE1;">
-              <img src="{{ p.img }}" alt="{{ p.name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              <div role="img" aria-label="{{ p.name }}" style="{{ p.imgStyle }}"></div>
               <div style="position: absolute; left: 12px; top: 12px; background: {{ p.tagBg }}; color: {{ p.tagFg }}; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 6px 11px; border-radius: 999px;">{{ p.status }}</div>
             </div>
             <div style="padding: 18px;">
@@ -95,9 +98,11 @@
                 <span style="font-size: 12.5px; font-weight: 700;">{{ p.pct }}</span>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;">
-                <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">Wish list · {{ p.wish }}</a>
-                <a data-track="cta_start_brief" href="Turnkii v3.dc.html#brief" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">New request</a>
+                <a href="Turnkii Marketplace.dc.html" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">Wish list · {{ p.wish }}</a>
+                <a href="Turnkii v3.dc.html#brief" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">New request</a>
+                <button type="button" onClick="{{ p.onBookCare }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid #12130E; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 9px 14px;" style-hover="background: #D6F23C; color: #12130E;">{{ p.careLabel }}</button>
               </div>
+              <div style="font-size: 12px; color: #8A8A79; margin-top: 10px; line-height: 1.45;">{{ p.careNote }}</div>
             </div>
           </div>
         </sc-for>
@@ -107,18 +112,243 @@
     <sc-if value="{{ onProjects }}" hint-placeholder-val="{{ false }}">
       <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; margin-top: 20px; overflow: hidden;">
         <sc-for list="{{ projects }}" as="j" hint-placeholder-count="4">
-          <div style="display: flex; gap: clamp(12px, 2.4vw, 28px); align-items: center; padding: 18px; border-bottom: 1px solid #EFEBE1; flex-wrap: wrap;">
+          <button type="button" onClick="{{ j.onOpen }}" style="{{ j.rowStyle }}">
             <span style="flex: 0 0 64px; height: 64px; border-radius: 12px; overflow: hidden; background: #EFEBE1;">
-              <img src="{{ j.img }}" alt="{{ j.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              <div role="img" aria-label="{{ j.title }}" style="{{ j.imgStyle }}"></div>
             </span>
             <span style="flex: 2 1 220px; min-width: 0;">
               <span style="display: block; font-size: 16px; font-weight: 700;">{{ j.title }}</span>
               <span style="display: block; font-size: 13px; color: #8A8A79; margin-top: 4px;">{{ j.property }} · {{ j.ref }}</span>
             </span>
             <span style="flex: 1 1 150px; font-size: 13.5px; color: #5E5F52;">{{ j.next }}</span>
-            <span style="flex: 0 0 auto; font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; color: {{ j.tagFg }}; background: {{ j.tagBg }}; padding: 7px 12px; border-radius: 999px;">{{ j.status }}</span>
-          </div>
+            <span style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px;">
+              <span style="{{ j.pendingStyle }}">{{ j.pendingLabel }}</span>
+              <span style="font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; color: {{ j.tagFg }}; background: {{ j.tagBg }}; padding: 7px 12px; border-radius: 999px;">{{ j.status }}</span>
+              <span style="font-size: 15px; color: #8A8A79;">{{ j.chevron }}</span>
+            </span>
+          </button>
         </sc-for>
+      </div>
+
+      <sc-if value="{{ hasUpdates }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Progress updates</div>
+              <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(24px, 3vw, 34px); line-height: 1.05; margin-top: 8px;">{{ openProjectTitle }}</div>
+            </div>
+            <div style="font-size: 13.5px; color: #5E5F52; max-width: 42ch; line-height: 1.5;">{{ openProjectHint }}</div>
+          </div>
+
+          <sc-for list="{{ updates }}" as="u" hint-placeholder-count="2">
+            <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; overflow: hidden;">
+              <div style="padding: 18px 20px; border-bottom: 1px solid #EFEBE1; display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline;">
+                <div style="flex: 1 1 300px; min-width: 240px;">
+                  <div style="font-size: 17px; font-weight: 700;">{{ u.stage }}</div>
+                  <div style="font-size: 13.5px; color: #5E5F52; line-height: 1.5; margin-top: 5px;">{{ u.note }}</div>
+                </div>
+                <div style="flex: 0 0 auto; font-size: 12.5px; color: #8A8A79; font-weight: 600;">{{ u.sentAt }}</div>
+              </div>
+              <div style="padding: 18px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px;">
+                <sc-for list="{{ u.items }}" as="it" hint-placeholder-count="3">
+                  <div style="{{ it.cardStyle }}">
+                    <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #EFEBE1;">
+                      <div role="img" aria-label="{{ it.caption }}" style="{{ it.imgStyle }}"></div>
+                      <sc-if value="{{ it.isVideo }}" hint-placeholder-val="{{ false }}">
+                        <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 999px; background: rgba(18,19,14,0.68); backdrop-filter: blur(6px); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px;">▶</span>
+                      </sc-if>
+                      <span style="{{ it.badgeStyle }}">{{ it.badge }}</span>
+                    </div>
+                    <div style="padding: 14px 16px 16px;">
+                      <div style="font-size: 14.5px; font-weight: 600; line-height: 1.35;">{{ it.caption }}</div>
+
+                      <sc-if value="{{ it.decided }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top: 10px; font-size: 13px; color: #5E5F52; line-height: 1.5;">{{ it.decisionLine }}</div>
+                        <button type="button" onClick="{{ it.onUndo }}" style="margin-top: 12px; cursor: pointer; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; border: 1px solid #E4E0D5; background: #FFFFFF; color: #5E5F52; border-radius: 999px; padding: 9px 14px;">Change my answer</button>
+                      </sc-if>
+
+                      <sc-if value="{{ it.awaiting }}" hint-placeholder-val="{{ true }}">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                          <button type="button" onClick="{{ it.onAccept }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: none; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 10px 16px;">Accept</button>
+                          <button type="button" onClick="{{ it.onReject }}" style="{{ it.rejectBtnStyle }}">Reject</button>
+                          <button type="button" onClick="{{ it.onReshoot }}" style="{{ it.reshootBtnStyle }}">Another shot</button>
+                        </div>
+                      </sc-if>
+
+                      <sc-if value="{{ it.formOpen }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin-top: 14px; border-top: 1px solid #EFEBE1; padding-top: 14px;">
+                          <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ it.formLabel }}</div>
+                          <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 10px;">
+                            <sc-for list="{{ it.reasons }}" as="r" hint-placeholder-count="4">
+                              <button type="button" onClick="{{ r.onPick }}" style="{{ r.style }}">{{ r.label }}</button>
+                            </sc-for>
+                          </div>
+                          <textarea value="{{ it.comment }}" onInput="{{ it.onComment }}" rows="2" placeholder="{{ it.commentPlaceholder }}" style="width: 100%; margin-top: 10px; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 12px; font-size: 14px; line-height: 1.45; color: #12130E; outline: none; resize: vertical;" style-focus="border-color: #12130E;"></textarea>
+                          <div style="display: flex; gap: 8px; margin-top: 10px;">
+                            <button type="button" onClick="{{ it.onSubmit }}" style="{{ it.submitStyle }}">{{ it.submitLabel }}</button>
+                            <button type="button" onClick="{{ it.onCancel }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; background: #FFFFFF; color: #5E5F52; border-radius: 999px; padding: 11px 16px;">Cancel</button>
+                          </div>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="{{ u.signStyle }}">
+                <div style="flex: 1 1 300px; min-width: 240px;">
+                  <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: {{ u.signKickerColor }};">{{ u.signKicker }}</div>
+                  <div style="font-size: 16.5px; font-weight: 700; margin-top: 7px;">{{ u.signTitle }}</div>
+                  <div style="font-size: 13.5px; line-height: 1.55; margin-top: 6px; color: {{ u.signBodyColor }};">{{ u.signBody }}</div>
+                  <sc-if value="{{ u.signed }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); gap: 10px; margin-top: 14px;">
+                      <sc-for list="{{ u.certRows }}" as="r" hint-placeholder-count="4">
+                        <div style="min-width: 0;">
+                          <div style="font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.45);">{{ r.label }}</div>
+                          <div style="font-size: 13px; font-weight: 700; margin-top: 3px;">{{ r.value }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+                <div style="flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; align-items: stretch; min-width: 200px;">
+                  <sc-if value="{{ u.signable }}" hint-placeholder-val="{{ false }}">
+                    <input value="{{ u.signName }}" onInput="{{ u.onSignName }}" placeholder="Type your full name" style="border: 1px solid #C9C4B4; border-radius: 12px; background: #FFFFFF; padding: 13px; font-size: 14.5px; outline: none;" style-focus="border-color: #12130E;" />
+                  </sc-if>
+                  <button type="button" onClick="{{ u.onSign }}" style="{{ u.signBtnStyle }}">{{ u.signBtnLabel }}</button>
+                  <sc-if value="{{ u.signed }}" hint-placeholder-val="{{ false }}">
+                    <a href="Turnkii Account.dc.html#account" style="text-align: center; font-size: 13px; font-weight: 700; color: rgba(246,243,236,0.7); padding: 8px;">Download certificate PDF</a>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ noUpdates }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 14px; border: 1px dashed #C9C4B4; border-radius: 20px; background: #EFEBE1; padding: 26px; text-align: center;">
+          <div style="font-size: 16.5px; font-weight: 700;">No progress media on this project yet</div>
+          <div style="font-size: 13.5px; color: #5E5F52; margin-top: 6px;">Your project manager posts photos and video every Thursday. You will get a WhatsApp when the first set lands.</div>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ onCare }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 20px; display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start;">
+
+        <div style="flex: 2 1 480px; min-width: 300px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(18px, 2.4vw, 26px);">
+          <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Which property</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+            <sc-for list="{{ carePropChips }}" as="c" hint-placeholder-count="3">
+              <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">
+                <span style="display: block; font-size: 14px; font-weight: 700;">{{ c.name }}</span>
+                <span style="display: block; font-size: 11.5px; opacity: 0.7; margin-top: 2px;">{{ c.meta }}</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ careLocked }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 22px; border: 1px dashed #C9C4B4; border-radius: 16px; background: #EFEBE1; padding: 20px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
+              <div style="flex: 1 1 260px; min-width: 220px;">
+                <div style="font-size: 16.5px; font-weight: 700;">{{ careLockTitle }}</div>
+                <div style="font-size: 13.5px; color: #5E5F52; line-height: 1.55; margin-top: 6px;">{{ careLockBody }}</div>
+              </div>
+              <button type="button" onClick="{{ onCareNotify }}" style="{{ careLockCtaStyle }}">{{ careLockCta }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ careUnlocked }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79; margin-top: 26px;">Service</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 10px; margin-top: 12px;">
+            <sc-for list="{{ careTiles }}" as="c" hint-placeholder-count="2">
+              <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">
+                <span style="display: flex; align-items: center; gap: 12px;">
+                  <span style="width: 40px; height: 40px; border-radius: 12px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: {{ c.iconBg }}; color: {{ c.iconFg }};">
+                    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ c.icon }}"></path></svg>
+                  </span>
+                  <span style="flex: 1 1 auto; min-width: 0;">
+                    <span style="display: block; font-size: 16.5px; font-weight: 700;">{{ c.title }}</span>
+                    <span style="display: block; font-size: 12.5px; color: #8A8A79; margin-top: 2px;">{{ c.price }}</span>
+                  </span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 22px;">
+              <div>
+                <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">{{ careScopeLabel }}</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                  <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">How often</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                  <sc-for list="{{ carePlans }}" as="c" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+                <div style="flex: 1 1 280px; min-width: 240px;">
+                  <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Visit day</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    <sc-for list="{{ careDays }}" as="c" hint-placeholder-count="6">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="flex: 1 1 200px; min-width: 180px;">
+                  <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Arrival window</div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    <sc-for list="{{ careSlots }}" as="c" hint-placeholder-count="4">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+          </sc-if>
+        </div>
+
+        <div style="flex: 1 1 320px; min-width: 280px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: 22px;">
+            <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">This visit</div>
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1.05; margin-top: 10px;">{{ carePrice }}</div>
+            <div style="font-size: 13px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px;">{{ carePriceNote }}</div>
+            <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(246,243,236,0.14);">
+              <sc-for list="{{ careSummary }}" as="r" hint-placeholder-count="4">
+                <div style="display: flex; gap: 12px; align-items: baseline; justify-content: space-between;">
+                  <span style="font-size: 12.5px; color: rgba(246,243,236,0.5);">{{ r.label }}</span>
+                  <span style="font-size: 12.5px; font-weight: 700; text-align: right;">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ onCareSubmit }}" style="{{ careCtaStyle }}">{{ careCtaLabel }}</button>
+            <div style="font-size: 12px; color: rgba(246,243,236,0.5); line-height: 1.45; margin-top: 10px; text-align: center;">{{ careHint }}</div>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: 20px;">
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">{{ careHistoryTitle }}</div>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;">
+              <sc-for list="{{ careHistory }}" as="h" hint-placeholder-count="3">
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                  <span style="width: 8px; height: 8px; border-radius: 999px; margin-top: 6px; flex: 0 0 auto; background: {{ h.dot }};"></span>
+                  <span style="min-width: 0;">
+                    <span style="display: block; font-size: 14px; font-weight: 700;">{{ h.title }}</span>
+                    <span style="display: block; font-size: 12.5px; color: #8A8A79; margin-top: 2px;">{{ h.meta }}</span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
       </div>
     </sc-if>
 
@@ -138,29 +368,242 @@
             </div>
           </sc-for>
         </div>
-        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="display: inline-block; margin-top: 16px; background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Continue shopping</a>
+        <a href="Turnkii Marketplace.dc.html" style="display: inline-block; margin-top: 16px; background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Continue shopping</a>
       </div>
     </sc-if>
   </section>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
+const bgImg = src => 'width: 100%; height: 100%; background-image: url(' + src + '); background-size: cover; background-position: center;';
+
+const PROPS = [
+  { id: 'zed', img: 'assets/style-warm.jpg', name: 'Zed East · Apartment 704', short: 'Zed East 704', loc: 'Sheikh Zayed', area: 164, meta: '164 m² · 2 bed · Warm Contemporary', status: 'On site', pct: '62%', stage: 'Finishing — week 5 of 8', wish: '4 items',
+    handedOver: false, opensOn: 'handover, est. 26 Sep 2026', history: [] },
+  { id: 'hacienda', img: 'assets/style-coastal.jpg', name: 'Hacienda Bay · Chalet 12', short: 'Hacienda Bay 12', loc: 'North Coast', area: 120, meta: '120 m² · 3 bed · Coastal Light', status: 'In design', pct: '25%', stage: 'Material selection open', wish: '3 items',
+    handedOver: false, opensOn: 'handover, est. Feb 2027', history: [] },
+  { id: 'katameya', img: 'assets/style-neoclassic.png', name: 'Katameya · Villa', short: 'Katameya Villa', loc: 'New Cairo', area: 430, meta: '430 m² · Reception + family', status: 'Handed over', pct: '100%', stage: 'Warranty until Mar 2027', wish: '2 items',
+    handedOver: true, opensOn: '', history: [
+      { title: 'Deep clean · whole unit', meta: '12 Jun 2026 · EGP 23,650', dot: '#A3BE2A' },
+      { title: 'AC service · 4 units', meta: '3 May 2026 · EGP 750 + parts', dot: '#A3BE2A' },
+      { title: 'Annual plan renewal', meta: 'Due 12 Mar 2027', dot: '#D6C22A' }
+    ] }
+];
+
+const CARE_SLOTS = ['10:00', '12:00', '14:00', '16:00'];
+const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const CARE_SERVICES = [
+  { id: 'cleaning', title: 'Deep cleaning', icon: 'M4 9h12.5l-1.1 10.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8L4 9Z M7.3 9V6.2a3 3 0 0 1 6 0V9 M19.2 4.4h.01 M21 8.2h.01 M19.6 11.8h.01',
+    scopes: ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace'] },
+  { id: 'maintenance', title: 'Maintenance & repairs', icon: 'M12 9.4a2.6 2.6 0 1 0 0 5.2 2.6 2.6 0 0 0 0-5.2Z M12 3.6v3 M12 17.4v3 M3.6 12h3 M17.4 12h3 M6.1 6.1l2.1 2.1 M15.8 15.8l2.1 2.1 M17.9 6.1l-2.1 2.1 M8.2 15.8l-2.1 2.1',
+    scopes: ['AC service', 'Plumbing', 'Electrics', 'Joinery', 'Snag fix', 'Not sure yet'] }
+];
+
 class Component extends DCLogic {
-  state = { tab: 'Properties' };
+  state = { openProject: 'TK-2418', form: null, formReason: '', formComment: '', signName: '', tab: 'Properties', careProp: 'katameya', careService: '', careScope: '', carePlan: 'once', careDay: '', careSlot: '', careDone: false, careNotify: false };
+
+  componentDidMount() {
+    const bump = () => this.forceUpdate();
+    window.addEventListener('turnkii-pricing-ready', bump);
+    window.addEventListener('turnkii-pricing-changed', bump);
+    window.addEventListener('turnkii-progress-ready', bump);
+    window.addEventListener('turnkii-progress-changed', bump);
+  }
+
+  respond(uid, iid, status, reason, comment) {
+    window.TurnkiiProgress.mutate(uid, iid, { status, reason: reason || '', comment: comment || '' });
+    this.setState({ form: null, formReason: '', formComment: '' });
+  }
+
+  get days() {
+    if (!this._days) {
+      const out = [];
+      let i = 1;
+      while (out.length < 6) {
+        const t = new Date(Date.now() + i * 86400000);
+        i++;
+        if (t.getDay() === 5) continue;
+        out.push({ id: t.toISOString().slice(0, 10), label: DOWS[t.getDay()] + ' ' + t.getDate(), long: DOWS[t.getDay()] + ' ' + t.getDate() + ' ' + MONTHS[t.getMonth()] });
+      }
+      this._days = out;
+    }
+    return this._days;
+  }
+
+  set(k, v) { this.setState({ [k]: v }); }
 
   renderVals() {
-    const tab = this.state.tab;
+    const st = this.state;
+    const tab = st.tab;
     const tag = (s) => s === 'On site' ? { tagBg: '#D6F23C', tagFg: '#12130E' }
       : (s === 'In design' ? { tagBg: '#EFEBE1', tagFg: '#5E5F52' } : { tagBg: '#12130E', tagFg: '#F6F3EC' });
 
+    const P = window.TurnkiiPricing;
+    const prop = PROPS.find(p => p.id === st.careProp) || PROPS[0];
+    const svc = CARE_SERVICES.find(x => x.id === st.careService);
+    const q = P ? P.careQuote({ service: st.careService || 'cleaning', area: prop.area, plan: st.carePlan }) : null;
+    const cfg = P ? P.rates().care : null;
+    const dayObj = this.days.find(d => d.id === st.careDay);
+    const ready = !!(prop.handedOver && st.careService && st.careDay && st.careSlot);
+    const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 11px 16px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
+
+    const G = window.TurnkiiProgress;
+    const all = G ? G.list() : [];
+    const openRef = st.openProject;
+    const mine = all.filter(u => u.ref === openRef);
+    const openProj = (G ? G.PROJECTS : []).find(p => p.ref === openRef);
+    const STATUS = {
+      pending: { badge: 'Awaiting you', bg: '#D6F23C', fg: '#12130E' },
+      accepted: { badge: 'Accepted', bg: '#12130E', fg: '#D6F23C' },
+      rejected: { badge: 'Rejected', bg: '#A34A3A', fg: '#FFFFFF' },
+      reshoot: { badge: 'Re-shoot asked', bg: '#E0B21F', fg: '#12130E' }
+    };
+    const pillBtn = (border, color) => 'cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid ' + border + '; background: #FFFFFF; color: ' + color + '; border-radius: 999px; padding: 10px 16px;';
+    const reasonBtn = on => 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 600; border-radius: 10px; padding: 10px 12px; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
+    const form = st.form;
+    const n = (count, word, plural) => count + ' ' + (count === 1 ? word : (plural || word + 's'));
+
     return {
+      openProjectTitle: openProj ? openProj.title : '',
+      openProjectHint: openProj ? openProj.property + ' · ' + openProj.ref + ' · ' + openProj.pm + ' is your project manager' : '',
+      hasUpdates: mine.length > 0,
+      noUpdates: mine.length === 0,
+      updates: mine.map(u => {
+        const signed = !!u.signoff;
+        const signable = G.canSign(u);
+        const acc = G.acceptedCount(u);
+        const money = window.TurnkiiPricing ? window.TurnkiiPricing.full(u.amount || 0) : 'EGP ' + (u.amount || 0);
+        return {
+        stage: u.stage, note: u.note, sentAt: u.sentAt,
+        signed, signable,
+        signStyle: 'display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; padding: 18px 20px; border-top: 1px solid #EFEBE1; background: ' + (signed ? '#12130E' : signable ? '#F1F6DC' : '#F6F3EC') + '; color: ' + (signed ? '#F6F3EC' : '#12130E') + ';',
+        signKicker: signed ? 'Signed off · ' + u.signoff.ref : signable ? 'Ready for your sign-off' : 'Sign-off pending',
+        signKickerColor: signed ? '#D6F23C' : '#6C7A20',
+        signTitle: u.milestone || u.stage,
+        signBody: signed
+          ? u.signoff.name + ' (' + u.signoff.role + ') accepted ' + n(u.signoff.items, 'item') + ' on ' + u.signoff.at + '. This certificate releases ' + money + ' and confirms ' + (u.visit || 'the milestone visit') + '.'
+          : signable
+            ? 'All ' + n(u.items.length, 'item') + ' accepted. Sign off to release ' + money + ' and confirm ' + (u.visit || 'the milestone visit') + '. Your name and the timestamp become the payment document.'
+            : 'Accept every photo and video above to unlock sign-off — ' + acc + ' of ' + n(u.items.length, 'item') + ' done. ' + money + ' stays held until then.',
+        signBodyColor: signed ? 'rgba(246,243,236,0.7)' : '#5E5F52',
+        certRows: signed ? [
+          { label: 'Certificate', value: u.signoff.ref },
+          { label: 'Signed by', value: u.signoff.name },
+          { label: 'Timestamp', value: u.signoff.at },
+          { label: 'Method', value: u.signoff.method }
+        ] : [],
+        signName: st.signName,
+        onSignName: e => this.setState({ signName: e.target.value }),
+        signBtnLabel: signed ? 'Certificate issued ✓' : signable ? 'Sign off this milestone' : 'Locked until all accepted',
+        signBtnStyle: 'cursor: ' + (signable && st.signName.trim().length > 2 ? 'pointer' : 'default') + '; font-family: Manrope, sans-serif; font-size: 14.5px; font-weight: 700; border: none; border-radius: 999px; padding: 15px 22px; background: ' + (signed ? 'rgba(214,242,60,0.16)' : signable && st.signName.trim().length > 2 ? '#D6F23C' : '#E4E0D5') + '; color: ' + (signed ? '#D6F23C' : signable && st.signName.trim().length > 2 ? '#12130E' : '#A5A292') + ';',
+        onSign: () => { if (signable && st.signName.trim().length > 2) { G.sign(u.id, { name: st.signName.trim(), role: 'Owner' }); this.setState({ signName: '' }); } },
+        items: u.items.map(it => {
+          const s = STATUS[it.status] || STATUS.pending;
+          const isForm = form && form.uid === u.id && form.iid === it.id;
+          const isReject = isForm && form.kind === 'rejected';
+          return {
+            caption: it.caption,
+            isVideo: it.type === 'video',
+            imgStyle: bgImg(it.src),
+            badge: s.badge,
+            badgeStyle: 'position: absolute; left: 10px; top: 10px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 6px 11px; border-radius: 999px; background: ' + s.bg + '; color: ' + s.fg + ';',
+            cardStyle: 'border-radius: 16px; overflow: hidden; background: #FFFFFF; border: 1px solid ' + (it.status === 'pending' ? '#12130E' : '#E4E0D5') + ';',
+            decided: it.status !== 'pending' && !isForm,
+            awaiting: it.status === 'pending' && !isForm,
+            decisionLine: it.status === 'accepted'
+              ? 'You accepted this shot.'
+              : (it.status === 'rejected' ? 'Rejected — ' : 'Another shot asked — ') + it.reason + (it.comment ? ' · “' + it.comment + '”' : ''),
+            rejectBtnStyle: pillBtn('#E4B3A8', '#A34A3A'),
+            reshootBtnStyle: pillBtn('#E4E0D5', '#12130E'),
+            onAccept: () => this.respond(u.id, it.id, 'accepted'),
+            onReject: () => this.setState({ form: { uid: u.id, iid: it.id, kind: 'rejected' }, formReason: '', formComment: '' }),
+            onReshoot: () => this.setState({ form: { uid: u.id, iid: it.id, kind: 'reshoot' }, formReason: '', formComment: '' }),
+            onUndo: () => this.respond(u.id, it.id, 'pending'),
+            formOpen: !!isForm,
+            formLabel: isReject ? 'Why are you rejecting this?' : 'What should the next shot show?',
+            reasons: ((G && (isReject ? G.REJECT_REASONS : G.RESHOOT_REASONS)) || []).map(r => ({
+              label: r, style: reasonBtn(st.formReason === r), onPick: () => this.setState({ formReason: r })
+            })),
+            comment: st.formComment,
+            commentPlaceholder: isReject ? 'Anything the crew should know before they redo it' : 'Where exactly should they stand?',
+            onComment: e => this.setState({ formComment: e.target.value }),
+            submitLabel: isReject ? 'Send rejection' : 'Request the shot',
+            submitStyle: 'cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: none; border-radius: 999px; padding: 11px 18px; background: ' + (st.formReason ? (isReject ? '#A34A3A' : '#D6F23C') : '#E4E0D5') + '; color: ' + (st.formReason ? (isReject ? '#FFFFFF' : '#12130E') : '#A5A292') + ';',
+            onSubmit: () => { if (st.formReason) this.respond(u.id, it.id, isReject ? 'rejected' : 'reshoot', st.formReason, st.formComment); },
+            onCancel: () => this.setState({ form: null, formReason: '', formComment: '' })
+          };
+        })
+        };
+      }),
+
+      onCare: tab === 'Care',
+      carePropChips: PROPS.map(p => ({
+        name: p.short, meta: p.area + ' m² · ' + p.loc,
+        onPick: () => this.setState({ careProp: p.id, careDone: false }),
+        style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; border-radius: 14px; padding: 12px 16px; border: 1px solid ' + (st.careProp === p.id ? '#12130E' : '#E4E0D5') + '; background: ' + (st.careProp === p.id ? '#12130E' : '#FFFFFF') + '; color: ' + (st.careProp === p.id ? '#F6F3EC' : '#12130E') + ';'
+      })),
+      careTiles: CARE_SERVICES.map(x => {
+        const on = st.careService === x.id;
+        const price = !cfg ? '—' : (x.id === 'cleaning'
+          ? P.full(Math.max(cfg.cleaningMin, prop.area * cfg.cleaningPerM2)) + ' · ' + prop.area + ' m²'
+          : P.full(cfg.maintenanceCallout) + ' call-out');
+        return {
+          title: x.title, icon: x.icon, price,
+          onPick: () => this.setState({ careService: on ? '' : x.id, careScope: '', careDone: false }),
+          iconBg: on ? '#12130E' : '#EFEBE1',
+          iconFg: on ? '#D6F23C' : '#5E5F52',
+          style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; width: 100%; display: block; border-radius: 16px; padding: 16px; background: #FFFFFF; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; outline: ' + (on ? '1px solid #12130E' : '0') + '; outline-offset: -2px;'
+        };
+      }),
+      careChosen: !!svc,
+      careScopeLabel: st.careService === 'maintenance' ? 'What needs attention' : 'What to clean',
+      careScopes: ((svc && svc.scopes) || []).map(l => ({ label: l, onPick: () => this.set('careScope', l), style: chip(st.careScope === l) })),
+      carePlans: [
+        { id: 'once', label: 'One visit' },
+        { id: 'plan', label: st.careService === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
+      ].map(p => ({ label: p.label, onPick: () => this.set('carePlan', p.id), style: chip(st.carePlan === p.id) })),
+      careDays: this.days.map(d => ({ label: d.label, onPick: () => this.set('careDay', d.id), style: chip(st.careDay === d.id) })),
+      careSlots: CARE_SLOTS.map(t => ({ label: t, onPick: () => this.set('careSlot', t), style: chip(st.careSlot === t) })),
+      carePrice: !prop.handedOver ? 'From handover' : st.careDone ? 'Visit booked' : (q && q.ready ? (st.carePlan === 'plan' ? P.money(q.annual) + ' / yr' : P.full(q.due)) : 'Pick a service'),
+      carePriceNote: !prop.handedOver
+        ? 'Care pricing for this unit is locked in now and applies from ' + prop.opensOn + '.'
+        : st.careDone
+        ? 'Confirmed by WhatsApp. Logged against ' + prop.short + '.'
+        : (q && q.ready
+            ? (st.carePlan === 'plan' ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime' : 'Priced from your saved unit area — nothing to measure.')
+            : 'Your saved properties price themselves; just pick a day.'),
+      careSummary: [
+        { label: 'Property', value: prop.short },
+        { label: 'Area', value: prop.area + ' m²' },
+        { label: 'Service', value: svc ? svc.title : '—' },
+        { label: 'Scope', value: st.careScope || 'to confirm' },
+        { label: 'Visit', value: dayObj && st.careSlot ? dayObj.long + ', ' + st.careSlot : '—' }
+      ],
+      careCtaLabel: !prop.handedOver ? 'Available at handover' : st.careDone ? 'Booked ✓' : 'Confirm the visit',
+      careCtaStyle: 'width: 100%; margin-top: 18px; border: none; border-radius: 14px; padding: 16px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (ready ? 'pointer' : 'default') + '; background: ' + (st.careDone ? '#A3BE2A' : ready ? '#D6F23C' : 'rgba(246,243,236,0.14)') + '; color: ' + (st.careDone || ready ? '#12130E' : 'rgba(246,243,236,0.45)') + ';',
+      onCareSubmit: () => { if (ready && !st.careDone) this.setState({ careDone: true }); },
+      careHint: !prop.handedOver ? 'Pick a handed-over unit above to book now.' : st.careDone ? 'Add another service or switch property above.' : 'No payment now — the crew confirms on arrival.',
+      careHistoryTitle: 'Visit history · ' + prop.short,
+      careHistory: prop.history.length
+        ? prop.history
+        : [{ title: 'No visits yet', meta: prop.handedOver ? 'This unit has no care history.' : 'Care starts at ' + prop.opensOn + '.', dot: '#D3CEC0' }],
+      careUnlocked: prop.handedOver,
+      careLocked: !prop.handedOver,
+      careLockTitle: 'Care opens at handover',
+      careLockBody: prop.short + ' is still ' + prop.status.toLowerCase() + '. Cleaning and maintenance are booked from the handover date — we schedule the first deep clean with the keys, so nothing overlaps the crews still on site.',
+      careLockCta: st.careNotify ? 'We’ll remind you ✓' : 'Remind me at handover',
+      careLockCtaStyle: 'cursor: pointer; font-family: Manrope, sans-serif; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; background: ' + (st.careNotify ? '#A3BE2A' : '#12130E') + '; color: ' + (st.careNotify ? '#12130E' : '#F6F3EC') + ';',
+      onCareNotify: () => this.setState({ careNotify: true }),
+
       stats: [
         { value: '3', label: 'Properties' },
         { value: '2', label: 'Live projects' },
-        { value: '9', label: 'Wish list items' },
-        { value: '5%', label: 'Furniture discount held' }
+        { value: G ? String(G.counts().signed) : '0', label: 'Milestones signed off' },
+        { value: G ? String(G.counts().pending + G.counts().signable) : '0', label: 'Waiting on you' }
       ],
-      tabs: ['Properties', 'Projects', 'Wish list'].map(t => ({
+      tabs: ['Properties', 'Projects', 'Care', 'Wish list'].map(t => ({
         name: t,
         bg: t === tab ? '#12130E' : '#FFFFFF',
         fg: t === tab ? '#F6F3EC' : '#5E5F52',
@@ -169,17 +612,37 @@ class Component extends DCLogic {
       onProperties: tab === 'Properties',
       onProjects: tab === 'Projects',
       onWish: tab === 'Wish list',
-      properties: [
-        { img: 'assets/style-warm.jpg', name: 'Zed East · Apartment 704', loc: 'Sheikh Zayed', meta: '164 m² · 2 bed · Warm Contemporary', status: 'On site', pct: '62%', stage: 'Finishing — week 5 of 8', wish: '4 items' },
-        { img: 'assets/style-coastal.jpg', name: 'Hacienda Bay · Chalet 12', loc: 'North Coast', meta: '120 m² · 3 bed · Coastal Light', status: 'In design', pct: '25%', stage: 'Material selection open', wish: '3 items' },
-        { img: 'assets/style-neoclassic.png', name: 'Katameya · Villa', loc: 'New Cairo', meta: '430 m² · Reception + family', status: 'Handed over', pct: '100%', stage: 'Warranty until Mar 2027', wish: '2 items' }
-      ].map(p => Object.assign({}, p, tag(p.status))),
+      properties: PROPS.map(p => Object.assign({}, p, tag(p.status), {
+        imgStyle: bgImg(p.img),
+        careLabel: p.status === 'Handed over' ? 'Book cleaning or maintenance' : 'Post-handover services',
+        careNote: cfg
+          ? (p.status === 'Handed over'
+              ? 'Deep clean ' + P.full(Math.max(cfg.cleaningMin, p.area * cfg.cleaningPerM2)) + ' · maintenance call-out ' + P.full(cfg.maintenanceCallout)
+              : 'Cleaning and maintenance open at handover — first deep clean is scheduled with the keys.')
+          : '',
+        onBookCare: () => this.setState({ tab: 'Care', careProp: p.id, careService: '', careScope: '', careDay: '', careSlot: '', careDone: false })
+      })),
       projects: [
         { img: 'assets/style-warm.jpg', title: 'Finishing + full FF&E', property: 'Zed East 704', ref: 'TK-2418', next: 'Site visit Thu 14 Aug, 10:00', status: 'On site' },
         { img: 'assets/style-warm.jpg', title: 'Kitchen design & build', property: 'Zed East 704', ref: 'TK-2419', next: 'Cabinetry drawings for approval', status: 'In design' },
         { img: 'assets/style-coastal.jpg', title: 'Chalet furnishing package', property: 'Hacienda Bay 12', ref: 'TK-2402', next: 'Scope and EGP range sent', status: 'In design' },
         { img: 'assets/style-neoclassic.png', title: 'Villa reception fit-out', property: 'Katameya Villa', ref: 'TK-2291', next: 'Snag list closed', status: 'Handed over' }
-      ].map(j => Object.assign({}, j, tag(j.status))),
+      ].map(j => {
+        const c = G ? G.counts(j.ref) : { pending: 0 };
+        const open = j.ref === openRef;
+        return Object.assign({}, j, tag(j.status), {
+          imgStyle: bgImg(j.img),
+          chevron: open ? '⌃' : '⌄',
+          pendingLabel: c.pending ? c.pending + ' to review' : (c.signable ? c.signable + ' to sign off' : (c.signed ? c.signed + ' signed' : '')),
+          pendingStyle: c.pending || c.signable
+            ? 'font-size: 12px; font-weight: 700; background: #D6F23C; color: #12130E; padding: 7px 12px; border-radius: 999px;'
+            : (c.signed
+                ? 'font-size: 12px; font-weight: 700; background: #12130E; color: #D6F23C; padding: 7px 12px; border-radius: 999px;'
+                : 'display: none;'),
+          rowStyle: 'cursor: pointer; width: 100%; font-family: Manrope, sans-serif; text-align: left; color: #12130E; display: flex; gap: clamp(12px, 2.4vw, 28px); align-items: center; padding: 18px; border: none; border-bottom: 1px solid #EFEBE1; border-left: 3px solid ' + (open ? '#D6F23C' : 'transparent') + '; flex-wrap: wrap; background: ' + (open ? '#F6F3EC' : '#FFFFFF') + ';',
+          onOpen: () => this.setState({ openProject: j.ref, form: null })
+        });
+      }),
       wishlist: [
         { slotId: 'wish-sofa', name: 'Bouclé modular sofa, 260cm', property: 'Zed East 704', price: 'On request' },
         { slotId: 'wish-pendant', name: 'Smoked glass pendant cluster', property: 'Katameya Villa', price: 'On request' },

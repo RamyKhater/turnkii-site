@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="pricing.js"></script>
+<style>
+  body { margin: 0; background: #EFEBE1; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #12130E; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  ::selection { background: #D6F23C; color: #12130E; }
+  input, textarea, button { font-family: inherit; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh;">
+  <div style="position: sticky; top: 0; z-index: 40; background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+      <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
+      <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Pricing admin</span>
+      <span style="flex: 1 1 auto; font-size: 13.5px; color: rgba(246,243,236,0.6);">{{ statusLine }}</span>
+      <a href="Turnkii v3.dc.html" style="color: rgba(246,243,236,0.72); font-size: 13.5px; font-weight: 600;">View live site</a>
+    </div>
+  </div>
+
+  <div style="max-width: 1320px; margin: 0 auto; padding: 40px 32px 120px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 44px; align-items: start;">
+
+    <div style="min-width: 0; display: flex; flex-direction: column; gap: 34px;">
+      <div style="max-width: 62ch;">
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 48px; line-height: 1.03; letter-spacing: -0.02em; margin: 0;">Rate card</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0;">Every live estimate on the site is computed from these numbers. Edit, check the sample on the right, then publish. Nothing changes for customers until you press publish.</p>
+      </div>
+
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="6">
+        <div style="border: 1px solid #E4E0D5; border-radius: 20px; background: #FFFFFF; overflow: hidden;">
+          <div style="padding: 18px 22px; border-bottom: 1px solid #E4E0D5; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;">
+            <span style="font-size: 17px; font-weight: 700; letter-spacing: -0.01em;">{{ g.title }}</span>
+            <span style="font-size: 13px; color: #8A8A79;">{{ g.hint }}</span>
+          </div>
+          <div style="padding: 18px 22px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+            <sc-for list="{{ g.fields }}" as="f" hint-placeholder-count="4">
+              <label style="display: flex; flex-direction: column; gap: 7px; min-width: 0;">
+                <span style="font-size: 12.5px; font-weight: 700; color: #5E5F52;">{{ f.label }}</span>
+                <span style="display: flex; align-items: center; gap: 8px; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 0 12px;">
+                  <input type="number" step="{{ f.step }}" value="{{ f.value }}" onChange="{{ f.onChange }}" style="flex: 1 1 auto; min-width: 0; border: none; background: transparent; padding: 13px 0; font-size: 16px; font-weight: 600; color: #12130E; outline: none;" />
+                  <span style="flex: 0 0 auto; font-size: 12px; font-weight: 700; color: #8A8A79;">{{ f.unit }}</span>
+                </span>
+                <span style="font-size: 11.5px; color: #B4B2A4;">{{ f.note }}</span>
+              </label>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+
+      <div style="border: 1px solid #E4E0D5; border-radius: 20px; background: #FFFFFF; padding: 22px;">
+        <div style="font-size: 17px; font-weight: 700;">Published JSON</div>
+        <div style="font-size: 13.5px; color: #5E5F52; line-height: 1.5; margin-top: 6px;">This is exactly what the front end reads. Hand it to engineering to seed the pricing table, or paste a rate card in and apply it.</div>
+        <textarea value="{{ json }}" onChange="{{ onJson }}" rows="10" style="width: 100%; margin-top: 14px; border: 1px solid #E4E0D5; border-radius: 14px; background: #F6F3EC; padding: 16px; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.6; color: #12130E; outline: none; resize: vertical;"></textarea>
+        <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+          <div onClick="{{ onApplyJson }}" style="border: 1px solid #12130E; border-radius: 999px; padding: 12px 20px; font-size: 14px; font-weight: 700; cursor: pointer;">Apply pasted JSON</div>
+          <span style="font-size: 13px; color: {{ jsonColor }}; align-self: center; font-weight: 600;">{{ jsonMsg }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: sticky; top: 116px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="border: 1px solid #E4E0D5; border-radius: 22px; background: #FFFFFF; overflow: hidden;">
+        <div style="padding: 20px 22px; background: #12130E; color: #F6F3EC;">
+          <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Sample estimate</div>
+          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 38px; line-height: 1.05; margin-top: 10px;">{{ sampleRange }}</div>
+          <div style="font-size: 13px; color: rgba(246,243,236,0.62); margin-top: 8px; line-height: 1.5;">{{ sampleBasis }}</div>
+        </div>
+        <div style="padding: 18px 22px; display: flex; flex-direction: column; gap: 11px;">
+          <sc-for list="{{ sampleRows }}" as="r" hint-placeholder-count="5">
+            <div style="display: flex; align-items: baseline; gap: 12px;">
+              <span style="flex: 1 1 auto; font-size: 13.5px; color: #8A8A79;">{{ r.label }}</span>
+              <span style="flex: 0 0 auto; font-size: 13.5px; font-weight: 700;">{{ r.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding: 16px 22px 20px; background: #F6F3EC; display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Test against a real unit</div>
+          <div style="display: flex; gap: 10px;">
+            <label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #8A8A79; font-weight: 600;">Area m²</span>
+              <input type="number" value="{{ testArea }}" onChange="{{ onTestArea }}" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #FFFFFF; padding: 12px; font-size: 15px; font-weight: 600; outline: none;" />
+            </label>
+            <label style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 12px; color: #8A8A79; font-weight: 600;">Units</span>
+              <input type="number" value="{{ testUnits }}" onChange="{{ onTestUnits }}" style="width: 100%; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #FFFFFF; padding: 12px; font-size: 15px; font-weight: 600; outline: none;" />
+            </label>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <sc-for list="{{ testStyles }}" as="t" hint-placeholder-count="5">
+              <div onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="border: 1px solid #E4E0D5; border-radius: 22px; background: #FFFFFF; padding: 20px;">
+        <div onClick="{{ onPublish }}" style="{{ publishStyle }}">{{ publishLabel }}</div>
+        <div onClick="{{ onRevert }}" style="border: 1px solid #C9C4B4; color: #5E5F52; border-radius: 999px; padding: 14px; font-size: 14.5px; font-weight: 700; text-align: center; cursor: pointer; margin-top: 10px;">Discard changes</div>
+        <div onClick="{{ onReset }}" style="color: #A34A3A; border-radius: 999px; padding: 12px; font-size: 13.5px; font-weight: 700; text-align: center; cursor: pointer; margin-top: 4px;">Reset to Turnkii defaults</div>
+        <div style="font-size: 12.5px; color: #8A8A79; line-height: 1.5; margin-top: 12px; text-align: center;">{{ dirtyHint }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const STYLE_NAMES = { warm: "Warm Contemporary", neoclassic: "Neo-Classic Calm", majlis: "Modern Majlis", eclectic: "Layered Eclectic", coastal: "Coastal Light" };
+const PKG_NAMES = { none: "No furniture", essential: "Essential", signature: "Signature", bespoke: "Bespoke" };
+const SVC_NAMES = { kitchen: "Kitchen", hvac: "HVAC", shutters: "Shutters & blinds", outdoor: "Outdoor" };
+const WEEK_NAMES = { finishing: "Finishing", furnishing: "Furnishing", ffe: "FF&E", kitchen: "Kitchen", hvac: "HVAC", shutters: "Shutters", outdoor: "Outdoor" };
+
+class Component extends DCLogic {
+  state = { draft: null, dirty: false, saved: false, testArea: 185, testUnits: 1, testStyle: "warm", json: "", jsonMsg: "", jsonOk: true };
+
+  componentDidMount() {
+    const boot = () => this.setState({ draft: window.TurnkiiPricing.rates() });
+    if (window.TurnkiiPricing) boot();
+    else window.addEventListener("turnkii-pricing-ready", boot, { once: true });
+  }
+
+  d() { return this.state.draft; }
+
+  setFlat(key, v) {
+    this.setState(s => ({ draft: Object.assign({}, s.draft, { [key]: v }), dirty: true, saved: false }));
+  }
+  setNested(group, key, v) {
+    this.setState(s => ({
+      draft: Object.assign({}, s.draft, { [group]: Object.assign({}, s.draft[group], { [key]: v }) }),
+      dirty: true, saved: false,
+    }));
+  }
+
+  field(label, key, unit, step, note) {
+    return {
+      label, unit, note: note || "", step: step || 1,
+      value: this.d()[key],
+      onChange: e => this.setFlat(key, Number(e.target.value)),
+    };
+  }
+  nestedFields(group, names, unit, step, noteFn) {
+    const obj = this.d()[group] || {};
+    return Object.keys(obj).map(k => ({
+      label: (names && names[k]) || k, unit, step: step || 1,
+      note: noteFn ? noteFn(k, obj[k]) : "",
+      value: obj[k],
+      onChange: e => this.setNested(group, k, Number(e.target.value)),
+    }));
+  }
+
+  renderVals() {
+    const P = window.TurnkiiPricing;
+    if (!P || !this.state.draft) {
+      return { groups: [], sampleRows: [], testStyles: [], statusLine: "Loading rate card…", sampleRange: "—", sampleBasis: "", json: "", jsonMsg: "", jsonColor: "#8A8A79", publishLabel: "Publish", publishStyle: "opacity:0.4;border-radius:999px;padding:16px;text-align:center;font-weight:700;background:#E4E0D5;", dirtyHint: "", testArea: 185, testUnits: 1 };
+    }
+    const s = this.state, d = s.draft;
+
+    const est = P.estimate({
+      services: ["finishing", "furnishing", "kitchen", "hvac"],
+      area: Number(s.testArea) || 0, units: Number(s.testUnits) || 1,
+      style: s.testStyle, pkg: "signature", ptype: "Apartment",
+      answered: 8, answerTotal: 8, months: 36,
+    }, d);
+
+    return {
+      statusLine: P.isOverridden() ? "Custom rate card published" : "Running Turnkii default rate card",
+      testArea: s.testArea, testUnits: s.testUnits,
+      onTestArea: e => this.setState({ testArea: e.target.value }),
+      onTestUnits: e => this.setState({ testUnits: e.target.value }),
+      testStyles: Object.keys(d.styleRate).map(k => ({
+        label: STYLE_NAMES[k] || k,
+        onClick: () => this.setState({ testStyle: k }),
+        style: "border-radius: 999px; padding: 9px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; " + (s.testStyle === k ? "background: #12130E; color: #D6F23C;" : "background: #FFFFFF; border: 1px solid #E4E0D5; color: #5E5F52;"),
+      })),
+
+      groups: [
+        { title: "Style rates", hint: "Finishing, EGP per m² at Signature spec", fields: this.nestedFields("styleRate", STYLE_NAMES, "/ m²", 100) },
+        { title: "Furniture packages", hint: "Multiplier applied to the style rate", fields: this.nestedFields("packageFactor", PKG_NAMES, "×", 0.01, (k, v) => "adds " + P.full((d.styleRate[s.testStyle] || 0) * v) + " / m²") },
+        { title: "Add-on services", hint: "EGP per m², on top of finishing", fields: this.nestedFields("serviceRate", SVC_NAMES, "/ m²", 10) },
+        { title: "Property type factor", hint: "Adjusts the finishing rate by unit type", fields: this.nestedFields("propertyFactor", null, "×", 0.01) },
+        { title: "Post-handover care", hint: "Deep cleaning and maintenance visits", fields: this.nestedFields("care", { cleaningPerM2: "Deep clean", cleaningMin: "Minimum visit", maintenanceCallout: "Maintenance call-out", planDiscount: "Yearly plan discount" }, "", 5) },
+        { title: "Programme", hint: "Weeks added per service", fields: [this.field("Mobilisation", "baseWeeks", "wks", 1)].concat(this.nestedFields("serviceWeeks", WEEK_NAMES, "wks", 1)) },
+        {
+          title: "Commercials", hint: "Range width, financing and discounts", fields: [
+            this.field("Minimum job value", "minJob", "EGP", 10000, "floor per unit"),
+            this.field("Indicative APR", "apr", "%", 0.25),
+            this.field("Down payment", "downPct", "%", 1),
+            this.field("Save-ahead discount", "saverDiscount", "%", 0.5),
+            this.field("Multi-unit discount", "multiUnitDiscount", "%", 1, "applies from 5 units"),
+            this.field("Range at full confidence", "spreadFloor", "± %", 1),
+            this.field("Range when unqualified", "spreadCeiling", "± %", 1),
+          ],
+        },
+      ],
+
+      sampleRange: est.ready ? P.range(est.lo, est.hi) : "—",
+      sampleBasis: (STYLE_NAMES[s.testStyle] || s.testStyle) + " · finishing + furniture + kitchen + HVAC · " + s.testArea + " m² · " + (Number(s.testUnits) || 1) + " unit(s)",
+      sampleRows: [
+        { label: "Blended rate", value: P.full(est.rate) + " / m²" },
+        { label: "Per unit", value: P.full(est.perUnit) },
+        { label: "Total", value: P.full(est.total) },
+        { label: "Range width", value: "± " + est.spreadPct + "%" },
+        { label: "Programme", value: est.weeks + " weeks" },
+        { label: "Monthly at 36 mo", value: P.full(est.monthly) },
+        { label: "Save-ahead price", value: P.full(est.saver) },
+      ],
+
+      json: s.json || JSON.stringify(d, null, 2),
+      onJson: e => this.setState({ json: e.target.value, jsonMsg: "" }),
+      jsonMsg: s.jsonMsg, jsonColor: s.jsonOk ? "#6C7A20" : "#A34A3A",
+      onApplyJson: () => {
+        try {
+          const next = JSON.parse(s.json || JSON.stringify(d));
+          this.setState({ draft: next, dirty: true, saved: false, jsonMsg: "Loaded into the editor — publish to go live", jsonOk: true });
+        } catch (err) {
+          this.setState({ jsonMsg: "That is not valid JSON", jsonOk: false });
+        }
+      },
+
+      publishLabel: s.saved ? "Published ✓" : s.dirty ? "Publish rate card" : "No changes to publish",
+      publishStyle: "border-radius: 999px; padding: 16px; font-size: 15.5px; font-weight: 700; text-align: center; cursor: " + (s.dirty ? "pointer" : "default") + "; " + (s.dirty ? "background: #D6F23C; color: #12130E;" : "background: #EFEBE1; color: #A5A292;"),
+      onPublish: () => { if (s.dirty) { P.save(d); this.setState({ dirty: false, saved: true }); } },
+      onRevert: () => this.setState({ draft: P.rates(), dirty: false, saved: false, json: "", jsonMsg: "" }),
+      onReset: () => { P.reset(); this.setState({ draft: P.rates(), dirty: false, saved: false, json: "", jsonMsg: "" }); },
+      dirtyHint: s.dirty ? "Unpublished edits — the live site still shows the old numbers." : "The live site matches this rate card.",
+    };
+  }
+}
+
+</script>
+</body>
+</html>

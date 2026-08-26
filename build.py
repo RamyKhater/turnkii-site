@@ -54,6 +54,10 @@ PAGE_VERTICAL = {
 # added later at the edge — until then B lives at /b and /brief for testing.
 VARIANT_PAGES = {"b.html", "brief.html"}
 
+# Internal admin consoles: reachable by URL, but kept out of the index and the
+# sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html"}
+
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
 #    its env var is set at build time. Direct gtag.js (no GTM), plus a small
@@ -329,6 +333,22 @@ PAGES = {
         "Turnkii on mobile — phone-first design",
         "Phone-first Turnkii: responsive mobile web now, native app in phase two — the screens and flows.",
     ),
+    # ── Facility management (customer-facing, indexed) + internal admin consoles.
+    "Turnkii Facility.dc.html": (
+        "facility.html",
+        "Facility management — Turnkii × Eltizam",
+        "Hard and soft FM, security, landscaping and asset management for residential communities, commercial buildings and corporate HQs — delivered by Eltizam Asset Management.",
+    ),
+    "Turnkii Pricing Admin.dc.html": (
+        "pricing-admin.html",
+        "Pricing admin — Turnkii",
+        "Internal rate card: edit the numbers behind every live estimate, test against a sample unit, and publish.",
+    ),
+    "Turnkii Progress Admin.dc.html": (
+        "progress-admin.html",
+        "Progress console — Turnkii",
+        "Internal media and approvals console: send progress updates, track client decisions, and release milestone payments.",
+    ),
     # ── A/B variant B (noindex, out of sitemap) — clean cart-forward experience.
     "Turnkii B.dc.html": (
         "b.html",
@@ -358,8 +378,13 @@ def meta_block(slug, title, desc):
     d = html.escape(desc, quote=True)
     # Variant-B pages: tag GA4 events with experiment_variant='B' (set before any
     # gtag config runs) and keep them out of the index.
-    variant = ('<script>window.TK_VARIANT="B";</script>\n'
-               '<meta name="robots" content="noindex,follow" />\n') if slug in VARIANT_PAGES else ""
+    if slug in VARIANT_PAGES:
+        variant = ('<script>window.TK_VARIANT="B";</script>\n'
+                   '<meta name="robots" content="noindex,follow" />\n')
+    elif slug in NOINDEX_PAGES:
+        variant = '<meta name="robots" content="noindex,follow" />\n'
+    else:
+        variant = ""
     return variant + f"""<title>{t}</title>
 <meta name="description" content="{d}" />
 <meta name="theme-color" content="{THEME_COLOR}" />
@@ -520,8 +545,8 @@ def write_static():
     # sitemap
     urls = []
     for src, (slug, *_rest) in PAGES.items():
-        if slug in VARIANT_PAGES:
-            continue  # experiment pages stay out of the index
+        if slug in VARIANT_PAGES or slug in NOINDEX_PAGES:
+            continue  # experiment + internal admin pages stay out of the index
         loc = SITE_ORIGIN + "/" + ("" if slug == "index.html" else slug)
         urls.append(f"  <url><loc>{loc}</loc><changefreq>weekly</changefreq></url>")
     open(os.path.join(DIST, "sitemap.xml"), "w").write(
@@ -583,6 +608,10 @@ def main():
     # loads from its <helmet>; ship it so the estimate resolves at runtime.
     if os.path.exists(os.path.join(ROOT, "pricing.js")):
         shutil.copy(os.path.join(ROOT, "pricing.js"), os.path.join(DIST, "pricing.js"))
+    # progress.js — shared media/approvals store (window.TurnkiiProgress) used by
+    # the client account and the internal progress console.
+    if os.path.exists(os.path.join(ROOT, "progress.js")):
+        shutil.copy(os.path.join(ROOT, "progress.js"), os.path.join(DIST, "progress.js"))
     # ios-frame.jsx is fetched at runtime by <x-import> on the mobile page and
     # Babel-transformed with the vendored @babel/standalone (no CDN).
     shutil.copy(os.path.join(ROOT, "ios-frame.jsx"), os.path.join(DIST, "ios-frame.jsx"))
