@@ -579,6 +579,10 @@ def main():
     for f in os.listdir(os.path.join(ROOT, "vendor", "brand")):
         shutil.copy(os.path.join(ROOT, "vendor", "brand", f), os.path.join(DIST, f))
     shutil.copy(os.path.join(ROOT, "image-slot.js"), os.path.join(DIST, "image-slot.js"))
+    # pricing.js — the shared pricing engine (window.TurnkiiPricing) the brief rail
+    # loads from its <helmet>; ship it so the estimate resolves at runtime.
+    if os.path.exists(os.path.join(ROOT, "pricing.js")):
+        shutil.copy(os.path.join(ROOT, "pricing.js"), os.path.join(DIST, "pricing.js"))
     # ios-frame.jsx is fetched at runtime by <x-import> on the mobile page and
     # Babel-transformed with the vendored @babel/standalone (no CDN).
     shutil.copy(os.path.join(ROOT, "ios-frame.jsx"), os.path.join(DIST, "ios-frame.jsx"))
