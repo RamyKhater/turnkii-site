@@ -243,7 +243,8 @@ def analytics_head():
         "})();</script>"
     ).replace("__GADS__", gads_conv)
     parts.append(helper)
-    parts.append(BRIEF_ENGINE)
+    # Variant-B brief-basket engine is excluded from production (see PAGES note).
+    # parts.append(BRIEF_ENGINE)
     return "\n" + "\n".join(parts)
 
 
@@ -349,17 +350,9 @@ PAGES = {
         "Progress console — Turnkii",
         "Internal media and approvals console: send progress updates, track client decisions, and release milestone payments.",
     ),
-    # ── A/B variant B (noindex, out of sitemap) — clean cart-forward experience.
-    "Turnkii B.dc.html": (
-        "b.html",
-        "Turnkii — hand us the keys, get back a finished home",
-        "Turnkey home finishing, furniture and handover. Pick your services and style, build a brief, and get a costed plan within a working day.",
-    ),
-    "Turnkii Brief.dc.html": (
-        "brief.html",
-        "Your brief — Turnkii",
-        "Review the services and style in your Turnkii brief and send it to our team. No payment now; a real person reviews every brief.",
-    ),
+    # ── A/B variant B (Turnkii B.dc.html / Turnkii Brief.dc.html) is intentionally
+    #    NOT built into production — kept in the repo for a later A/B test. Re-add the
+    #    two PAGES entries + `parts.append(BRIEF_ENGINE)` to bring it back.
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
