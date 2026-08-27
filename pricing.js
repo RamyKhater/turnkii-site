@@ -50,10 +50,15 @@
     return out;
   }
 
+  // The published rate card baked in by the admin (window.TURNKII_CONTENT.pricing)
+  // is the source of truth; localStorage stays a local, per-device override on top.
+  function published() {
+    try { return (window.TURNKII_CONTENT && window.TURNKII_CONTENT.pricing) || null; } catch (e) { return null; }
+  }
   function rates() {
     var over = null;
     try { over = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
-    return merge(DEFAULTS, over);
+    return merge(merge(DEFAULTS, published()), over);
   }
 
   function save(next) {
