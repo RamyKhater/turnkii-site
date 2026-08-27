@@ -31,15 +31,15 @@
         <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
       </a>
       <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
-        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
-        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
-        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
-        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
-        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
-        <a href="Turnkii Facility.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Facility management</a>
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="inspiration" href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a data-vertical="styles" href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a data-vertical="facility" href="Turnkii Facility.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Facility management</a>
         <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
       </nav>
-      <a href="#request" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B; color: #12130E;">Request a proposal</a>
+      <a data-track="cta_facility_proposal" href="#request" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B; color: #12130E;">Request a proposal</a>
     </div>
   </header>
 
@@ -242,7 +242,7 @@
           <div style="display: flex; flex-direction: column; gap: 11px;">
             <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(246,243,236,0.42); font-weight: 700;">Facility management</div>
             <a href="#scope" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Scope of services</a>
-            <a href="#request" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Request a proposal</a>
+            <a data-track="cta_facility_proposal" href="#request" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Request a proposal</a>
             <a href="#faq" style="color: rgba(246,243,236,0.78); font-size: 14.5px;" style-hover="color: #D6F23C;">Questions</a>
           </div>
           <div style="display: flex; flex-direction: column; gap: 11px;">
@@ -327,6 +327,26 @@ class Component extends DCLogic {
       onSubmit: () => {
         if (!ok) { this.setState({ tried: true }); return; }
         this.setState({ sent: true, ref: 'FM-' + String(Date.now()).slice(-6) });
+        var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { type: 'facility', services: (s.svc || []).join(','), property_type: s.type || '' }); } catch (e) {}
+        try {
+          var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
+          if (url) {
+            var summary = [s.type, s.site, s.size, s.loc, s.status].filter(function (x) { return x && String(x).trim(); }).join(' · ');
+            fetch(url, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contactName: s.name, phone: s.phone, email: s.email || undefined,
+                propertyType: s.type || undefined, location: s.loc || undefined,
+                services: Array.isArray(s.svc) ? s.svc : [], channel: 'Facility (Eltizam)',
+                referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
+                utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
+                message: 'Facility management enquiry — ' + summary + (s.notes ? (' · ' + s.notes) : '')
+              })
+            }).catch(function () {});
+          }
+        } catch (e) {}
       },
       onReset: () => this.setState({ svc: [], type: '', status: '', site: '', size: '', loc: '', notes: '', sent: false, tried: false }),
       faqs: FAQS.map((f, i) => ({

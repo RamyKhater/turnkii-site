@@ -45,6 +45,7 @@ PAGE_VERTICAL = {
     "marketplace.html": "marketplace",
     "inspiration.html": "inspiration",
     "ai-studio.html": "ai_studio",
+    "facility.html": "facility",
 }
 
 # A/B experiment. These slugs are the "variant B" experience (clean cart-forward

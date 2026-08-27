@@ -34,12 +34,12 @@
         <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
       </a>
       <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
-        <a href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
-        <a href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
-        <a href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
-        <a href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
-        <a href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
-        <a href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="inspiration" href="Turnkii Inspirations.dc.html#board" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Inspiration</a>
+        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">AI studio</a>
+        <a data-vertical="styles" href="Turnkii v3.dc.html#styles" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Styles</a>
+        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Marketplace</a>
+        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
         <a href="Turnkii Account.dc.html#account" style="color: #D6F23C; font-size: 14px; font-weight: 700;">My account</a>
       </nav>
       <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
@@ -57,7 +57,7 @@
       </div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
         <a href="Turnkii v3.dc.html#brief" style="background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Add a property</a>
-        <a href="Turnkii Marketplace.dc.html" style="border: 1px solid #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C;">Shop marketplace</a>
+        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="border: 1px solid #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="background: #D6F23C;">Shop marketplace</a>
       </div>
     </div>
 
@@ -98,7 +98,7 @@
                 <span style="font-size: 12.5px; font-weight: 700;">{{ p.pct }}</span>
               </div>
               <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;">
-                <a href="Turnkii Marketplace.dc.html" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">Wish list · {{ p.wish }}</a>
+                <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">Wish list · {{ p.wish }}</a>
                 <a href="Turnkii v3.dc.html#brief" style="font-size: 13px; font-weight: 700; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 14px;" style-hover="border-color: #12130E;">New request</a>
                 <button type="button" onClick="{{ p.onBookCare }}" style="cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid #12130E; background: #12130E; color: #F6F3EC; border-radius: 999px; padding: 9px 14px;" style-hover="background: #D6F23C; color: #12130E;">{{ p.careLabel }}</button>
               </div>
@@ -368,7 +368,7 @@
             </div>
           </sc-for>
         </div>
-        <a href="Turnkii Marketplace.dc.html" style="display: inline-block; margin-top: 16px; background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Continue shopping</a>
+        <a data-vertical="marketplace" href="Turnkii Marketplace.dc.html" style="display: inline-block; margin-top: 16px; background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Continue shopping</a>
       </div>
     </sc-if>
   </section>
