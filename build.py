@@ -351,6 +351,16 @@ PAGES = {
         "Progress console — Turnkii",
         "Internal media and approvals console: send progress updates, track client decisions, and release milestone payments.",
     ),
+    "Turnkii Privacy.dc.html": (
+        "privacy.html",
+        "Privacy policy — Turnkii",
+        "How Turnkii collects, uses and protects your personal data, and the choices and rights you have.",
+    ),
+    "Turnkii Terms.dc.html": (
+        "terms.html",
+        "Terms & conditions — Turnkii",
+        "The terms that govern your use of the Turnkii website and services.",
+    ),
     # ── A/B variant B (Turnkii B.dc.html / Turnkii Brief.dc.html) is intentionally
     #    NOT built into production — kept in the repo for a later A/B test. Re-add the
     #    two PAGES entries + `parts.append(BRIEF_ENGINE)` to bring it back.
