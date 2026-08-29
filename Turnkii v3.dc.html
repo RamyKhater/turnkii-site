@@ -1499,7 +1499,34 @@ class Component extends DCLogic {
       preBtnBg: preOk ? '#A3BE2A' : '#12130E',
       preBtnFg: preOk ? '#12130E' : '#F6F3EC',
       preHint: 'Soft check only. We share your details with our partner bank solely to size the limit.',
-      onPreSubmit: () => { if (preOk) this.setState({ preApproved: true, plan: s.plan || 'Bank instalments' }); },
+      onPreSubmit: () => {
+        if (!preOk) return;
+        // Optimistic: show the indicative result immediately.
+        this.setState({ preApproved: true, plan: s.plan || 'Bank instalments' });
+        var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'financing', employment: s.preJob || '', value: preLimit }); } catch (e) {}
+        // Send the pre-approval to the admin as a real, manageable lead.
+        try {
+          var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
+          if (url) {
+            fetch(url, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                kind: 'financing',
+                contactName: s.preName, phone: s.prePhone,
+                monthlyIncome: Number(s.preIncome) || undefined,
+                financeAmount: Number(s.preAmount) || undefined,
+                employment: s.preJob || undefined,
+                budgetPlan: s.plan || undefined,
+                channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
+                utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
+                message: 'Financing pre-approval enquiry'
+              })
+            }).catch(function () {});
+          }
+        } catch (e) {}
+      },
       preResultTitle: (s.preName ? s.preName.split(' ')[0] + ', you' : 'You') + ' can borrow up to EGP ' + preLimit.toLocaleString('en-US') + '.',
       preResultBody: 'Indicative only, based on the income you gave and a 35% instalment-to-income ratio. Our team confirms the final limit with the partner bank once your scope is priced — usually within one working day of the survey.',
       preRows: [
