@@ -184,7 +184,7 @@
     </div>
   </section>
 
-  <section id="work" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(50px, 6vw, 90px) clamp(16px, 3vw, 40px);">
+  <section data-vertical="handovers" id="work" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(50px, 6vw, 90px) clamp(16px, 3vw, 40px);">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
       <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.4vw, 56px); line-height: 1.02; letter-spacing: -0.02em; margin: 0;">Recent handovers</h2>
       <p style="font-size: 15px; color: #8A8A79; margin: 0; max-width: 32ch;">Delivered with our own crews and named partner suppliers.</p>
@@ -251,7 +251,7 @@
     </div>
   </section>
 
-  <section style="background: #12130E; color: #F6F3EC; border-bottom: 1px solid rgba(246,243,236,0.12);">
+  <section data-vertical-all="inspiration,ai_studio" style="background: #12130E; color: #F6F3EC; border-bottom: 1px solid rgba(246,243,236,0.12);">
     <div style="max-width: 1280px; margin: 0 auto; padding: clamp(40px, 5vw, 72px) clamp(16px, 3vw, 40px);">
       <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
         <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 4vw, 50px); line-height: 1.03; letter-spacing: -0.02em; margin: 0; max-width: 20ch;">Not sure yet? Two ways to decide.</h2>
@@ -1165,13 +1165,18 @@ const TILES = {
   outdoor: { title: 'Outdoor & landscaping', wks: 4, icon: 'M12 21V11 M3.5 11a8.5 8.5 0 0 1 17 0z M8 21h8' }
 };
 
-const STYLES = [
+const STYLES_DEFAULT = [
   { id: 'warm', name: 'Warm Contemporary', img: 'assets/style-warm.jpg', blurb: 'Sand plaster, cane and walnut. Soft, photogenic, easy to let.', palette: 'Sand · Walnut · Olive' },
   { id: 'neoclassic', name: 'Neo-Classic Calm', img: 'assets/style-neoclassic.png', blurb: 'Panelled walls, brass and sage. Quiet formality for premium units.', palette: 'Chalk · Sage · Brass' },
   { id: 'majlis', name: 'Modern Majlis', img: 'assets/style-majlis.jpg', blurb: 'Deep velvets, gold accent and layered seating for large gatherings.', palette: 'Cocoa · Camel · Gold' },
   { id: 'eclectic', name: 'Layered Eclectic', img: 'assets/style-eclectic.jpg', blurb: 'Teal upholstery, rattan and greenery. Character-led, short-stay friendly.', palette: 'Teal · Rattan · Linen' },
   { id: 'coastal', name: 'Coastal Light', img: 'assets/style-coastal.jpg', blurb: 'Bouclé, pale oak and open doors. Built for the North Coast.', palette: 'Bone · Oak · Sea green' }
 ];
+// Use the admin's published style photos (image) when present; only http-uploaded
+// images override the built-in placeholder — a blank/relative admin value keeps the default.
+const STYLES = (window.TK) ? window.TK.overlay(STYLES_DEFAULT, ((window.TK.content || {}).styles || []).map(function (s) {
+  return (s && window.TK.http(s.image)) ? s : Object.assign({}, s, { image: undefined });
+}), 'id', 'key', { name: 'name', blurb: 'blurb', img: 'image' }) : STYLES_DEFAULT;
 
 const PACKAGES = [
   { id: 'none', name: 'No furniture', kicker: 'Finishing only', blurb: 'Finishing and fixed works only — you furnish the unit yourself.', items: ['Finishing, joinery and MEP scope', 'Kitchen and wardrobes if selected', 'No loose furniture or styling', 'Handover cleaned and photographed'] },

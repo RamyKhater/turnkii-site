@@ -413,15 +413,27 @@ def meta_block(slug, title, desc):
     ) + sections_style() + analytics_head()
 
 
+# Container elements that wrap several verticals: tagged data-vertical-all="a,b"
+# and hidden only when EVERY listed vertical is disabled (so the heading/strip
+# doesn't linger once all its cards are gone). Individual cards inside still use
+# their own data-vertical="a".
+COMBO_VERTICALS = ["inspiration,ai_studio"]
+
+
 def sections_style():
     """Hide any site vertical/section the admin disabled (sections flag = false).
-    Elements opt in with data-vertical="<name>" (sections + nav links)."""
+    Elements opt in with data-vertical="<name>" (sections + nav links); wrappers
+    opt in with data-vertical-all="a,b" (hidden only when all are off)."""
     secs = (CONTENT or {}).get("sections") or {}
-    off = [k for k, v in secs.items() if v is False]
-    if not off:
+    off = {k for k, v in secs.items() if v is False}
+    sels = [f'[data-vertical="{html.escape(k, quote=True)}"]' for k in off]
+    for combo in COMBO_VERTICALS:
+        parts = [p.strip() for p in combo.split(",") if p.strip()]
+        if parts and all(p in off for p in parts):
+            sels.append(f'[data-vertical-all="{html.escape(combo, quote=True)}"]')
+    if not sels:
         return ""
-    sel = ", ".join(f'[data-vertical="{html.escape(k, quote=True)}"]' for k in off)
-    return f'\n<style>{sel}{{display:none !important}}</style>'
+    return f'\n<style>{", ".join(sels)}{{display:none !important}}</style>'
 
 
 # Small runtime helper the page scripts use to overlay published content onto
