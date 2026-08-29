@@ -70,8 +70,8 @@
         <div style="padding: clamp(16px, 2vw, 24px); display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
           <div style="flex: 1 1 320px; min-width: 240px;">
             <div style="display: inline-block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #4E5A16; background: #E8F4C4; padding: 4px 10px; border-radius: 999px;">Payment plans</div>
-            <div style="font-size: clamp(17px, 1.7vw, 22px); font-weight: 600; letter-spacing: -0.01em; margin-top: 10px;">Finish now, pay over 12 to 60 months.</div>
-            <div style="font-size: 14px; color: #5E5F52; line-height: 1.5; margin-top: 6px; max-width: 52ch;">Milestone payments as standard, bank financing up to EGP 60M, rent-backed plans for portfolios, or save ahead at 5% off.</div>
+            <div style="font-size: clamp(17px, 1.7vw, 22px); font-weight: 600; letter-spacing: -0.01em; margin-top: 10px;">{{ finHeadline }}</div>
+            <div style="font-size: 14px; color: #5E5F52; line-height: 1.5; margin-top: 6px; max-width: 52ch;">{{ finBlurb }}</div>
           </div>
           <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
             <button type="button" onClick="{{ onOpenPre }}" style="cursor: pointer; font-family: Manrope, sans-serif; background: #12130E; color: #F6F3EC; font-weight: 700; font-size: 15px; padding: 15px 26px; border-radius: 999px; border: 0;" style-hover="background: #D6F23C; color: #12130E;">{{ preCta }}</button>
@@ -1218,12 +1218,55 @@ const PROJECTS = [
   { img: 'assets/style-eclectic.jpg', loc: 'Maadi', title: 'Short-stay conversion, 3 studios', tags: ['Furnishing', 'Kitchen', '5 weeks'] }
 ];
 
-const PLANS = [
-        { name: 'Milestone', terms: '4 payments', body: 'Deposit, mid-works, pre-delivery and handover. No interest, no third party.', fit: 'Single unit' },
-        { name: 'Bank instalments', terms: '12–60 months', body: 'Partner bank financing up to EGP 60M, approved alongside the survey.', fit: 'Owners & end users' },
-        { name: 'Rent-backed', terms: '12–24 months', body: 'Repayment scheduled against rental income once units are listed and let.', fit: 'Investors, 3+ units' },
-        { name: 'Plan ahead', terms: '10–12 months', body: 'Save in equal interest-free instalments, then draw the full budget.', fit: 'Interest free · 5% off' }
-];
+// Financing plans + pre-approval sizing. Defaults here mirror the admin's
+// FINANCING_DEFAULTS; the admin's published config (window.TURNKII_CONTENT.financing)
+// overrides them so plans, rates and pre-approval are all managed from the panel.
+const FIN_DEFAULT = {
+  currency: 'EGP',
+  headline: 'Finish now, pay over 12 to 60 months.',
+  blurb: 'Milestone payments as standard, bank financing up to EGP 60M, rent-backed plans for portfolios, or save ahead at 5% off.',
+  plans: [
+    { key: 'milestone', name: 'Milestone', terms: '4 payments', body: 'Deposit, mid-works, pre-delivery and handover. No interest, no third party.', fit: 'Single unit', model: 'even', unit: 'milestones', minTerm: 4, maxTerm: 4, defaultTerm: 4, monthlyRate: 0, discountPct: 0, note: 'Interest free: deposit, mid-works, pre-delivery and handover.', published: true },
+    { key: 'bank', name: 'Bank instalments', terms: '12–60 months', body: 'Partner bank financing up to EGP 60M, approved alongside the survey.', fit: 'Owners & end users', model: 'amortized', unit: 'months', minTerm: 12, maxTerm: 60, defaultTerm: 24, monthlyRate: 0.0165, discountPct: 0, note: 'Illustrative bank rate, up to EGP {cap}, approved alongside the survey.', published: true },
+    { key: 'rent', name: 'Rent-backed', terms: '12–24 months', body: 'Repayment scheduled against rental income once units are listed and let.', fit: 'Investors, 3+ units', model: 'even', unit: 'months', minTerm: 12, maxTerm: 24, defaultTerm: 24, monthlyRate: 0, discountPct: 0, note: 'Repaid from rental income once the units are listed and let.', published: true },
+    { key: 'saver', name: 'Plan ahead', terms: '10–12 months', body: 'Save in equal interest-free instalments, then draw the full budget.', fit: 'Interest free · 5% off', model: 'saver', unit: 'months', minTerm: 10, maxTerm: 12, defaultTerm: 12, monthlyRate: 0, discountPct: 5, note: '5% discount applied — you pay on EGP {discounted} and draw the budget at the end.', published: true }
+  ],
+  preApproval: { incomeRatio: 0.35, termMonths: 48, maxLimit: 60000000, rounding: 50000 }
+};
+function finResolve() {
+  var over = null;
+  try { over = (window.TURNKII_CONTENT && window.TURNKII_CONTENT.financing) || null; } catch (e) {}
+  var base = JSON.parse(JSON.stringify(FIN_DEFAULT));
+  if (over) {
+    if (over.currency) base.currency = over.currency;
+    if (over.headline) base.headline = over.headline;
+    if (over.blurb) base.blurb = over.blurb;
+    if (over.preApproval) base.preApproval = Object.assign(base.preApproval, over.preApproval);
+    if (Array.isArray(over.plans)) base.plans = over.plans.map(function (p) { return Object.assign({}, FIN_DEFAULT.plans[0], p); });
+  }
+  return base;
+}
+const FIN = finResolve();
+function finBudget(v) {
+  var pa = FIN.preApproval, inc = Number(v) || 0;
+  if (inc <= 0) return 0;
+  return Math.min(pa.maxLimit, Math.round(inc * pa.incomeRatio * pa.termMonths / pa.rounding) * pa.rounding);
+}
+function finPlan(name) { for (var i = 0; i < FIN.plans.length; i++) { if (FIN.plans[i].name === name) return FIN.plans[i]; } return FIN.plans[0]; }
+function finPay(p, amount, term) {
+  var n = Math.max(1, term);
+  if (p.model === 'amortized') { var r = p.monthlyRate; return r > 0 ? amount * r / (1 - Math.pow(1 + r, -n)) : amount / n; }
+  if (p.model === 'saver') return amount * (1 - p.discountPct / 100) / n;
+  return amount / n;
+}
+function finNote(p, amount) {
+  var discounted = Math.round(amount * (1 - p.discountPct / 100));
+  return String(p.note || '')
+    .split('{cap}').join(FIN.preApproval.maxLimit.toLocaleString('en-US'))
+    .split('{amount}').join(Math.round(amount).toLocaleString('en-US'))
+    .split('{discounted}').join(discounted.toLocaleString('en-US'));
+}
+const PLANS = FIN.plans.filter(function (p) { return p.published; });
 
 const ON_BC = '#D6F23C', ON_BG = 'rgba(214,242,60,0.12)', OFF_BC = 'rgba(246,243,236,0.18)', OFF_BG = '#12130E';
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -1318,7 +1361,7 @@ class Component extends DCLogic {
     const dayObj = this.days.find(d => d.id === s.day);
     const has = id => s.services.includes(id);
     const preOk = s.preName.trim().length > 1 && s.prePhone.trim().length > 7 && Number(s.preIncome) > 0;
-    const preLimit = Math.min(60000000, Math.round((Number(s.preIncome) || 0) * 0.35 * 48 / 50000) * 50000);
+    const preLimit = finBudget(s.preIncome);
     const detailBits = ['kitchen', 'hvac', 'shutters', 'outdoor'].filter(k => has(k) && s.detail[k]).map(k => s.detail[k]);
     const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 5;
     const visitOk = !!s.day && !!s.slot;
@@ -1467,6 +1510,8 @@ class Component extends DCLogic {
         };
       }),
 
+      finHeadline: FIN.headline,
+      finBlurb: FIN.blurb,
       finOpen: s.finOpen,
       finCta: s.finOpen ? 'Hide plans' : 'See payment plans',
       toggleFin: () => this.setState(st => ({ finOpen: !st.finOpen })),
@@ -1476,7 +1521,7 @@ class Component extends DCLogic {
         btnBg: s.plan === p.name ? '#D6F23C' : '#12130E',
         btnFg: s.plan === p.name ? '#12130E' : '#F6F3EC',
         onSelect: () => { this.set('plan', p.name); this.set('phase', 3); this.jump('brief'); },
-        onCalc: () => this.setState({ calc: p.name, calcTerm: p.name === 'Milestone' ? 4 : (p.name === 'Plan ahead' ? 12 : 24) })
+        onCalc: () => this.setState({ calc: p.name, calcTerm: p.defaultTerm })
       })),
       preCta: s.preApproved ? 'Pre-approved ✓ view result' : 'Get pre-approved',
       preOpen: s.preOpen,
@@ -1528,11 +1573,11 @@ class Component extends DCLogic {
         } catch (e) {}
       },
       preResultTitle: (s.preName ? s.preName.split(' ')[0] + ', you' : 'You') + ' can borrow up to EGP ' + preLimit.toLocaleString('en-US') + '.',
-      preResultBody: 'Indicative only, based on the income you gave and a 35% instalment-to-income ratio. Our team confirms the final limit with the partner bank once your scope is priced — usually within one working day of the survey.',
+      preResultBody: 'Indicative only, based on the income you gave and a ' + Math.round(FIN.preApproval.incomeRatio * 100) + '% instalment-to-income ratio. Our team confirms the final limit with the partner bank once your scope is priced — usually within one working day of the survey.',
       preRows: [
         { k: 'Indicative limit', v: 'EGP ' + preLimit.toLocaleString('en-US') },
-        { k: 'Max monthly', v: 'EGP ' + Math.round((Number(s.preIncome) || 0) * 0.35).toLocaleString('en-US') },
-        { k: 'Plans open to you', v: preLimit >= 500000 ? 'All four' : 'Milestone, Plan ahead' }
+        { k: 'Max monthly', v: 'EGP ' + Math.round((Number(s.preIncome) || 0) * FIN.preApproval.incomeRatio).toLocaleString('en-US') },
+        { k: 'Plans open to you', v: preLimit >= 500000 ? ('All ' + PLANS.length + ' plans') : PLANS.slice(0, 2).map(p => p.name).join(' & ') }
       ],
       onPreToBrief: () => this.setState({ preOpen: false, phase: 3 }),
       calcOpen: !!s.calc,
@@ -1540,24 +1585,16 @@ class Component extends DCLogic {
       calcAmount: s.calcAmount,
       calcAmountLabel: 'EGP ' + (s.calcAmount / 1000000).toFixed(2).replace(/\.00$/, '') + 'M',
       calcTerm: s.calcTerm,
-      calcMin: s.calc === 'Milestone' ? 4 : (s.calc === 'Plan ahead' ? 10 : 12),
-      calcMax: s.calc === 'Milestone' ? 4 : (s.calc === 'Plan ahead' ? 12 : (s.calc === 'Rent-backed' ? 24 : 60)),
-      calcTermLabel: s.calc === 'Milestone' ? '4 milestones' : s.calcTerm + ' months',
-      calcPayLabel: s.calc === 'Milestone' ? 'Each milestone' : 'Monthly payment',
+      calcMin: finPlan(s.calc).minTerm,
+      calcMax: finPlan(s.calc).maxTerm,
+      calcTermLabel: finPlan(s.calc).unit === 'milestones' ? (finPlan(s.calc).maxTerm + ' milestones') : (s.calcTerm + ' months'),
+      calcPayLabel: finPlan(s.calc).unit === 'milestones' ? 'Each milestone' : 'Monthly payment',
       calcPayment: (() => {
-        const base = s.calc === 'Plan ahead' ? s.calcAmount * 0.95 : s.calcAmount;
-        const n = s.calc === 'Milestone' ? 4 : s.calcTerm;
-        const rate = s.calc === 'Bank instalments' ? 0.0165 : 0;
-        const pay = rate ? base * rate / (1 - Math.pow(1 + rate, -n)) : base / n;
-        return 'EGP ' + Math.round(pay).toLocaleString('en-US');
+        const p = finPlan(s.calc);
+        const term = p.unit === 'milestones' ? p.maxTerm : s.calcTerm;
+        return 'EGP ' + Math.round(finPay(p, s.calcAmount, term)).toLocaleString('en-US');
       })(),
-      calcNote: s.calc === 'Bank instalments'
-        ? 'Illustrative bank rate, up to EGP 60M, approved alongside the survey.'
-        : (s.calc === 'Plan ahead'
-          ? '5% discount applied — you pay on EGP ' + Math.round(s.calcAmount * 0.95).toLocaleString('en-US') + ' and draw the budget at the end.'
-          : (s.calc === 'Rent-backed'
-            ? 'Repaid from rental income once the units are listed and let.'
-            : 'Interest free: deposit, mid-works, pre-delivery and handover.')),
+      calcNote: finNote(finPlan(s.calc), s.calcAmount),
       onAmount: e => this.setState({ calcAmount: Number(e.target.value) }),
       onTerm: e => this.setState({ calcTerm: Number(e.target.value) }),
       onCloseCalc: () => this.setState({ calc: '' }),
