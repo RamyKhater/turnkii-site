@@ -286,6 +286,16 @@
                   </sc-for>
                 </div>
               </div>
+              <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">{{ careRoomsLabel }}</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                  <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              </sc-if>
               <div>
                 <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">How often</div>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
@@ -402,7 +412,7 @@ const CARE_SERVICES = [
 ];
 
 class Component extends DCLogic {
-  state = { openProject: 'TK-2418', form: null, formReason: '', formComment: '', signName: '', tab: 'Properties', careProp: 'katameya', careService: '', careScope: '', carePlan: 'once', careDay: '', careSlot: '', careDone: false, careNotify: false };
+  state = { openProject: 'TK-2418', form: null, formReason: '', formComment: '', signName: '', tab: 'Properties', careProp: 'katameya', careService: '', careScope: '', careRooms: 0, carePlan: 'once', careDay: '', careSlot: '', careDone: false, careNotify: false };
 
   componentDidMount() {
     const bump = () => this.forceUpdate();
@@ -443,10 +453,12 @@ class Component extends DCLogic {
     const P = window.TurnkiiPricing;
     const prop = PROPS.find(p => p.id === st.careProp) || PROPS[0];
     const svc = CARE_SERVICES.find(x => x.id === st.careService);
-    const q = P ? P.careQuote({ service: st.careService || 'cleaning', area: prop.area, plan: st.carePlan }) : null;
+    const q = P ? P.careQuote({ service: st.careService || 'cleaning', scope: st.careScope, rooms: st.careRooms, area: prop.area, plan: st.carePlan }) : null;
     const cfg = P ? P.rates().care : null;
     const dayObj = this.days.find(d => d.id === st.careDay);
-    const ready = !!(prop.handedOver && st.careService && st.careDay && st.careSlot);
+    const needRooms = st.careService === 'cleaning';
+    const scopePicked = !!st.careScope && (!needRooms || st.careRooms > 0);
+    const ready = !!(prop.handedOver && st.careService && scopePicked && st.careDay && st.careSlot);
     const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 11px 16px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
 
     const G = window.TurnkiiProgress;
@@ -546,12 +558,13 @@ class Component extends DCLogic {
       })),
       careTiles: CARE_SERVICES.map(x => {
         const on = st.careService === x.id;
+        const minMaint = cfg && cfg.maintenanceRates ? Math.min.apply(null, Object.keys(cfg.maintenanceRates).map(k => cfg.maintenanceRates[k])) : (cfg ? cfg.maintenanceCallout : 0);
         const price = !cfg ? '—' : (x.id === 'cleaning'
-          ? P.full(Math.max(cfg.cleaningMin, prop.area * cfg.cleaningPerM2)) + ' · ' + prop.area + ' m²'
-          : P.full(cfg.maintenanceCallout) + ' call-out');
+          ? 'from ' + P.full((cfg.cleaningBase || 0) + (cfg.cleaningPerRoom || 0))
+          : 'from ' + P.full(minMaint) + ' call-out');
         return {
           title: x.title, icon: x.icon, price,
-          onPick: () => this.setState({ careService: on ? '' : x.id, careScope: '', careDone: false }),
+          onPick: () => this.setState({ careService: on ? '' : x.id, careScope: '', careRooms: 0, careDone: false }),
           iconBg: on ? '#12130E' : '#EFEBE1',
           iconFg: on ? '#D6F23C' : '#5E5F52',
           style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; width: 100%; display: block; border-radius: 16px; padding: 16px; background: #FFFFFF; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; outline: ' + (on ? '1px solid #12130E' : '0') + '; outline-offset: -2px;'
@@ -560,25 +573,33 @@ class Component extends DCLogic {
       careChosen: !!svc,
       careScopeLabel: st.careService === 'maintenance' ? 'What needs attention' : 'What to clean',
       careScopes: ((svc && svc.scopes) || []).map(l => ({ label: l, onPick: () => this.set('careScope', l), style: chip(st.careScope === l) })),
+      careRoomsShow: needRooms && !!st.careScope,
+      careRoomsLabel: 'How many rooms',
+      careRooms: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('careRooms', nn), style: chip(st.careRooms === nn) })),
       carePlans: [
         { id: 'once', label: 'One visit' },
         { id: 'plan', label: st.careService === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('carePlan', p.id), style: chip(st.carePlan === p.id) })),
       careDays: this.days.map(d => ({ label: d.label, onPick: () => this.set('careDay', d.id), style: chip(st.careDay === d.id) })),
       careSlots: CARE_SLOTS.map(t => ({ label: t, onPick: () => this.set('careSlot', t), style: chip(st.careSlot === t) })),
-      carePrice: !prop.handedOver ? 'From handover' : st.careDone ? 'Visit booked' : (q && q.ready ? (st.carePlan === 'plan' ? P.money(q.annual) + ' / yr' : P.full(q.due)) : 'Pick a service'),
+      carePrice: !prop.handedOver ? 'From handover' : st.careDone ? 'Visit booked' : (q && scopePicked ? (st.carePlan === 'plan' ? P.money(q.annual) + ' / yr' : P.full(q.due)) : (svc ? (needRooms ? 'Pick rooms' : 'Pick a service') : 'Pick a service')),
       carePriceNote: !prop.handedOver
         ? 'Care pricing for this unit is locked in now and applies from ' + prop.opensOn + '.'
         : st.careDone
         ? 'Confirmed by WhatsApp. Logged against ' + prop.short + '.'
-        : (q && q.ready
-            ? (st.carePlan === 'plan' ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime' : 'Priced from your saved unit area — nothing to measure.')
-            : 'Your saved properties price themselves; just pick a day.'),
+        : (q && scopePicked
+            ? (st.carePlan === 'plan'
+                ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime'
+                : (needRooms
+                    ? 'Priced by ' + n(st.careRooms, 'room') + ' and what to clean.'
+                    : P.full(q.perVisit) + ' call-out for ' + st.careScope + ' — parts quoted on site.'))
+            : (needRooms ? 'Pick what to clean and how many rooms.' : 'Pick what needs attention.')),
       careSummary: [
         { label: 'Property', value: prop.short },
-        { label: 'Area', value: prop.area + ' m²' },
         { label: 'Service', value: svc ? svc.title : '—' },
         { label: 'Scope', value: st.careScope || 'to confirm' },
+        ...(needRooms && st.careScope ? [{ label: 'Rooms', value: st.careRooms > 0 ? n(st.careRooms, 'room') : 'pick rooms' }] : []),
+        { label: 'Per visit', value: q && q.ready ? P.full(q.perVisit) : '—' },
         { label: 'Visit', value: dayObj && st.careSlot ? dayObj.long + ', ' + st.careSlot : '—' }
       ],
       careCtaLabel: !prop.handedOver ? 'Available at handover' : st.careDone ? 'Booked ✓' : 'Confirm the visit',
@@ -620,7 +641,7 @@ class Component extends DCLogic {
               ? 'Deep clean ' + P.full(Math.max(cfg.cleaningMin, p.area * cfg.cleaningPerM2)) + ' · maintenance call-out ' + P.full(cfg.maintenanceCallout)
               : 'Cleaning and maintenance open at handover — first deep clean is scheduled with the keys.')
           : '',
-        onBookCare: () => this.setState({ tab: 'Care', careProp: p.id, careService: '', careScope: '', careDay: '', careSlot: '', careDone: false })
+        onBookCare: () => this.setState({ tab: 'Care', careProp: p.id, careService: '', careScope: '', careRooms: 0, careDay: '', careSlot: '', careDone: false })
       })),
       projects: [
         { img: 'assets/style-warm.jpg', title: 'Finishing + full FF&E', property: 'Zed East 704', ref: 'TK-2418', next: 'Site visit Thu 14 Aug, 10:00', status: 'On site' },

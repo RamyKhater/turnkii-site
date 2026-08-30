@@ -30,10 +30,22 @@
       finishing: 6, furnishing: 3, ffe: 4, kitchen: 3, hvac: 2, shutters: 1, outdoor: 2
     },
     care: {                // post-handover services
-      cleaningPerM2: 55,   // EGP per m² per deep clean
-      cleaningMin: 1800,   // minimum visit charge
-      maintenanceCallout: 750,
-      planDiscount: 12     // % off when booked as a yearly plan
+      cleaningPerM2: 55,   // EGP per m² per deep clean (legacy area estimate)
+      cleaningMin: 1800,   // minimum visit charge (legacy)
+      maintenanceCallout: 750, // fallback maintenance call-out
+      planDiscount: 12,    // % off when booked as a yearly plan
+      cleaningBase: 600,   // base call-out for a deep clean
+      cleaningPerRoom: 450,// EGP per room
+      // intensity factor on the per-room component, per cleaning sub-type
+      cleaningScopes: {
+        'Whole unit': 1, 'Kitchen & bathrooms': 0.7,
+        'Post-works clean': 1.35, 'Windows & terrace': 0.55
+      },
+      // per sub-type call-out for maintenance & repairs
+      maintenanceRates: {
+        'AC service': 900, 'Plumbing': 750, 'Electrics': 800,
+        'Joinery': 950, 'Snag fix': 700, 'Not sure yet': 750
+      }
     },
     baseWeeks: 3
   };
@@ -129,19 +141,37 @@
   }
 
   /* post-handover care quote: { service:'cleaning'|'maintenance', area, plan:'once'|'plan' } */
+  // Quote a post-handover visit. Maintenance is priced per sub-type (scope);
+  // deep cleaning is priced by the number of rooms × a per-sub-type intensity
+  // factor, with a legacy area estimate when no room count is given.
   function careQuote(input, configOverride) {
     var p = configOverride || rates();
     var c = p.care;
     var i = input || {};
-    var area = Number(i.area) > 0 ? Number(i.area) : 0;
-    var perVisit = i.service === 'maintenance'
-      ? c.maintenanceCallout
-      : Math.max(c.cleaningMin, area * c.cleaningPerM2);
+    var perVisit, ready;
+    if (i.service === 'maintenance') {
+      var mr = c.maintenanceRates || {};
+      perVisit = (i.scope != null && mr[i.scope] != null) ? mr[i.scope] : c.maintenanceCallout;
+      ready = i.scope != null && i.scope !== '';
+    } else {
+      var rooms = Number(i.rooms) > 0 ? Number(i.rooms) : 0;
+      var sc = c.cleaningScopes || {};
+      var sf = (i.scope != null && sc[i.scope] != null) ? sc[i.scope] : 1;
+      if (rooms > 0) {
+        var base = (c.cleaningBase != null) ? c.cleaningBase : (c.cleaningMin || 0);
+        perVisit = Math.round(base + rooms * (c.cleaningPerRoom || 0) * sf);
+        ready = i.scope != null && i.scope !== '';
+      } else {
+        // legacy area-based estimate (homepage widget, no room picker)
+        var area = Number(i.area) > 0 ? Number(i.area) : 0;
+        perVisit = Math.round(Math.max(c.cleaningMin, area * c.cleaningPerM2) * sf);
+        ready = area > 0;
+      }
+    }
     var visits = i.service === 'maintenance' ? 4 : 3;
-    var annual = perVisit * visits * (1 - c.planDiscount / 100);
+    var annual = Math.round(perVisit * visits * (1 - c.planDiscount / 100));
     return {
-      ready: i.service === 'maintenance' ? true : area > 0,
-      perVisit: perVisit, visits: visits, annual: annual,
+      ready: ready, perVisit: perVisit, visits: visits, annual: annual,
       planDiscount: c.planDiscount,
       due: i.plan === 'plan' ? annual : perVisit
     };
