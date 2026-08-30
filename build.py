@@ -18,7 +18,7 @@ image-slot.js + assets) and emits a self-contained, deployable static site into
 
 Run:  python3 build.py
 """
-import os, re, shutil, html, json, urllib.request
+import os, re, shutil, html, json, urllib.request, urllib.parse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
@@ -36,6 +36,12 @@ INTAKE_URL = os.environ.get("TURNKII_INTAKE_URL", "").strip()
 # is fetched at build time and baked into the pages, e.g.
 #   TURNKII_CONTENT_URL=https://<admin-host>/api/site-content python3 build.py
 CONTENT_URL = os.environ.get("TURNKII_CONTENT_URL", "").strip()
+
+# WhatsApp Business number for the floating click-to-chat button (digits only,
+# with country code, no "+"). Override with TURNKII_WHATSAPP; empty hides it.
+WHATSAPP = re.sub(r"[^0-9]", "", os.environ.get("TURNKII_WHATSAPP", "201221188000"))
+# The message pre-filled into the WhatsApp composer when a visitor taps it.
+WHATSAPP_MSG = os.environ.get("TURNKII_WHATSAPP_MSG", "Hi Turnkii 👋 I'd like to ask about finishing my property.")
 
 # Pages that belong to a toggleable vertical — when the admin disables that
 # vertical, the page redirects home (so "hidden" means unreachable, not just
@@ -420,6 +426,34 @@ def meta_block(slug, title, desc):
 COMBO_VERTICALS = ["inspiration,ai_studio"]
 
 
+def whatsapp_widget():
+    """A floating WhatsApp click-to-chat button, baked into the body of every
+    public page. Opens wa.me with a pre-filled message and fires a GA lead
+    event on tap. Empty TURNKII_WHATSAPP hides it."""
+    if not WHATSAPP:
+        return ""
+    href = "https://wa.me/" + WHATSAPP + "?text=" + urllib.parse.quote(WHATSAPP_MSG)
+    glyph = (
+        '<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false">'
+        '<path fill="#fff" d="M16 3C8.83 3 3 8.83 3 16c0 2.29.6 4.44 1.65 6.3L3 29l6.87-1.8A12.93 12.93 0 0 0 16 29'
+        'c7.17 0 13-5.83 13-13S23.17 3 16 3zm0 23.8c-2.06 0-3.98-.56-5.63-1.53l-.4-.24-4.08 1.07 1.09-3.98-.26-.41'
+        'A10.78 10.78 0 0 1 5.2 16C5.2 10.04 10.04 5.2 16 5.2S26.8 10.04 26.8 16 21.96 26.8 16 26.8z"/>'
+        '<path fill="#fff" d="M22.5 19.31c-.34-.17-2.02-.99-2.33-1.11-.31-.11-.54-.17-.77.17-.22.34-.88 1.11-1.08 1.34'
+        '-.2.22-.4.25-.74.08-.34-.17-1.44-.53-2.75-1.69-1.02-.91-1.7-2.03-1.9-2.37-.2-.34-.02-.53.15-.7.15-.15.34-.4.51-.6'
+        '.17-.2.22-.34.34-.57.11-.22.06-.42-.03-.6-.08-.17-.77-1.85-1.05-2.53-.28-.67-.56-.58-.77-.59l-.66-.01'
+        'c-.22 0-.6.08-.91.42-.31.34-1.2 1.17-1.2 2.85s1.23 3.3 1.4 3.53c.17.22 2.42 3.7 5.86 5.19.82.35 1.46.56 1.96.72'
+        '.82.26 1.57.22 2.16.14.66-.1 2.02-.83 2.31-1.62.28-.8.28-1.48.2-1.62-.08-.14-.31-.22-.65-.39z"/></svg>'
+    )
+    onclick = "try{window.tkTrack&&window.tkTrack('generate_lead',{method:'whatsapp',currency:'EGP'})}catch(e){}"
+    return (
+        '\n<a href="' + html.escape(href, quote=True) + '" target="_blank" rel="noopener noreferrer"'
+        ' aria-label="Chat with Turnkii on WhatsApp" onclick="' + html.escape(onclick, quote=True) + '"'
+        ' style="position:fixed;right:20px;bottom:20px;z-index:2147483000;width:56px;height:56px;'
+        'border-radius:50%;background:#25D366;box-shadow:0 6px 20px rgba(0,0,0,.24);display:flex;'
+        'align-items:center;justify-content:center;text-decoration:none;">' + glyph + '</a>'
+    )
+
+
 def sections_style():
     """Hide any site vertical/section the admin disabled (sections flag = false).
     Elements opt in with data-vertical="<name>" (sections + nav links); wrappers
@@ -515,6 +549,11 @@ def build_page(src_name):
     vert = PAGE_VERTICAL.get(slug)
     if vert and CONTENT and (CONTENT.get("sections") or {}).get(vert) is False:
         text = text.replace("<head>", '<head>\n<script>location.replace("/")</script>', 1)
+
+    # floating WhatsApp click-to-chat button on public pages (not the internal
+    # admin consoles baked into the site).
+    if slug not in NOINDEX_PAGES:
+        text = text.replace("</body>", whatsapp_widget() + "\n</body>", 1)
 
     with open(os.path.join(DIST, slug), "w", encoding="utf-8") as f:
         f.write(text)
