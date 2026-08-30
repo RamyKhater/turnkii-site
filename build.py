@@ -341,6 +341,11 @@ PAGES = {
         "Turnkii on mobile — phone-first design",
         "Phone-first Turnkii: responsive mobile web now, native app in phase two — the screens and flows.",
     ),
+    "Turnkii Care.dc.html": (
+        "care.html",
+        "Cleaning & maintenance — Turnkii",
+        "Book vetted deep-cleaning and home maintenance in minutes — pick the service, see the price, and we confirm on WhatsApp. Open to everyone, no account needed.",
+    ),
     # ── Facility management (customer-facing, indexed) + internal admin consoles.
     "Turnkii Facility.dc.html": (
         "facility.html",

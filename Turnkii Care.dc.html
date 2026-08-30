@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="pricing.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  input, select, textarea, button { font-family: inherit; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #F6F3EC; color: #12130E; overflow-x: hidden;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Care.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Care &amp; maintenance</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="#book" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B;">Book a visit</a>
+    </div>
+  </header>
+
+  <section style="background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 76px) clamp(16px, 3vw, 40px);">
+      <div style="display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #12130E; background: #D6F23C; padding: 5px 12px; border-radius: 999px;">Post-handover care</div>
+      <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 5vw, 62px); line-height: 1.03; letter-spacing: -0.02em; margin: 22px 0 0; max-width: 18ch;">Cleaning &amp; maintenance for your finished home.</h1>
+      <p style="font-size: 16.5px; line-height: 1.65; color: rgba(246,243,236,0.72); margin: 18px 0 0; max-width: 56ch; text-wrap: pretty;">Book a vetted crew in two minutes. Pick what you need, see the price before you commit, and we confirm on WhatsApp. No account required.</p>
+      <div style="display: flex; gap: 26px; flex-wrap: wrap; margin-top: 30px;">
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">240+</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.55); margin-top: 5px;">Homes cared for</span></span>
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">24h</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.55); margin-top: 5px;">Typical callback</span></span>
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">Pay after</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.55); margin-top: 5px;">Crew confirms on arrival</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="book" style="scroll-margin-top: 80px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: clamp(28px, 4vw, 56px) clamp(16px, 3vw, 40px);">
+      <sc-if value="{{ form }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start;">
+
+        <!-- left: choices + contact -->
+        <div style="flex: 1 1 420px; min-width: 300px; display: flex; flex-direction: column; gap: 26px;">
+
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">1 · What do you need</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 12px;">
+              <sc-for list="{{ serviceTiles }}" as="c" hint-placeholder-count="2">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">
+                  <div style="font-size: 16px; font-weight: 700;">{{ c.title }}</div>
+                  <div style="font-size: 13px; color: #5E5F52; line-height: 1.45; margin-top: 5px;">{{ c.blurb }}</div>
+                  <div style="font-size: 12.5px; font-weight: 700; color: #6C7A20; margin-top: 10px;">{{ c.price }}</div>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ chosen }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">2 · {{ scopeLabel }}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ scopes }}" as="c" hint-placeholder-count="4">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ roomsShow }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">3 · How many rooms</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ rooms }}" as="c" hint-placeholder-count="6">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">How often</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ plans }}" as="c" hint-placeholder-count="2">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Preferred visit (optional)</div>
+            <div style="display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px;">
+              <div style="flex: 1 1 260px; min-width: 220px;">
+                <div style="font-size: 12px; color: #8A8A79;">Day</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                  <sc-for list="{{ days }}" as="c" hint-placeholder-count="6">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="flex: 1 1 180px; min-width: 160px;">
+                <div style="font-size: 12px; color: #8A8A79;">Arrival window</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                  <sc-for list="{{ slots }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Your details</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 12px;">
+              <input type="text" placeholder="Full name" onInput="{{ onName }}" style="{{ inputStyle }}" />
+              <input type="tel" placeholder="Mobile · +20 1xx xxx xxxx" onInput="{{ onPhone }}" style="{{ inputStyle }}" />
+              <input type="email" placeholder="Email (optional)" onInput="{{ onEmail }}" style="{{ inputStyle }}" />
+              <input type="text" placeholder="Area / compound" onInput="{{ onLoc }}" style="{{ inputStyle }}" />
+            </div>
+            <input type="text" placeholder="Anything else? (access, timing, the issue…)" onInput="{{ onNotes }}" style="{{ inputStyle }} margin-top: 12px; width: 100%;" />
+          </div>
+
+        </div>
+
+        <!-- right: live price + submit -->
+        <div style="flex: 1 1 320px; min-width: 280px; position: sticky; top: 80px;">
+          <div style="background: #12130E; color: #F6F3EC; border-radius: 20px; padding: clamp(20px, 2.4vw, 28px);">
+            <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">{{ priceKicker }}</div>
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(30px, 4vw, 40px); line-height: 1.04; margin-top: 8px;">{{ priceBig }}</div>
+            <div style="font-size: 13px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px;">{{ priceNote }}</div>
+            <div style="margin-top: 18px; border-top: 1px solid rgba(246,243,236,0.14); padding-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ summary }}" as="r" hint-placeholder-count="4">
+                <div style="display: flex; justify-content: space-between; gap: 14px; font-size: 13.5px;">
+                  <span style="color: rgba(246,243,236,0.55);">{{ r.label }}</span>
+                  <span style="font-weight: 600; text-align: right;">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ onSubmit }}" style="{{ ctaStyle }}">{{ ctaLabel }}</button>
+            <div style="font-size: 12px; color: rgba(246,243,236,0.5); line-height: 1.45; margin-top: 10px; text-align: center;">{{ hint }}</div>
+          </div>
+        </div>
+
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width: 620px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(28px, 4vw, 44px); text-align: center;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #E8F4C4; color: #4E5A16; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 26px;">✓</div>
+        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.1; margin: 18px 0 0;">{{ confirmTitle }}</h2>
+        <p style="font-size: 15.5px; line-height: 1.6; color: #5E5F52; margin: 12px 0 0;">{{ confirmBody }}</p>
+        <div style="display: inline-flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
+          <a href="Turnkii v3.dc.html#top" style="background: #12130E; color: #F6F3EC; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Back to home</a>
+          <button type="button" onClick="{{ onAnother }}" style="cursor: pointer; background: transparent; border: 1px solid #E4E0D5; color: #12130E; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="border-color: #12130E;">Book another</button>
+        </div>
+      </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <footer style="background: #12130E; color: rgba(246,243,236,0.7);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 34px clamp(16px, 3vw, 40px); display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+      <span style="font-size: 13px;">© Turnkii — turnkey home finishing, furniture &amp; handover.</span>
+      <span style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px;">
+        <a href="Turnkii Privacy.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Privacy policy</a>
+        <a href="Turnkii Terms.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Terms &amp; conditions</a>
+        <a href="https://wa.me/201221188000" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">WhatsApp us</a>
+      </span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props="{}">
+const CARE_SERVICES = [
+  { id: 'cleaning', title: 'Deep cleaning', blurb: 'Move-in, post-works or routine deep cleans.', scopes: ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace'] },
+  { id: 'maintenance', title: 'Maintenance & repairs', blurb: 'AC, plumbing, electrics, joinery and snags.', scopes: ['AC service', 'Plumbing', 'Electrics', 'Joinery', 'Snag fix', 'Not sure yet'] }
+];
+const SLOTS = ['10:00', '12:00', '14:00', '16:00'];
+const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+class Component extends DCLogic {
+  state = { service: '', scope: '', rooms: 0, plan: 'once', name: '', phone: '', email: '', loc: '', notes: '', day: '', slot: '', sent: false, ref: '', tried: false };
+
+  componentDidMount() {
+    const bump = () => this.forceUpdate();
+    window.addEventListener('turnkii-pricing-ready', bump);
+    window.addEventListener('turnkii-pricing-changed', bump);
+  }
+
+  set(k, v) { this.setState({ [k]: v }); }
+
+  get days() {
+    if (!this._days) {
+      const out = [];
+      let i = 1;
+      while (out.length < 6) {
+        const t = new Date(Date.now() + i * 86400000); i++;
+        if (t.getDay() === 5) continue;
+        out.push({ id: t.toISOString().slice(0, 10), label: DOWS[t.getDay()] + ' ' + t.getDate(), long: DOWS[t.getDay()] + ' ' + t.getDate() + ' ' + MONTHS[t.getMonth()] });
+      }
+      this._days = out;
+    }
+    return this._days;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const P = window.TurnkiiPricing;
+    const cfg = P ? P.rates().care : null;
+    const svc = CARE_SERVICES.find(x => x.id === s.service);
+    const needRooms = s.service === 'cleaning';
+    const q = P ? P.careQuote({ service: s.service || 'cleaning', scope: s.scope, rooms: s.rooms, plan: s.plan }) : null;
+    const scopePicked = !!s.scope && (!needRooms || s.rooms > 0);
+    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
+    const canSend = !!s.service && scopePicked && contactOk;
+    const dayObj = this.days.find(d => d.id === s.day);
+    const priceText = q && scopePicked ? (P.full(q.due) + (s.plan === 'plan' ? ' / yr' : '')) : '';
+    const n = (c, w) => c + ' ' + (c === 1 ? w : w + 's');
+
+    const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
+    const inputStyle = 'background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 14.5px; color: #12130E; outline: none;';
+
+    return {
+      form: !s.sent,
+      sent: s.sent,
+      inputStyle: inputStyle,
+      serviceTiles: CARE_SERVICES.map(x => {
+        const on = s.service === x.id;
+        const minMaint = cfg && cfg.maintenanceRates ? Math.min.apply(null, Object.keys(cfg.maintenanceRates).map(k => cfg.maintenanceRates[k])) : (cfg ? cfg.maintenanceCallout : 0);
+        const price = !cfg ? '' : (x.id === 'cleaning'
+          ? 'from ' + P.full((cfg.cleaningBase || 0) + (cfg.cleaningPerRoom || 0))
+          : 'from ' + P.full(minMaint) + ' call-out');
+        return { title: x.title, blurb: x.blurb, price: price, onPick: () => this.setState({ service: on ? '' : x.id, scope: '', rooms: 0 }),
+          style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; width: 100%; display: block; border-radius: 16px; padding: 16px; background: #FFFFFF; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; outline: ' + (on ? '1px solid #12130E' : '0') + '; outline-offset: -2px;' };
+      }),
+      chosen: !!svc,
+      scopeLabel: s.service === 'maintenance' ? 'What needs attention' : 'What to clean',
+      scopes: ((svc && svc.scopes) || []).map(l => ({ label: l, onPick: () => this.set('scope', l), style: chip(s.scope === l) })),
+      roomsShow: needRooms && !!s.scope,
+      rooms: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('rooms', nn), style: chip(s.rooms === nn) })),
+      plans: [
+        { id: 'once', label: 'One visit' },
+        { id: 'plan', label: s.service === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
+      ].map(p => ({ label: p.label, onPick: () => this.set('plan', p.id), style: chip(s.plan === p.id) })),
+      days: this.days.map(d => ({ label: d.label, onPick: () => this.set('day', d.id), style: chip(s.day === d.id) })),
+      slots: SLOTS.map(t => ({ label: t, onPick: () => this.set('slot', t), style: chip(s.slot === t) })),
+
+      onName: e => this.set('name', e.target.value),
+      onPhone: e => this.set('phone', e.target.value),
+      onEmail: e => this.set('email', e.target.value),
+      onLoc: e => this.set('loc', e.target.value),
+      onNotes: e => this.set('notes', e.target.value),
+
+      priceKicker: s.plan === 'plan' ? 'Yearly plan' : 'This visit',
+      priceBig: !svc ? 'Pick a service' : (scopePicked ? priceText : (needRooms ? 'Pick rooms' : 'Pick an option')),
+      priceNote: !svc
+        ? 'Choose cleaning or maintenance to see the price.'
+        : (scopePicked
+            ? (s.plan === 'plan' ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime' : (needRooms ? 'Priced by ' + n(s.rooms, 'room') + ' and what to clean.' : 'Call-out for ' + s.scope + ' — parts quoted on site.'))
+            : (needRooms ? 'Pick what to clean and how many rooms.' : 'Pick what needs attention.')),
+      summary: [
+        { label: 'Service', value: svc ? svc.title : '—' },
+        { label: 'Scope', value: s.scope || '—' }
+      ].concat(needRooms && s.scope ? [{ label: 'Rooms', value: s.rooms > 0 ? n(s.rooms, 'room') : '—' }] : [])
+       .concat([
+        { label: 'Per visit', value: q && scopePicked ? P.full(q.perVisit) : '—' },
+        { label: 'Preferred', value: dayObj && s.slot ? dayObj.long + ', ' + s.slot : (dayObj ? dayObj.long : 'we call to book') }
+      ]),
+
+      ctaLabel: canSend ? 'Request this visit' : (!svc ? 'Pick a service' : !scopePicked ? (needRooms ? 'Pick rooms' : 'Pick an option') : 'Add name & mobile'),
+      ctaStyle: 'width: 100%; margin-top: 18px; border: none; border-radius: 14px; padding: 15px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (canSend ? 'pointer' : 'default') + '; background: ' + (canSend ? '#D6F23C' : 'rgba(246,243,236,0.14)') + '; color: ' + (canSend ? '#12130E' : 'rgba(246,243,236,0.45)') + ';',
+      hint: 'No payment now — the crew confirms the scope and price on arrival.',
+      onSubmit: () => {
+        if (!canSend) { this.setState({ tried: true }); return; }
+        this.setState({ sent: true, ref: 'TS-' + String(Date.now()).slice(-6) });
+        var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'service', service: s.service || '', scope: s.scope || '' }); } catch (e) {}
+        try {
+          var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
+          if (url) {
+            fetch(url, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                kind: 'service',
+                contactName: s.name, phone: s.phone, email: s.email || undefined,
+                location: s.loc || undefined,
+                services: [svc ? (svc.title + (s.scope ? ' — ' + s.scope : '')) : 'Service request'],
+                channel: 'Care booking',
+                referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
+                utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
+                message: [svc && svc.title, s.scope, needRooms && s.rooms ? n(s.rooms, 'room') : '', s.plan === 'plan' ? 'Yearly plan' : 'One visit', priceText ? ('Est. ' + priceText) : '', dayObj && s.slot ? ('Prefers ' + dayObj.long + ' ' + s.slot) : '', s.notes].filter(Boolean).join(' · ')
+              })
+            }).catch(function () {});
+          }
+        } catch (e) {}
+      },
+      confirmTitle: (s.name ? s.name.split(' ')[0] + ', your' : 'Your') + ' request is in.',
+      confirmBody: 'We call you on ' + (s.phone || 'your mobile') + ' within one working day to confirm the crew, the scope and the price' + (dayObj ? ' — we\'ll aim for ' + dayObj.long + (s.slot ? ' at ' + s.slot : '') : '') + '. Reference ' + s.ref + '.',
+      onAnother: () => this.setState({ service: '', scope: '', rooms: 0, plan: 'once', day: '', slot: '', notes: '', sent: false, tried: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
