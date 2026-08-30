@@ -336,6 +336,7 @@ class Component extends DCLogic {
             fetch(url, {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
+                kind: 'service',
                 contactName: s.name, phone: s.phone, email: s.email || undefined,
                 propertyType: s.type || undefined, location: s.loc || undefined,
                 services: Array.isArray(s.svc) ? s.svc : [], channel: 'Facility (Eltizam)',
