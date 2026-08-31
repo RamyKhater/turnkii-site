@@ -41,10 +41,27 @@
         'Whole unit': 1, 'Kitchen & bathrooms': 0.7,
         'Post-works clean': 1.35, 'Windows & terrace': 0.55
       },
-      // per sub-type call-out for maintenance & repairs
+      // Maintenance menu: category → sub-services, with a per-unit unit label.
+      // The structure is the menu shown to customers; the prices live in
+      // maintenanceRates (keyed "Category · Sub"), so the admin edits numbers.
+      maintenanceCatalogue: [
+        { name: 'AC service', unitLabel: 'units', subs: ['Installation', 'Cleaning', 'Gas refill', 'Repair & diagnosis'] },
+        { name: 'Plumbing', unitLabel: 'points', subs: ['Leak repair', 'Fixture install', 'Blockage clear', 'Inspection'] },
+        { name: 'Electrics', unitLabel: 'points', subs: ['Point/wiring install', 'Fault diagnosis', 'Fixture install', 'Panel & breakers'] },
+        { name: 'Joinery', unitLabel: 'items', subs: ['Repair & adjust', 'New unit', 'Hinges & handles'] },
+        { name: 'Appliances', unitLabel: 'units', subs: ['Install & mount', 'Diagnose & repair'] },
+        { name: 'Snag fix', unitLabel: 'items', subs: ['General snag'] },
+        { name: 'Not sure yet', unitLabel: 'units', subs: ['Assessment visit'] }
+      ],
+      // Per sub-service rate (× number of units). Keyed "Category · Sub".
       maintenanceRates: {
-        'AC service': 900, 'Plumbing': 750, 'Electrics': 800,
-        'Joinery': 950, 'Snag fix': 700, 'Not sure yet': 750
+        'AC service · Installation': 1200, 'AC service · Cleaning': 350, 'AC service · Gas refill': 600, 'AC service · Repair & diagnosis': 500,
+        'Plumbing · Leak repair': 500, 'Plumbing · Fixture install': 700, 'Plumbing · Blockage clear': 450, 'Plumbing · Inspection': 800,
+        'Electrics · Point/wiring install': 450, 'Electrics · Fault diagnosis': 500, 'Electrics · Fixture install': 400, 'Electrics · Panel & breakers': 900,
+        'Joinery · Repair & adjust': 600, 'Joinery · New unit': 1500, 'Joinery · Hinges & handles': 300,
+        'Appliances · Install & mount': 500, 'Appliances · Diagnose & repair': 550,
+        'Snag fix · General snag': 700,
+        'Not sure yet · Assessment visit': 750
       }
     },
     baseWeeks: 3
@@ -151,8 +168,17 @@
     var perVisit, ready;
     if (i.service === 'maintenance') {
       var mr = c.maintenanceRates || {};
-      perVisit = (i.scope != null && mr[i.scope] != null) ? mr[i.scope] : c.maintenanceCallout;
-      ready = i.scope != null && i.scope !== '';
+      var units = Number(i.units) > 0 ? Number(i.units) : 1;
+      if (i.category && i.sub) {
+        var key = i.category + ' · ' + i.sub;
+        var rate = (mr[key] != null) ? mr[key] : (mr[i.category] != null ? mr[i.category] : c.maintenanceCallout);
+        perVisit = Math.round(rate * units);
+        ready = true;
+      } else if (i.scope != null && mr[i.scope] != null) {
+        perVisit = Math.round(mr[i.scope] * units); ready = true; // legacy flat sub-type
+      } else {
+        perVisit = c.maintenanceCallout; ready = true; // legacy call-out (homepage widget)
+      }
     } else {
       var rooms = Number(i.rooms) > 0 ? Number(i.rooms) : 0;
       var sc = c.cleaningScopes || {};

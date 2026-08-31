@@ -75,16 +75,16 @@
             </div>
           </div>
 
-          <sc-if value="{{ chosen }}" hint-placeholder-val="{{ false }}">
+          <!-- cleaning path -->
+          <sc-if value="{{ isCleaning }}" hint-placeholder-val="{{ false }}">
           <div>
-            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">2 · {{ scopeLabel }}</div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">2 · What to clean</div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
               <sc-for list="{{ scopes }}" as="c" hint-placeholder-count="4">
                 <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
               </sc-for>
             </div>
           </div>
-
           <sc-if value="{{ roomsShow }}" hint-placeholder-val="{{ false }}">
           <div>
             <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">3 · How many rooms</div>
@@ -95,7 +95,41 @@
             </div>
           </div>
           </sc-if>
+          </sc-if>
 
+          <!-- maintenance path: category → sub-service → units -->
+          <sc-if value="{{ isMaint }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">2 · Which service</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ categories }}" as="c" hint-placeholder-count="6">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ subShow }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">3 · What's needed</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ subs }}" as="c" hint-placeholder-count="4">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ unitsShow }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">4 · {{ unitsLabel }}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <sc-for list="{{ units }}" as="c" hint-placeholder-count="6">
+                <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+          </sc-if>
+
+          <!-- how often + preferred visit (once a service is chosen) -->
+          <sc-if value="{{ chosen }}" hint-placeholder-val="{{ false }}">
           <div>
             <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">How often</div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
@@ -104,7 +138,6 @@
               </sc-for>
             </div>
           </div>
-
           <div>
             <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Preferred visit (optional)</div>
             <div style="display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px;">
@@ -148,7 +181,7 @@
             <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(30px, 4vw, 40px); line-height: 1.04; margin-top: 8px;">{{ priceBig }}</div>
             <div style="font-size: 13px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px;">{{ priceNote }}</div>
             <div style="margin-top: 18px; border-top: 1px solid rgba(246,243,236,0.14); padding-top: 14px; display: flex; flex-direction: column; gap: 10px;">
-              <sc-for list="{{ summary }}" as="r" hint-placeholder-count="4">
+              <sc-for list="{{ summary }}" as="r" hint-placeholder-count="5">
                 <div style="display: flex; justify-content: space-between; gap: 14px; font-size: 13.5px;">
                   <span style="color: rgba(246,243,236,0.55);">{{ r.label }}</span>
                   <span style="font-weight: 600; text-align: right;">{{ r.value }}</span>
@@ -192,16 +225,13 @@
 </x-dc>
 
 <script type="text/x-dc" data-dc-script data-props="{}">
-const CARE_SERVICES = [
-  { id: 'cleaning', title: 'Deep cleaning', blurb: 'Move-in, post-works or routine deep cleans.', scopes: ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace'] },
-  { id: 'maintenance', title: 'Maintenance & repairs', blurb: 'AC, plumbing, electrics, joinery and snags.', scopes: ['AC service', 'Plumbing', 'Electrics', 'Joinery', 'Snag fix', 'Not sure yet'] }
-];
+const CLEAN_SCOPES = ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace'];
 const SLOTS = ['10:00', '12:00', '14:00', '16:00'];
 const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 class Component extends DCLogic {
-  state = { service: '', scope: '', rooms: 0, plan: 'once', name: '', phone: '', email: '', loc: '', notes: '', day: '', slot: '', sent: false, ref: '', tried: false };
+  state = { service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', name: '', phone: '', email: '', loc: '', notes: '', day: '', slot: '', sent: false, ref: '', tried: false };
 
   componentDidMount() {
     const bump = () => this.forceUpdate();
@@ -229,40 +259,64 @@ class Component extends DCLogic {
     const s = this.state;
     const P = window.TurnkiiPricing;
     const cfg = P ? P.rates().care : null;
-    const svc = CARE_SERVICES.find(x => x.id === s.service);
-    const needRooms = s.service === 'cleaning';
-    const q = P ? P.careQuote({ service: s.service || 'cleaning', scope: s.scope, rooms: s.rooms, plan: s.plan }) : null;
-    const scopePicked = !!s.scope && (!needRooms || s.rooms > 0);
+    const isCleaning = s.service === 'cleaning';
+    const isMaint = s.service === 'maintenance';
+    const catalogue = (cfg && cfg.maintenanceCatalogue) || [];
+    const catObj = catalogue.find(x => x.name === s.category);
+    const unitWord = catObj ? catObj.unitLabel : 'units';
+
+    const q = P ? P.careQuote({ service: s.service || 'cleaning', scope: s.scope, rooms: s.rooms, category: s.category, sub: s.sub, units: s.units, plan: s.plan }) : null;
+    const selDone = isCleaning ? (!!s.scope && s.rooms > 0) : (isMaint ? (!!s.category && !!s.sub && s.units > 0) : false);
     const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
-    const canSend = !!s.service && scopePicked && contactOk;
+    const canSend = !!s.service && selDone && contactOk;
     const dayObj = this.days.find(d => d.id === s.day);
-    const priceText = q && scopePicked ? (P.full(q.due) + (s.plan === 'plan' ? ' / yr' : '')) : '';
+    const priceText = q && selDone ? (P.full(q.due) + (s.plan === 'plan' ? ' / yr' : '')) : '';
     const n = (c, w) => c + ' ' + (c === 1 ? w : w + 's');
+    const nUnit = (c, w) => c + ' ' + (c === 1 && w.slice(-1) === 's' ? w.slice(0, -1) : w);
 
     const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
     const inputStyle = 'background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 14.5px; color: #12130E; outline: none;';
+
+    const svcTitle = isCleaning ? 'Deep cleaning' : (isMaint ? 'Maintenance & repairs' : '');
 
     return {
       form: !s.sent,
       sent: s.sent,
       inputStyle: inputStyle,
-      serviceTiles: CARE_SERVICES.map(x => {
+      serviceTiles: [
+        { id: 'cleaning', title: 'Deep cleaning', blurb: 'Move-in, post-works or routine deep cleans.' },
+        { id: 'maintenance', title: 'Maintenance & repairs', blurb: 'AC, plumbing, electrics, joinery, appliances & snags.' }
+      ].map(x => {
         const on = s.service === x.id;
-        const minMaint = cfg && cfg.maintenanceRates ? Math.min.apply(null, Object.keys(cfg.maintenanceRates).map(k => cfg.maintenanceRates[k])) : (cfg ? cfg.maintenanceCallout : 0);
+        const rateVals = cfg && cfg.maintenanceRates ? Object.keys(cfg.maintenanceRates).map(k => cfg.maintenanceRates[k]) : [];
+        const minMaint = rateVals.length ? Math.min.apply(null, rateVals) : (cfg ? cfg.maintenanceCallout : 0);
         const price = !cfg ? '' : (x.id === 'cleaning'
           ? 'from ' + P.full((cfg.cleaningBase || 0) + (cfg.cleaningPerRoom || 0))
-          : 'from ' + P.full(minMaint) + ' call-out');
-        return { title: x.title, blurb: x.blurb, price: price, onPick: () => this.setState({ service: on ? '' : x.id, scope: '', rooms: 0 }),
+          : 'from ' + P.full(minMaint) + ' / unit');
+        return { title: x.title, blurb: x.blurb, price: price, onPick: () => this.setState({ service: on ? '' : x.id, scope: '', rooms: 0, category: '', sub: '', units: 0 }),
           style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; width: 100%; display: block; border-radius: 16px; padding: 16px; background: #FFFFFF; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; outline: ' + (on ? '1px solid #12130E' : '0') + '; outline-offset: -2px;' };
       }),
-      chosen: !!svc,
-      scopeLabel: s.service === 'maintenance' ? 'What needs attention' : 'What to clean',
-      scopes: ((svc && svc.scopes) || []).map(l => ({ label: l, onPick: () => this.set('scope', l), style: chip(s.scope === l) })),
-      roomsShow: needRooms && !!s.scope,
+
+      isCleaning: isCleaning,
+      isMaint: isMaint,
+      chosen: !!s.service,
+
+      // cleaning
+      scopes: CLEAN_SCOPES.map(l => ({ label: l, onPick: () => this.set('scope', l), style: chip(s.scope === l) })),
+      roomsShow: isCleaning && !!s.scope,
       rooms: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('rooms', nn), style: chip(s.rooms === nn) })),
+
+      // maintenance
+      categories: catalogue.map(x => ({ label: x.name, onPick: () => this.setState({ category: s.category === x.name ? '' : x.name, sub: '', units: 0 }), style: chip(s.category === x.name) })),
+      subShow: isMaint && !!s.category,
+      subs: (catObj ? catObj.subs : []).map(l => ({ label: l, onPick: () => this.set('sub', l), style: chip(s.sub === l) })),
+      unitsShow: isMaint && !!s.sub,
+      unitsLabel: 'How many ' + unitWord,
+      units: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('units', nn), style: chip(s.units === nn) })),
+
       plans: [
         { id: 'once', label: 'One visit' },
-        { id: 'plan', label: s.service === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
+        { id: 'plan', label: isMaint ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('plan', p.id), style: chip(s.plan === p.id) })),
       days: this.days.map(d => ({ label: d.label, onPick: () => this.set('day', d.id), style: chip(s.day === d.id) })),
       slots: SLOTS.map(t => ({ label: t, onPick: () => this.set('slot', t), style: chip(s.slot === t) })),
@@ -274,29 +328,40 @@ class Component extends DCLogic {
       onNotes: e => this.set('notes', e.target.value),
 
       priceKicker: s.plan === 'plan' ? 'Yearly plan' : 'This visit',
-      priceBig: !svc ? 'Pick a service' : (scopePicked ? priceText : (needRooms ? 'Pick rooms' : 'Pick an option')),
-      priceNote: !svc
+      priceBig: !s.service ? 'Pick a service' : (selDone ? priceText : (isCleaning ? (s.scope ? 'Pick rooms' : 'Pick an area') : (!s.category ? 'Pick a service' : (!s.sub ? 'Pick what\'s needed' : 'Pick units')))),
+      priceNote: !s.service
         ? 'Choose cleaning or maintenance to see the price.'
-        : (scopePicked
-            ? (s.plan === 'plan' ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime' : (needRooms ? 'Priced by ' + n(s.rooms, 'room') + ' and what to clean.' : 'Call-out for ' + s.scope + ' — parts quoted on site.'))
-            : (needRooms ? 'Pick what to clean and how many rooms.' : 'Pick what needs attention.')),
+        : (selDone
+            ? (s.plan === 'plan'
+                ? q.visits + ' visits, ' + q.planDiscount + '% off · cancel anytime'
+                : (isCleaning ? 'Priced by ' + n(s.rooms, 'room') + ' and what to clean.' : P.full(q.perVisit) + ' for ' + nUnit(s.units, unitWord) + ' — parts quoted on site.'))
+            : (isCleaning ? 'Pick what to clean and how many rooms.' : 'Pick the service, what\'s needed, and how many units.')),
       summary: [
-        { label: 'Service', value: svc ? svc.title : '—' },
-        { label: 'Scope', value: s.scope || '—' }
-      ].concat(needRooms && s.scope ? [{ label: 'Rooms', value: s.rooms > 0 ? n(s.rooms, 'room') : '—' }] : [])
+        { label: 'Service', value: svcTitle || '—' }
+      ].concat(isCleaning ? [
+        { label: 'Scope', value: s.scope || '—' },
+        { label: 'Rooms', value: s.rooms > 0 ? n(s.rooms, 'room') : '—' }
+      ] : (isMaint ? [
+        { label: 'Category', value: s.category || '—' },
+        { label: 'Sub-service', value: s.sub || '—' },
+        { label: 'Units', value: s.units > 0 ? nUnit(s.units, unitWord) : '—' }
+      ] : []))
        .concat([
-        { label: 'Per visit', value: q && scopePicked ? P.full(q.perVisit) : '—' },
+        { label: 'Per visit', value: q && selDone ? P.full(q.perVisit) : '—' },
         { label: 'Preferred', value: dayObj && s.slot ? dayObj.long + ', ' + s.slot : (dayObj ? dayObj.long : 'we call to book') }
       ]),
 
-      ctaLabel: canSend ? 'Request this visit' : (!svc ? 'Pick a service' : !scopePicked ? (needRooms ? 'Pick rooms' : 'Pick an option') : 'Add name & mobile'),
+      ctaLabel: canSend ? 'Request this visit' : (!s.service ? 'Pick a service' : !selDone ? 'Finish your selection' : 'Add name & mobile'),
       ctaStyle: 'width: 100%; margin-top: 18px; border: none; border-radius: 14px; padding: 15px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (canSend ? 'pointer' : 'default') + '; background: ' + (canSend ? '#D6F23C' : 'rgba(246,243,236,0.14)') + '; color: ' + (canSend ? '#12130E' : 'rgba(246,243,236,0.45)') + ';',
       hint: 'No payment now — the crew confirms the scope and price on arrival.',
       onSubmit: () => {
         if (!canSend) { this.setState({ tried: true }); return; }
         this.setState({ sent: true, ref: 'TS-' + String(Date.now()).slice(-6) });
         var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'service', service: s.service || '', scope: s.scope || '' }); } catch (e) {}
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'service', service: s.service || '', category: s.category || '', sub: s.sub || '' }); } catch (e) {}
+        var detail = isCleaning
+          ? ('Deep cleaning — ' + s.scope + ' · ' + n(s.rooms, 'room'))
+          : (s.category + ' — ' + s.sub + ' · ' + nUnit(s.units, unitWord));
         try {
           var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
           if (url) {
@@ -306,12 +371,12 @@ class Component extends DCLogic {
                 kind: 'service',
                 contactName: s.name, phone: s.phone, email: s.email || undefined,
                 location: s.loc || undefined,
-                services: [svc ? (svc.title + (s.scope ? ' — ' + s.scope : '')) : 'Service request'],
+                services: [detail],
                 channel: 'Care booking',
                 referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
                 utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
                 utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
-                message: [svc && svc.title, s.scope, needRooms && s.rooms ? n(s.rooms, 'room') : '', s.plan === 'plan' ? 'Yearly plan' : 'One visit', priceText ? ('Est. ' + priceText) : '', dayObj && s.slot ? ('Prefers ' + dayObj.long + ' ' + s.slot) : '', s.notes].filter(Boolean).join(' · ')
+                message: [detail, s.plan === 'plan' ? 'Yearly plan' : 'One visit', priceText ? ('Est. ' + priceText) : '', dayObj && s.slot ? ('Prefers ' + dayObj.long + ' ' + s.slot) : '', s.notes].filter(Boolean).join(' · ')
               })
             }).catch(function () {});
           }
@@ -319,7 +384,7 @@ class Component extends DCLogic {
       },
       confirmTitle: (s.name ? s.name.split(' ')[0] + ', your' : 'Your') + ' request is in.',
       confirmBody: 'We call you on ' + (s.phone || 'your mobile') + ' within one working day to confirm the crew, the scope and the price' + (dayObj ? ' — we\'ll aim for ' + dayObj.long + (s.slot ? ' at ' + s.slot : '') : '') + '. Reference ' + s.ref + '.',
-      onAnother: () => this.setState({ service: '', scope: '', rooms: 0, plan: 'once', day: '', slot: '', notes: '', sent: false, tried: false })
+      onAnother: () => this.setState({ service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', day: '', slot: '', notes: '', sent: false, tried: false })
     };
   }
 }
