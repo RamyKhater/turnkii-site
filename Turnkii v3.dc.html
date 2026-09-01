@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="pricing.js"></script>
+<script src="cal.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -896,12 +897,24 @@
             </div>
 
             <div style="display: flex; gap: 22px; flex-wrap: wrap;">
-              <div style="flex: 1 1 320px; min-width: 260px;">
+              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
                 <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Visit day</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                  <sc-for list="{{ careDays }}" as="d" hint-placeholder-count="6">
-                    <button type="button" onClick="{{ d.onPick }}" style="{{ d.style }}">{{ d.label }}</button>
-                  </sc-for>
+                <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #F6F3EC; padding: 14px 16px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
+                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
+                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
+                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
+                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
+                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
                 </div>
               </div>
               <div style="flex: 1 1 240px; min-width: 200px;">
@@ -1314,7 +1327,7 @@ class Component extends DCLogic {
   state = {
     services: [], ptype: '', area: '', units: '', location: '', style: '', pkg: '', materials: [],
     budget: '', timeline: '', name: '', phone: '', email: '', notes: '', day: '', slot: '',
-    careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', carePhone: '', careDone: false, careTried: false,
+    careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', careMonthOffset: 0, carePhone: '', careDone: false, careTried: false,
     plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, shot: {}
   };
 
@@ -1461,7 +1474,17 @@ class Component extends DCLogic {
       clean: careCfg ? 'from ' + P.full((careCfg.cleaningBase || 0) + (careCfg.cleaningPerRoom || 0)) : '—',
       maint: careCfg && careRateVals.length ? 'from ' + P.full(Math.min.apply(null, careRateVals)) + ' / unit' : '—'
     };
-    const careDayObj = this.days.find(d => d.id === s.careDay);
+    const careDayObj = s.careDay ? (function (id) { var p = id.split('-'); var dt = new Date(+p[0], +p[1] - 1, +p[2]); return { dow: DOWS[dt.getDay()], day: (+p[2]), mon: MONTHS[dt.getMonth()] }; })(s.careDay) : null;
+    const careCal = window.TurnkiiCal ? window.TurnkiiCal.build(s.careMonthOffset || 0, s.careDay) : null;
+    const careCalBase = 'aspect-ratio: 1 / 1; min-height: 34px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 13px; border-radius: 10px; padding: 0;';
+    const careCalCell = (c) => {
+      if (c.blank) return { label: '', onPick: () => {}, style: careCalBase + 'border: 0; background: transparent; cursor: default;' };
+      if (c.disabled) return { label: String(c.day), onPick: () => {}, style: careCalBase + 'border: 0; background: transparent; color: #CFCABB; cursor: default;' };
+      var sel = c.selected;
+      return { label: String(c.day), onPick: () => this.set('careDay', c.id),
+        style: careCalBase + 'cursor: pointer; font-weight: ' + (sel || c.today ? '700' : '500') + '; border: 1px solid ' + (sel ? '#12130E' : (c.today ? '#12130E' : '#E4E0D5')) + '; background: ' + (sel ? '#12130E' : '#FFFFFF') + '; color: ' + (sel ? '#F6F3EC' : '#12130E') + ';' };
+    };
+    const careCalNav = (disabled) => 'width: 32px; height: 32px; border-radius: 999px; border: 1px solid #E4E0D5; background: #FFFFFF; font-size: 17px; line-height: 1; font-family: Manrope, sans-serif; cursor: ' + (disabled ? 'default' : 'pointer') + '; color: ' + (disabled ? '#CFCABB' : '#12130E') + ';';
     const careNU = (c, w) => c + ' ' + (c === 1 && w.slice(-1) === 's' ? w.slice(0, -1) : w);
     const careOk = !!(s.careService && careSelDone && s.careDay && s.careSlot && s.carePhone.trim().length > 5);
 
@@ -1690,9 +1713,13 @@ class Component extends DCLogic {
         { id: 'once', label: 'One visit' },
         { id: 'plan', label: s.careService === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('carePlan', p.id), style: careChip(s.carePlan === p.id) })),
-      careDays: this.days.slice(0, 6).map(d => ({
-        label: d.dow + ' ' + d.day, onPick: () => this.set('careDay', d.id), style: careChip(s.careDay === d.id)
-      })),
+      calTitle: careCal ? careCal.title : '',
+      calWeekdays: careCal ? careCal.weekdays : [],
+      calCells: careCal ? careCal.cells.map(careCalCell) : [],
+      calPrev: () => { if ((s.careMonthOffset || 0) > 0) this.set('careMonthOffset', (s.careMonthOffset || 0) - 1); },
+      calNext: () => { if (careCal && !careCal.nextDisabled) this.set('careMonthOffset', (s.careMonthOffset || 0) + 1); },
+      calPrevStyle: careCalNav(careCal && careCal.prevDisabled),
+      calNextStyle: careCalNav(careCal && careCal.nextDisabled),
       careSlots: SLOTS.map(t => ({ label: t, onPick: () => this.set('careSlot', t), style: careChip(s.careSlot === t) })),
       carePhone: s.carePhone,
       onCarePhone: e => this.set('carePhone', e.target.value),

@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="pricing.js"></script>
+<script src="cal.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -116,6 +117,7 @@
               </sc-for>
             </div>
           </div>
+          </sc-if>
           <sc-if value="{{ unitsShow }}" hint-placeholder-val="{{ false }}">
           <div>
             <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">4 · {{ unitsLabel }}</div>
@@ -141,12 +143,23 @@
           <div>
             <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Preferred visit (optional)</div>
             <div style="display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px;">
-              <div style="flex: 1 1 260px; min-width: 220px;">
-                <div style="font-size: 12px; color: #8A8A79;">Day</div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
-                  <sc-for list="{{ days }}" as="c" hint-placeholder-count="6">
-                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                  </sc-for>
+              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
+                <div style="border: 1px solid #E4E0D5; border-radius: 18px; background: #FFFFFF; padding: 14px 16px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
+                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
+                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
+                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
+                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em; color: #A5A292; padding: 2px 0;">{{ w }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
+                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
                 </div>
               </div>
               <div style="flex: 1 1 180px; min-width: 160px;">
@@ -231,7 +244,7 @@ const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 class Component extends DCLogic {
-  state = { service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', name: '', phone: '', email: '', loc: '', notes: '', day: '', slot: '', sent: false, ref: '', tried: false };
+  state = { service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', name: '', phone: '', email: '', loc: '', notes: '', day: '', slot: '', monthOffset: 0, sent: false, ref: '', tried: false };
 
   componentDidMount() {
     const bump = () => this.forceUpdate();
@@ -269,13 +282,30 @@ class Component extends DCLogic {
     const selDone = isCleaning ? (!!s.scope && s.rooms > 0) : (isMaint ? (!!s.category && !!s.sub && s.units > 0) : false);
     const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
     const canSend = !!s.service && selDone && contactOk;
-    const dayObj = this.days.find(d => d.id === s.day);
+    const dayLabel = (function (id) {
+      if (!id) return '';
+      var p = id.split('-'); var dt = new Date(+p[0], +p[1] - 1, +p[2]);
+      return DOWS[dt.getDay()] + ' ' + (+p[2]) + ' ' + MONTHS[dt.getMonth()];
+    })(s.day);
+    const dayObj = s.day ? { long: dayLabel } : null;
     const priceText = q && selDone ? (P.full(q.due) + (s.plan === 'plan' ? ' / yr' : '')) : '';
     const n = (c, w) => c + ' ' + (c === 1 ? w : w + 's');
     const nUnit = (c, w) => c + ' ' + (c === 1 && w.slice(-1) === 's' ? w.slice(0, -1) : w);
 
     const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
     const inputStyle = 'background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 14.5px; color: #12130E; outline: none;';
+
+    // Month calendar (shared window.TurnkiiCal) — replaces the day chips.
+    const cal = window.TurnkiiCal ? window.TurnkiiCal.build(s.monthOffset || 0, s.day) : null;
+    const calBase = 'aspect-ratio: 1 / 1; min-height: 34px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 13px; border-radius: 10px; padding: 0;';
+    const calCell = (c) => {
+      if (c.blank) return { label: '', onPick: () => {}, style: calBase + 'border: 0; background: transparent; cursor: default;' };
+      if (c.disabled) return { label: String(c.day), onPick: () => {}, style: calBase + 'border: 0; background: transparent; color: #CFCABB; cursor: default;' };
+      var sel = c.selected;
+      return { label: String(c.day), onPick: () => this.set('day', c.id),
+        style: calBase + 'cursor: pointer; font-weight: ' + (sel || c.today ? '700' : '500') + '; border: 1px solid ' + (sel ? '#12130E' : (c.today ? '#12130E' : '#E4E0D5')) + '; background: ' + (sel ? '#12130E' : '#FFFFFF') + '; color: ' + (sel ? '#F6F3EC' : '#12130E') + ';' };
+    };
+    const calNav = (disabled) => 'width: 32px; height: 32px; border-radius: 999px; border: 1px solid #E4E0D5; background: #FFFFFF; font-size: 17px; line-height: 1; font-family: Manrope, sans-serif; cursor: ' + (disabled ? 'default' : 'pointer') + '; color: ' + (disabled ? '#CFCABB' : '#12130E') + ';';
 
     const svcTitle = isCleaning ? 'Deep cleaning' : (isMaint ? 'Maintenance & repairs' : '');
 
@@ -318,7 +348,13 @@ class Component extends DCLogic {
         { id: 'once', label: 'One visit' },
         { id: 'plan', label: isMaint ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('plan', p.id), style: chip(s.plan === p.id) })),
-      days: this.days.map(d => ({ label: d.label, onPick: () => this.set('day', d.id), style: chip(s.day === d.id) })),
+      calTitle: cal ? cal.title : '',
+      calWeekdays: cal ? cal.weekdays : [],
+      calCells: cal ? cal.cells.map(calCell) : [],
+      calPrev: () => { if ((s.monthOffset || 0) > 0) this.set('monthOffset', (s.monthOffset || 0) - 1); },
+      calNext: () => { if (cal && !cal.nextDisabled) this.set('monthOffset', (s.monthOffset || 0) + 1); },
+      calPrevStyle: calNav(cal && cal.prevDisabled),
+      calNextStyle: calNav(cal && cal.nextDisabled),
       slots: SLOTS.map(t => ({ label: t, onPick: () => this.set('slot', t), style: chip(s.slot === t) })),
 
       onName: e => this.set('name', e.target.value),
@@ -384,7 +420,7 @@ class Component extends DCLogic {
       },
       confirmTitle: (s.name ? s.name.split(' ')[0] + ', your' : 'Your') + ' request is in.',
       confirmBody: 'We call you on ' + (s.phone || 'your mobile') + ' within one working day to confirm the crew, the scope and the price' + (dayObj ? ' — we\'ll aim for ' + dayObj.long + (s.slot ? ' at ' + s.slot : '') : '') + '. Reference ' + s.ref + '.',
-      onAnother: () => this.setState({ service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', day: '', slot: '', notes: '', sent: false, tried: false })
+      onAnother: () => this.setState({ service: '', scope: '', rooms: 0, category: '', sub: '', units: 0, plan: 'once', day: '', slot: '', monthOffset: 0, notes: '', sent: false, tried: false })
     };
   }
 }

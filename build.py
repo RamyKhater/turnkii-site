@@ -672,6 +672,10 @@ def main():
     # the client account and the internal progress console.
     if os.path.exists(os.path.join(ROOT, "progress.js")):
         shutil.copy(os.path.join(ROOT, "progress.js"), os.path.join(DIST, "progress.js"))
+    # cal.js — shared month-calendar builder (window.TurnkiiCal) for the care
+    # booking date pickers.
+    if os.path.exists(os.path.join(ROOT, "cal.js")):
+        shutil.copy(os.path.join(ROOT, "cal.js"), os.path.join(DIST, "cal.js"))
     # ios-frame.jsx is fetched at runtime by <x-import> on the mobile page and
     # Babel-transformed with the vendored @babel/standalone (no CDN).
     shutil.copy(os.path.join(ROOT, "ios-frame.jsx"), os.path.join(DIST, "ios-frame.jsx"))

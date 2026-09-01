@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="./image-slot.js"></script>
 <script src="pricing.js"></script>
+<script src="cal.js"></script>
 <script src="progress.js"></script>
 <style>
   html { scroll-behavior: smooth; }
@@ -337,12 +338,24 @@
                 </div>
               </div>
               <div style="display: flex; gap: 22px; flex-wrap: wrap;">
-                <div style="flex: 1 1 280px; min-width: 240px;">
+                <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
                   <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">Visit day</div>
-                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
-                    <sc-for list="{{ careDays }}" as="c" hint-placeholder-count="6">
-                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                    </sc-for>
+                  <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #FFFFFF; padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                      <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
+                      <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
+                      <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
+                      <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
+                        <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
+                      </sc-for>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
+                      <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                        <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                      </sc-for>
+                    </div>
                   </div>
                 </div>
                 <div style="flex: 1 1 200px; min-width: 180px;">
@@ -444,7 +457,7 @@ const CARE_SERVICES = [
 ];
 
 class Component extends DCLogic {
-  state = { openProject: 'TK-2418', form: null, formReason: '', formComment: '', signName: '', tab: 'Properties', careProp: 'katameya', careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careDay: '', careSlot: '', careDone: false, careNotify: false };
+  state = { openProject: 'TK-2418', form: null, formReason: '', formComment: '', signName: '', tab: 'Properties', careProp: 'katameya', careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careDay: '', careSlot: '', careMonthOffset: 0, careDone: false, careNotify: false };
 
   componentDidMount() {
     const bump = () => this.forceUpdate();
@@ -487,7 +500,17 @@ class Component extends DCLogic {
     const svc = CARE_SERVICES.find(x => x.id === st.careService);
     const q = P ? P.careQuote({ service: st.careService || 'cleaning', scope: st.careScope, rooms: st.careRooms, category: st.careCategory, sub: st.careSub, units: st.careUnits, area: prop.area, plan: st.carePlan }) : null;
     const cfg = P ? P.rates().care : null;
-    const dayObj = this.days.find(d => d.id === st.careDay);
+    const dayObj = st.careDay ? { long: (function (id) { var p = id.split('-'); var dt = new Date(+p[0], +p[1] - 1, +p[2]); return DOWS[dt.getDay()] + ' ' + (+p[2]) + ' ' + MONTHS[dt.getMonth()]; })(st.careDay) } : null;
+    const cal = window.TurnkiiCal ? window.TurnkiiCal.build(st.careMonthOffset || 0, st.careDay) : null;
+    const calBase = 'aspect-ratio: 1 / 1; min-height: 34px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 13px; border-radius: 10px; padding: 0;';
+    const calCell = (c) => {
+      if (c.blank) return { label: '', onPick: () => {}, style: calBase + 'border: 0; background: transparent; cursor: default;' };
+      if (c.disabled) return { label: String(c.day), onPick: () => {}, style: calBase + 'border: 0; background: transparent; color: #CFCABB; cursor: default;' };
+      var sel = c.selected;
+      return { label: String(c.day), onPick: () => this.set('careDay', c.id),
+        style: calBase + 'cursor: pointer; font-weight: ' + (sel || c.today ? '700' : '500') + '; border: 1px solid ' + (sel ? '#12130E' : (c.today ? '#12130E' : '#E4E0D5')) + '; background: ' + (sel ? '#12130E' : '#FFFFFF') + '; color: ' + (sel ? '#F6F3EC' : '#12130E') + ';' };
+    };
+    const calNav = (disabled) => 'width: 32px; height: 32px; border-radius: 999px; border: 1px solid #E4E0D5; background: #FFFFFF; font-size: 17px; line-height: 1; font-family: Manrope, sans-serif; cursor: ' + (disabled ? 'default' : 'pointer') + '; color: ' + (disabled ? '#CFCABB' : '#12130E') + ';';
     const careIsCleaning = st.careService === 'cleaning';
     const careIsMaint = st.careService === 'maintenance';
     const needRooms = careIsCleaning;
@@ -626,7 +649,13 @@ class Component extends DCLogic {
         { id: 'once', label: 'One visit' },
         { id: 'plan', label: st.careService === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('carePlan', p.id), style: chip(st.carePlan === p.id) })),
-      careDays: this.days.map(d => ({ label: d.label, onPick: () => this.set('careDay', d.id), style: chip(st.careDay === d.id) })),
+      calTitle: cal ? cal.title : '',
+      calWeekdays: cal ? cal.weekdays : [],
+      calCells: cal ? cal.cells.map(calCell) : [],
+      calPrev: () => { if ((st.careMonthOffset || 0) > 0) this.set('careMonthOffset', (st.careMonthOffset || 0) - 1); },
+      calNext: () => { if (cal && !cal.nextDisabled) this.set('careMonthOffset', (st.careMonthOffset || 0) + 1); },
+      calPrevStyle: calNav(cal && cal.prevDisabled),
+      calNextStyle: calNav(cal && cal.nextDisabled),
       careSlots: CARE_SLOTS.map(t => ({ label: t, onPick: () => this.set('careSlot', t), style: chip(st.careSlot === t) })),
       carePrice: !prop.handedOver ? 'From handover' : st.careDone ? 'Visit booked' : (q && scopePicked ? (st.carePlan === 'plan' ? P.money(q.annual) + ' / yr' : P.full(q.due)) : (svc ? (careIsCleaning ? (st.careScope ? 'Pick rooms' : 'Pick an area') : (!st.careCategory ? 'Pick a service' : (!st.careSub ? 'Pick what\'s needed' : 'Pick units'))) : 'Pick a service')),
       carePriceNote: !prop.handedOver
