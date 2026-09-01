@@ -23,6 +23,11 @@
   input, select, textarea, button { font-family: inherit; }
   ::selection { background: #D6F23C; color: #12130E; }
   @keyframes tkRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  /* "Why clients use Turnkii" stats — always fills evenly (6 → 3 → 2 cols). */
+  .why-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: #E4E0D5; border: 1px solid #E4E0D5; border-radius: 20px; overflow: hidden; margin-top: 26px; }
+  .why-grid > div { background: #FFFFFF; padding: 26px 22px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+  @media (max-width: 1080px) { .why-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>
 </helmet>
 
@@ -156,31 +161,13 @@
           <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.8vw, 48px); line-height: 1.03; letter-spacing: -0.02em; margin: 0;">Why clients use Turnkii</h2>
           <a data-track="cta_brief" href="#brief" style="font-size: 14px; font-weight: 700; border-bottom: 2px solid #D6F23C; padding-bottom: 3px;">Start your brief →</a>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1px; background: #E4E0D5; border: 1px solid #E4E0D5; border-radius: 20px; overflow: hidden; margin-top: 26px;">
-          <div style="background: #12130E; color: #F6F3EC; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1; color: #D6F23C;">1</div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Contract, team and accountable number</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1;">5</div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Styles, costed — not concepts</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1;">4</div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Ways to pay, to 60 months</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1;">9<span style="font-size: 22px;"> wks</span></div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Shell to photographed handover</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1;">12<span style="font-size: 22px;"> mo</span></div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Workmanship cover after handover</div>
-          </div>
-          <div style="background: #FFFFFF; padding: 26px 22px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; line-height: 1;">1</div>
-            <div style="font-size: 16px; font-weight: 700; line-height: 1.3;">Account for every unit you own</div>
-          </div>
+        <div class="why-grid">
+          <sc-for list="{{ whyStats }}" as="w" hint-placeholder-count="6">
+            <div style="{{ w.cellStyle }}">
+              <div style="{{ w.numStyle }}">{{ w.n }}<span style="font-size: 22px;">{{ w.unit }}</span></div>
+              <div style="{{ w.labelStyle }}">{{ w.label }}</div>
+            </div>
+          </sc-for>
         </div>
       </div>
     </div>
@@ -1668,6 +1655,20 @@ class Component extends DCLogic {
       onTerm: e => this.setState({ calcTerm: Number(e.target.value) }),
       onCloseCalc: () => this.setState({ calc: '' }),
       onCalcSelect: () => this.setState({ plan: s.calc, calc: '', phase: 3 }),
+
+      whyStats: [
+        { n: '1', unit: '', label: 'Contract, team and accountable number', dark: true },
+        { n: '5', unit: '', label: 'Styles, costed — not concepts' },
+        { n: '4', unit: '', label: 'Ways to pay, to 60 months' },
+        { n: '9', unit: ' wks', label: 'Shell to photographed handover' },
+        { n: '12', unit: ' mo', label: 'Workmanship cover after handover' },
+        { n: '1', unit: '', label: 'Account for every unit you own' }
+      ].map(x => ({
+        n: x.n, unit: x.unit, label: x.label,
+        cellStyle: 'background: ' + (x.dark ? '#12130E' : '#FFFFFF') + ';',
+        numStyle: "font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(34px, 3.4vw, 42px); line-height: 1; color: " + (x.dark ? '#D6F23C' : '#12130E') + ';',
+        labelStyle: 'font-size: 15.5px; font-weight: 700; line-height: 1.3; color: ' + (x.dark ? '#F6F3EC' : '#12130E') + ';'
+      })),
 
       projects: PROJECTS,
       team: TEAM,
