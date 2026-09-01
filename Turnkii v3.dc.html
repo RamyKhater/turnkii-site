@@ -835,20 +835,56 @@
 
         <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top: 14px; border: 1px solid #D3CEC0; border-radius: 22px; background: #FFFFFF; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 22px;">
-            <div style="display: flex; gap: 22px; flex-wrap: wrap;">
-              <div style="flex: 1 1 320px; min-width: 260px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careScopeLabel }}</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                  <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="3">
-                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                  </sc-for>
-                </div>
-              </div>
-              <div style="flex: 0 1 220px; min-width: 180px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Unit area, m²</div>
-                <input type="number" value="{{ careArea }}" onInput="{{ onCareArea }}" placeholder="185" style="width: 100%; min-width: 0; margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 14px; background: #F6F3EC; padding: 14px; font-size: 16px; font-weight: 600; color: #12130E; outline: none;" style-focus="border-color: #12130E;" />
+            <sc-if value="{{ careIsCleaning }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What to clean</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
               </div>
             </div>
+            <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How many rooms</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
+            <sc-if value="{{ careIsMaint }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Which service</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careCategories }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ careSubShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What's needed</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careSubs }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ careUnitsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careUnitsLabel }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careUnits }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
 
             <div>
               <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How often</div>
@@ -1278,7 +1314,7 @@ class Component extends DCLogic {
   state = {
     services: [], ptype: '', area: '', units: '', location: '', style: '', pkg: '', materials: [],
     budget: '', timeline: '', name: '', phone: '', email: '', notes: '', day: '', slot: '',
-    careService: '', careScope: '', carePlan: 'once', careArea: '', careDay: '', careSlot: '', carePhone: '', careDone: false, careTried: false,
+    careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', carePhone: '', careDone: false, careTried: false,
     plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, shot: {}
   };
 
@@ -1412,14 +1448,22 @@ class Component extends DCLogic {
     const estReady = !!(est && est.ready);
 
     const careChip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 11px 16px; font-size: 14px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#F6F3EC') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
-    const careQ = P ? P.careQuote({ service: s.careService || 'cleaning', area: s.careArea, plan: s.carePlan }) : null;
     const careCfg = P ? P.rates().care : null;
+    const careIsCleaning = s.careService === 'cleaning';
+    const careIsMaint = s.careService === 'maintenance';
+    const careCatalogue = (careCfg && careCfg.maintenanceCatalogue) || [];
+    const careCatObj = careCatalogue.find(x => x.name === s.careCategory);
+    const careUnitWord = careCatObj ? careCatObj.unitLabel : 'units';
+    const careQ = P ? P.careQuote({ service: s.careService || 'cleaning', scope: s.careScope, rooms: s.careRooms, category: s.careCategory, sub: s.careSub, units: s.careUnits, plan: s.carePlan }) : null;
+    const careSelDone = careIsCleaning ? (!!s.careScope && s.careRooms > 0) : (careIsMaint ? (!!s.careCategory && !!s.careSub && s.careUnits > 0) : false);
+    const careRateVals = careCfg && careCfg.maintenanceRates ? Object.keys(careCfg.maintenanceRates).map(k => careCfg.maintenanceRates[k]) : [];
     const careLead = {
-      clean: careCfg ? 'from ' + P.full(careCfg.cleaningMin) : '—',
-      maint: careCfg ? P.full(careCfg.maintenanceCallout) : '—'
+      clean: careCfg ? 'from ' + P.full((careCfg.cleaningBase || 0) + (careCfg.cleaningPerRoom || 0)) : '—',
+      maint: careCfg && careRateVals.length ? 'from ' + P.full(Math.min.apply(null, careRateVals)) + ' / unit' : '—'
     };
     const careDayObj = this.days.find(d => d.id === s.careDay);
-    const careOk = !!(s.careService && s.careDay && s.careSlot && s.carePhone.trim().length > 5 && (s.careService === 'maintenance' || Number(s.careArea) > 0));
+    const careNU = (c, w) => c + ' ' + (c === 1 && w.slice(-1) === 's' ? w.slice(0, -1) : w);
+    const careOk = !!(s.careService && careSelDone && s.careDay && s.careSlot && s.carePhone.trim().length > 5);
 
     return {
       estRange: estReady ? P.range(est.lo, est.hi) : 'Add area to price it',
@@ -1625,44 +1669,48 @@ class Component extends DCLogic {
       ].map(c => {
         const on = s.careService === c.id;
         return Object.assign({}, c, {
-          onPick: () => this.setState({ careService: on ? '' : c.id, careScope: '', careTried: false }),
+          onPick: () => this.setState({ careService: on ? '' : c.id, careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, careTried: false }),
           iconBg: on ? '#12130E' : '#EFEBE1',
           iconFg: on ? '#D6F23C' : '#5E5F52',
           style: 'cursor: pointer; text-align: left; font-family: Manrope, sans-serif; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; outline: ' + (on ? '1px solid #12130E' : '0') + '; outline-offset: -2px; border-radius: 20px; padding: 20px; background: #FFFFFF; display: block; width: 100%;'
         });
       }),
-      careScopeLabel: s.careService === 'maintenance' ? 'What needs attention' : 'What to clean',
-      careScopes: (s.careService === 'maintenance'
-        ? ['AC service', 'Plumbing', 'Electrics', 'Joinery', 'Snag fix', 'Not sure yet']
-        : ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace']
-      ).map(label => ({ label, onPick: () => this.set('careScope', label), style: careChip(s.careScope === label) })),
+      careIsCleaning: careIsCleaning,
+      careIsMaint: careIsMaint,
+      careScopes: ['Whole unit', 'Kitchen & bathrooms', 'Post-works clean', 'Windows & terrace'].map(label => ({ label, onPick: () => this.set('careScope', label), style: careChip(s.careScope === label) })),
+      careRoomsShow: careIsCleaning && !!s.careScope,
+      careRooms: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('careRooms', nn), style: careChip(s.careRooms === nn) })),
+      careCategories: careCatalogue.map(x => ({ label: x.name, onPick: () => this.setState({ careCategory: s.careCategory === x.name ? '' : x.name, careSub: '', careUnits: 0 }), style: careChip(s.careCategory === x.name) })),
+      careSubShow: careIsMaint && !!s.careCategory,
+      careSubs: (careCatObj ? careCatObj.subs : []).map(label => ({ label, onPick: () => this.set('careSub', label), style: careChip(s.careSub === label) })),
+      careUnitsShow: careIsMaint && !!s.careSub,
+      careUnitsLabel: 'How many ' + careUnitWord,
+      careUnits: [1, 2, 3, 4, 5, 6].map(nn => ({ label: nn === 6 ? '6+' : String(nn), onPick: () => this.set('careUnits', nn), style: careChip(s.careUnits === nn) })),
       carePlans: [
         { id: 'once', label: 'One visit' },
         { id: 'plan', label: s.careService === 'maintenance' ? 'Yearly plan · 4 visits' : 'Yearly plan · 3 visits' }
       ].map(p => ({ label: p.label, onPick: () => this.set('carePlan', p.id), style: careChip(s.carePlan === p.id) })),
-      careArea: s.careArea,
-      onCareArea: e => this.set('careArea', e.target.value),
       careDays: this.days.slice(0, 6).map(d => ({
         label: d.dow + ' ' + d.day, onPick: () => this.set('careDay', d.id), style: careChip(s.careDay === d.id)
       })),
       careSlots: SLOTS.map(t => ({ label: t, onPick: () => this.set('careSlot', t), style: careChip(s.careSlot === t) })),
       carePhone: s.carePhone,
       onCarePhone: e => this.set('carePhone', e.target.value),
-      carePrice: careQ && careQ.ready ? (s.carePlan === 'plan' ? P.money(careQ.annual) + ' / year' : P.full(careQ.perVisit)) : 'Add the unit area',
-      carePriceNote: careQ && careQ.ready
+      carePrice: careQ && careSelDone ? (s.carePlan === 'plan' ? P.money(careQ.annual) + ' / year' : P.full(careQ.perVisit)) : (!s.careService ? 'Pick a service' : (careIsCleaning ? (s.careScope ? 'Pick rooms' : 'Pick an area') : (!s.careCategory ? 'Pick a service' : (!s.careSub ? 'Pick what\'s needed' : 'Pick units')))),
+      carePriceNote: careQ && careSelDone
         ? (s.carePlan === 'plan'
             ? careQ.visits + ' visits, ' + careQ.planDiscount + '% off · cancel anytime'
-            : 'Confirmed on arrival. Parts and consumables quoted before work starts.')
-        : 'Deep cleaning is priced per m²; maintenance is a flat call-out.',
-      careCtaLabel: careOk ? 'Request the visit' : (s.careTried ? 'Add a day and mobile' : 'Request the visit'),
+            : (careIsCleaning ? 'Priced by rooms and what to clean.' : P.full(careQ.perVisit) + ' for ' + careNU(s.careUnits, careUnitWord) + ' — parts quoted on site.'))
+        : (careIsCleaning ? 'Pick what to clean and how many rooms.' : (careIsMaint ? 'Pick the service, what\'s needed, and how many units.' : 'Deep cleaning by rooms; maintenance per sub-service and units.')),
+      careCtaLabel: careOk ? 'Request the visit' : (s.careTried ? 'Finish your selection' : 'Request the visit'),
       careCtaStyle: 'flex: 0 0 auto; border: none; border-radius: 999px; padding: 16px 26px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; background: ' + (careOk ? '#D6F23C' : '#E4E0D5') + '; color: ' + (careOk ? '#12130E' : '#A5A292') + ';',
       onCareSubmit: () => {
         if (!careOk) { this.set('careTried', true); return; }
         this.setState({ careDone: true });
       },
-      onCareReset: () => this.setState({ careDone: false, careService: '', careScope: '', careDay: '', careSlot: '', carePlan: 'once', careTried: false }),
+      onCareReset: () => this.setState({ careDone: false, careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, careDay: '', careSlot: '', carePlan: 'once', careTried: false }),
       careDoneTitle: (s.careService === 'maintenance' ? 'Technician' : 'Cleaning crew') + ' requested — ' + (careDayObj ? careDayObj.dow + ' ' + careDayObj.day + ' ' + careDayObj.mon : '') + ', ' + s.careSlot,
-      careDoneBody: 'We confirm on WhatsApp within the hour' + (s.careScope ? ' · ' + s.careScope : '') + (careQ && careQ.ready ? ' · ' + (s.carePlan === 'plan' ? P.money(careQ.annual) + ' per year' : P.full(careQ.perVisit) + ' per visit') : '') + '. The visit is logged against the unit in your account.',
+      careDoneBody: 'We confirm on WhatsApp within the hour' + (careIsCleaning ? (s.careScope ? ' · ' + s.careScope + ' · ' + careNU(s.careRooms, 'room') : '') : (s.careSub ? ' · ' + s.careCategory + ' — ' + s.careSub + ' · ' + careNU(s.careUnits, careUnitWord) : '')) + (careQ && careSelDone ? ' · ' + (s.carePlan === 'plan' ? P.money(careQ.annual) + ' per year' : P.full(careQ.perVisit) + ' per visit') : '') + '. The visit is logged against the unit in your account.',
 
       optOutLabel: s.pkg === 'none' ? 'Finishing only — furniture excluded ✓' : 'I don’t need furniture — finishing only',
       optOutStyle: 'display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; border: 1px solid ' + (s.pkg === 'none' ? '#12130E' : '#C9C4B4') + '; background: ' + (s.pkg === 'none' ? '#12130E' : 'transparent') + '; color: ' + (s.pkg === 'none' ? '#F6F3EC' : '#5E5F52') + ';',
