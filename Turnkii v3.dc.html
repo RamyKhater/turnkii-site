@@ -738,6 +738,9 @@
                     <div style="font-size: 12.5px; font-weight: 700; margin-top: 3px;">{{ estMonthly }}</div>
                   </div>
                 </div>
+                <sc-if value="{{ estShareShow }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ onShareEst }}" aria-label="Share this estimate" style="width: 100%; margin-top: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share this estimate</button>
+                </sc-if>
               </div>
               <button onClick="{{ onSubmit }}" style="width: 100%; margin-top: 18px; border: none; border-radius: 16px; padding: 20px; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; background: {{ ctaBg }}; color: {{ ctaFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ ctaLabel }}</button>
               <div style="font-size: 12.5px; line-height: 1.5; color: #8A8A79; margin-top: 12px; text-align: center;">{{ hint }}</div>
@@ -1487,6 +1490,16 @@ class Component extends DCLogic {
       estHint: estReady
         ? (est.confidence < 70 ? 'Answer the next question to narrow this range.' : 'Fixed after the free site survey.')
         : 'Enter the unit area in step I and the estimate appears here — before you give us any contact details.',
+      estShareShow: estReady,
+      onShareEst: () => {
+        const S = window.TurnkiiShare;
+        if (!S || !estReady) return;
+        const range = P.range(est.lo, est.hi);
+        const what = (Number(s.area) ? Number(s.area) + 'm² ' : '') + (s.ptype ? String(s.ptype).toLowerCase() : 'place');
+        const url = S.url('/#brief', { medium: 'social', campaign: 'estimate' });
+        const text = 'Turnkii costed my ' + what + ' fit-out at about ' + range + ' — done in 2 minutes, before giving any contact details. Try yours:';
+        S.go({ url: url, title: 'Turnkii · Live estimate', text: text, item: 'estimate' });
+      },
       notSubmitted: !s.submitted,
       submitted: s.submitted,
       doneCount: doneCount,
