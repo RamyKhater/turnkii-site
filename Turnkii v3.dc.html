@@ -1139,6 +1139,7 @@
         <a href="#about" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">How it works</a>
         <a data-vertical="facility" href="Turnkii Facility.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Facility management</a>
         <a href="Turnkii Care.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Care &amp; maintenance</a>
+        <a href="Turnkii Refer.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Refer &amp; earn</a>
         <a href="#faq" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">FAQ</a>
         <a data-track="cta_brief" href="#brief" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Start a brief</a>
       </nav>
@@ -1636,6 +1637,7 @@ class Component extends DCLogic {
                 employment: s.preJob || undefined,
                 budgetPlan: s.plan || undefined,
                 channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
                 utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
                 utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
                 message: 'Financing pre-approval enquiry'
@@ -1861,6 +1863,7 @@ class Component extends DCLogic {
                   location: s.location || undefined, style: s.style || undefined,
                   services: Array.isArray(s.services) ? s.services : [], budgetPlan: s.plan || undefined,
                   channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
                   utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
                   utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
                   message: s.notes || undefined

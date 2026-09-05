@@ -341,6 +341,7 @@ class Component extends DCLogic {
                 propertyType: s.type || undefined, location: s.loc || undefined,
                 services: Array.isArray(s.svc) ? s.svc : [], channel: 'Facility (Eltizam)',
                 referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
                 utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
                 utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
                 message: 'Facility management enquiry — ' + summary + (s.notes ? (' · ' + s.notes) : '')

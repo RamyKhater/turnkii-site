@@ -410,6 +410,7 @@ class Component extends DCLogic {
                 services: [detail],
                 channel: 'Care booking',
                 referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
                 utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
                 utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
                 message: [detail, s.plan === 'plan' ? 'Yearly plan' : 'One visit', priceText ? ('Est. ' + priceText) : '', dayObj && s.slot ? ('Prefers ' + dayObj.long + ' ' + s.slot) : '', s.notes].filter(Boolean).join(' · ')

@@ -37,6 +37,18 @@ INTAKE_URL = os.environ.get("TURNKII_INTAKE_URL", "").strip()
 #   TURNKII_CONTENT_URL=https://<admin-host>/api/site-content python3 build.py
 CONTENT_URL = os.environ.get("TURNKII_CONTENT_URL", "").strip()
 
+# Referral program: the register endpoint (derived from the intake host unless
+# set explicitly). A ?ref=CODE on any landing URL is captured to localStorage
+# and rides along on the next brief submission as referredByCode.
+REFERRAL_URL = os.environ.get("TURNKII_REFERRAL_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/referrals/register") if INTAKE_URL else ""
+)
+REF_CAPTURE = (
+    "\n<script>(function(){try{var r=new URL(location.href).searchParams.get('ref');"
+    "if(r){localStorage.setItem('tk_ref',r);}window.TURNKII_REF=r||localStorage.getItem('tk_ref')||'';}"
+    "catch(e){window.TURNKII_REF='';}})();</script>"
+)
+
 # WhatsApp Business number for the floating click-to-chat button (digits only,
 # with country code, no "+"). Override with TURNKII_WHATSAPP; empty hides it.
 WHATSAPP = re.sub(r"[^0-9]", "", os.environ.get("TURNKII_WHATSAPP", "201221188000"))
@@ -351,6 +363,11 @@ PAGES = {
         "What's your Turnkii style? — 60-second quiz",
         "Take the 60-second quiz to find your interior style — Warm Contemporary, Neo-Classic, Modern Majlis, Layered Eclectic or Coastal Light — then start a costed brief.",
     ),
+    "Turnkii Refer.dc.html": (
+        "refer.html",
+        "Refer a friend & earn — Turnkii",
+        "Share your Turnkii referral link — when a friend you send signs their fit-out contract, you get an EGP credit off your own unit.",
+    ),
     # ── Facility management (customer-facing, indexed) + internal admin consoles.
     "Turnkii Facility.dc.html": (
         "facility.html",
@@ -424,6 +441,8 @@ def meta_block(slug, title, desc):
 <meta name="twitter:image" content="{og_img}" />""" + (
         f'\n<script>window.TURNKII_INTAKE_URL="{INTAKE_URL}";</script>' if INTAKE_URL else ""
     ) + (
+        f'\n<script>window.TURNKII_REFERRAL_URL="{REFERRAL_URL}";</script>' if REFERRAL_URL else ""
+    ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
     ) + sections_style() + analytics_head()
