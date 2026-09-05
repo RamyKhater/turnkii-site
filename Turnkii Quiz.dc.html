@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="share.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  button { font-family: inherit; }
+  ::selection { background: #D6F23C; color: #12130E; }
+  @keyframes qRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="background: #12130E; color: #F6F3EC; min-height: 100vh;">
+
+  <header style="max-width: 780px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between;">
+    <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px;">
+      <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+    </a>
+    <a href="Turnkii v3.dc.html#styles" style="color: rgba(246,243,236,0.7); font-size: 13px; font-weight: 600;" style-hover="color: #D6F23C;">All styles →</a>
+  </header>
+
+  <main style="max-width: 780px; margin: 0 auto; padding: clamp(12px, 3vw, 30px) clamp(16px, 4vw, 32px) 80px;">
+
+    <!-- QUESTIONS -->
+    <sc-if value="{{ asking }}" hint-placeholder-val="{{ true }}">
+      <div style="animation: qRise 0.35s ease both;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Style finder</div>
+          <div style="font-size: 12.5px; font-weight: 700; color: rgba(246,243,236,0.55);">{{ progressLabel }}</div>
+        </div>
+        <div style="height: 4px; border-radius: 999px; background: rgba(246,243,236,0.14); margin-top: 12px; overflow: hidden;">
+          <div style="height: 100%; background: #D6F23C; border-radius: 999px; width: {{ progressPct }}; transition: width .3s;"></div>
+        </div>
+
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 5vw, 46px); line-height: 1.08; letter-spacing: -0.01em; margin: 30px 0 0;">{{ question }}</h1>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 26px;">
+          <sc-for list="{{ options }}" as="o" hint-placeholder-count="5">
+            <button type="button" onClick="{{ o.onPick }}" style="text-align: left; cursor: pointer; font-family: Manrope, sans-serif; background: rgba(246,243,236,0.05); border: 1px solid rgba(246,243,236,0.18); border-radius: 16px; padding: 18px 20px; color: #F6F3EC; display: flex; align-items: center; gap: 14px;" style-hover="border-color: #D6F23C; background: rgba(214,242,60,0.08);">
+              <span style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 999px; border: 1px solid rgba(246,243,236,0.4); display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; color: rgba(246,243,236,0.7);">{{ o.key }}</span>
+              <span style="font-size: 16.5px; font-weight: 600; line-height: 1.35;">{{ o.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ onBack }}" style="margin-top: 22px; background: transparent; border: none; color: rgba(246,243,236,0.55); font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="color: #F6F3EC;">← Back</button>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- RESULT -->
+    <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+      <div style="animation: qRise 0.4s ease both;">
+        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Your Turnkii style</div>
+        <div style="margin-top: 16px; border-radius: 22px; overflow: hidden; background: #FFFFFF; color: #12130E; border: 1px solid rgba(246,243,236,0.14);">
+          <div role="img" aria-label="{{ result.name }}" style="{{ result.imgStyle }} aspect-ratio: 16 / 9;"></div>
+          <div style="padding: clamp(20px, 3vw, 30px);">
+            <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 5vw, 52px); line-height: 1.02; margin: 0;">{{ result.name }}</h1>
+            <div style="font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #8A8A79; margin-top: 8px;">{{ result.palette }}</div>
+            <p style="font-size: 16.5px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 52ch;">{{ result.blurb }}</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
+              <a href="{{ result.briefHref }}" style="background: #12130E; color: #F6F3EC; font-weight: 700; font-size: 15px; padding: 15px 24px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Start my brief in this style</a>
+              <a href="{{ result.styleHref }}" style="border: 1px solid #E4E0D5; color: #12130E; font-weight: 700; font-size: 15px; padding: 15px 22px; border-radius: 999px;" style-hover="border-color: #12130E;">See materials</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #E6FF6B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share my result</button>
+          <button type="button" onClick="{{ onRetake }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #F6F3EC;">Retake</button>
+        </div>
+        <p style="font-size: 13px; color: rgba(246,243,236,0.5); line-height: 1.5; margin-top: 16px; max-width: 52ch;">Share your result and see what your friends get — every Turnkii style is a costed kit, ready to build.</p>
+      </div>
+    </sc-if>
+
+  </main>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props="{}">
+const QSTYLES = {
+  warm: { name: 'Warm Contemporary', blurb: 'Sand plaster, cane and walnut — soft, photogenic and easy to let.', palette: 'Sand · Walnut · Olive', img: 'assets/style-warm.jpg', anchor: 'warm' },
+  neoclassic: { name: 'Neo-Classic Calm', blurb: 'Panelled walls, marble and brass — quietly grand, never fussy.', palette: 'Ivory · Marble · Brass', img: 'assets/style-neoclassic.png', anchor: 'neoclassic' },
+  majlis: { name: 'Modern Majlis', blurb: 'Warm woods and generous social seating built for gathering.', palette: 'Terracotta · Oak · Gold', img: 'assets/style-majlis.jpg', anchor: 'majlis' },
+  eclectic: { name: 'Layered Eclectic', blurb: 'Colour, pattern and collected pieces — bold, done with control.', palette: 'Emerald · Rust · Ink', img: 'assets/style-eclectic.jpg', anchor: 'eclectic' },
+  coastal: { name: 'Coastal Light', blurb: 'Breezy whites, rattan and pale timber made for the shore.', palette: 'White · Rattan · Sky', img: 'assets/style-coastal.jpg', anchor: 'coastal' }
+};
+
+const QUESTIONS = [
+  { q: 'Pick the palette you would happily live in.', a: [
+    { t: 'Sand, walnut and olive', s: { warm: 2 } },
+    { t: 'Ivory, marble and brass', s: { neoclassic: 2 } },
+    { t: 'Terracotta, oak and gold', s: { majlis: 2 } },
+    { t: 'Emerald, rust and ink', s: { eclectic: 2 } },
+    { t: 'White, rattan and sky blue', s: { coastal: 2 } }
+  ] },
+  { q: 'What is the space mostly for?', a: [
+    { t: 'Calm, everyday living', s: { warm: 2, coastal: 1 } },
+    { t: 'Hosting guests in style', s: { neoclassic: 2, majlis: 1 } },
+    { t: 'Big family gatherings', s: { majlis: 2 } },
+    { t: 'Showing off your personality', s: { eclectic: 2 } },
+    { t: 'Weekends by the sea', s: { coastal: 2 } }
+  ] },
+  { q: 'Choose a material you are drawn to.', a: [
+    { t: 'Natural wood and cane', s: { warm: 2, coastal: 1 } },
+    { t: 'Marble and polished brass', s: { neoclassic: 2 } },
+    { t: 'Warm oak with brass accents', s: { majlis: 2, warm: 1 } },
+    { t: 'Bold tiles and velvet', s: { eclectic: 2 } },
+    { t: 'Whitewashed timber', s: { coastal: 2 } }
+  ] },
+  { q: 'How much colour do you want?', a: [
+    { t: 'Soft neutrals throughout', s: { warm: 2 } },
+    { t: 'Classic and restrained', s: { neoclassic: 2 } },
+    { t: 'Warm earthy tones', s: { majlis: 2 } },
+    { t: 'Bring on the colour', s: { eclectic: 2 } },
+    { t: 'Cool and breezy', s: { coastal: 2 } }
+  ] },
+  { q: 'Where is home?', a: [
+    { t: 'A city apartment', s: { warm: 1, neoclassic: 1 } },
+    { t: 'A villa or townhouse', s: { neoclassic: 2, majlis: 1 } },
+    { t: 'A busy family home', s: { majlis: 2 } },
+    { t: 'A place with real character', s: { eclectic: 2 } },
+    { t: 'A North Coast chalet', s: { coastal: 2 } }
+  ] }
+];
+
+class Component extends DCLogic {
+  state = { i: 0, scores: { warm: 0, neoclassic: 0, majlis: 0, eclectic: 0, coastal: 0 }, picks: [] };
+
+  pick(ans) {
+    const scores = Object.assign({}, this.state.scores);
+    Object.keys(ans.s).forEach(k => { scores[k] = (scores[k] || 0) + ans.s[k]; });
+    this.setState({ scores: scores, i: this.state.i + 1, picks: this.state.picks.concat([{ i: this.state.i, s: ans.s }]) });
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+  }
+
+  back() {
+    if (!this.state.picks.length) return;
+    const last = this.state.picks[this.state.picks.length - 1];
+    const scores = Object.assign({}, this.state.scores);
+    Object.keys(last.s).forEach(k => { scores[k] = (scores[k] || 0) - last.s[k]; });
+    this.setState({ scores: scores, i: this.state.i - 1, picks: this.state.picks.slice(0, -1) });
+  }
+
+  winner() {
+    const sc = this.state.scores;
+    let best = 'warm', bestV = -1;
+    ['warm', 'neoclassic', 'majlis', 'eclectic', 'coastal'].forEach(k => { if (sc[k] > bestV) { bestV = sc[k]; best = k; } });
+    return best;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const asking = s.i < QUESTIONS.length;
+    const bgImg = (src) => "background-image: url('" + src + "'); background-size: cover; background-position: center; width: 100%; height: 100%;";
+
+    if (asking) {
+      const cur = QUESTIONS[s.i];
+      const keys = ['A', 'B', 'C', 'D', 'E'];
+      return {
+        asking: true, done: false,
+        progressLabel: 'Question ' + (s.i + 1) + ' of ' + QUESTIONS.length,
+        progressPct: Math.round((s.i) / QUESTIONS.length * 100) + '%',
+        question: cur.q,
+        options: cur.a.map((o, idx) => ({ key: keys[idx], label: o.t, onPick: () => this.pick(o) })),
+        canBack: s.i > 0,
+        onBack: () => this.back()
+      };
+    }
+
+    const win = this.winner();
+    const st = QSTYLES[win];
+    const S = window.TurnkiiShare;
+    return {
+      asking: false, done: true,
+      result: {
+        name: st.name, blurb: st.blurb, palette: st.palette,
+        imgStyle: bgImg(st.img),
+        briefHref: 'Turnkii v3.dc.html#brief',
+        styleHref: 'Turnkii Style.dc.html#' + st.anchor
+      },
+      onShare: () => {
+        if (!S) return;
+        const url = S.url('/quiz.html', { medium: 'social', campaign: 'quiz_' + win });
+        const text = 'I took the 60-second Turnkii style quiz and I’m ' + st.name + '. What’s yours?';
+        S.go({ url: url, title: 'My Turnkii style: ' + st.name, text: text, item: 'quiz_' + win });
+      },
+      onRetake: () => this.setState({ i: 0, scores: { warm: 0, neoclassic: 0, majlis: 0, eclectic: 0, coastal: 0 }, picks: [] })
+    };
+  }
+}
+</script>
+</body>
+</html>

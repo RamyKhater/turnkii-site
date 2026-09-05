@@ -346,6 +346,11 @@ PAGES = {
         "Cleaning & maintenance — Turnkii",
         "Book vetted deep-cleaning and home maintenance in minutes — pick the service, see the price, and we confirm on WhatsApp. Open to everyone, no account needed.",
     ),
+    "Turnkii Quiz.dc.html": (
+        "quiz.html",
+        "What's your Turnkii style? — 60-second quiz",
+        "Take the 60-second quiz to find your interior style — Warm Contemporary, Neo-Classic, Modern Majlis, Layered Eclectic or Coastal Light — then start a costed brief.",
+    ),
     # ── Facility management (customer-facing, indexed) + internal admin consoles.
     "Turnkii Facility.dc.html": (
         "facility.html",
