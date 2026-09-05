@@ -676,6 +676,10 @@ def main():
     # booking date pickers.
     if os.path.exists(os.path.join(ROOT, "cal.js")):
         shutil.copy(os.path.join(ROOT, "cal.js"), os.path.join(DIST, "cal.js"))
+    # share.js — shared share engine (window.TurnkiiShare) behind the viral-loop
+    # share buttons (styles, inspiration, estimate, quiz).
+    if os.path.exists(os.path.join(ROOT, "share.js")):
+        shutil.copy(os.path.join(ROOT, "share.js"), os.path.join(DIST, "share.js"))
     # ios-frame.jsx is fetched at runtime by <x-import> on the mobile page and
     # Babel-transformed with the vendored @babel/standalone (no CDN).
     shutil.copy(os.path.join(ROOT, "ios-frame.jsx"), os.path.join(DIST, "ios-frame.jsx"))
