@@ -740,7 +740,10 @@
                   </div>
                 </div>
                 <sc-if value="{{ estShareShow }}" hint-placeholder-val="{{ false }}">
-                  <button onClick="{{ onShareEst }}" aria-label="Share this estimate" style="width: 100%; margin-top: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share this estimate</button>
+                  <div style="display: flex; gap: 8px; margin-top: 14px;">
+                    <button onClick="{{ onShareEst }}" aria-label="Share this estimate" style="flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share</button>
+                    <button onClick="{{ onShareEstStory }}" aria-label="Save a story image" title="Story image" style="flex: 0 0 auto; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 11px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;">📸 Story</button>
+                  </div>
                 </sc-if>
               </div>
               <button onClick="{{ onSubmit }}" style="width: 100%; margin-top: 18px; border: none; border-radius: 16px; padding: 20px; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; background: {{ ctaBg }}; color: {{ ctaFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ ctaLabel }}</button>
@@ -1501,6 +1504,19 @@ class Component extends DCLogic {
         const url = S.url('/#brief', { medium: 'social', campaign: 'estimate' });
         const text = 'Turnkii costed my ' + what + ' fit-out at about ' + range + ' — done in 2 minutes, before giving any contact details. Try yours:';
         S.go({ url: url, title: 'Turnkii · Live estimate', text: text, item: 'estimate' });
+      },
+      onShareEstStory: () => {
+        const S = window.TurnkiiShare;
+        if (!S || !estReady) return;
+        const range = P.range(est.lo, est.hi);
+        const what = (Number(s.area) ? Number(s.area) + 'm² ' : '') + (s.ptype ? String(s.ptype).toLowerCase() : 'place');
+        const url = S.url('/#brief', { medium: 'story', campaign: 'estimate' });
+        S.shareStory({
+          kicker: 'My fit-out estimate', title: range, subtitle: 'To finish my ' + what + ' — costed in 2 minutes.',
+          footer: 'Price yours · turnkii.app', url: url,
+          text: 'Turnkii costed my ' + what + ' fit-out at about ' + range + '. Try yours: ' + url,
+          item: 'estimate', filename: 'turnkii-estimate'
+        });
       },
       notSubmitted: !s.submitted,
       submitted: s.submitted,

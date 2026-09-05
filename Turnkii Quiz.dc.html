@@ -83,6 +83,7 @@
 
         <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
           <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #E6FF6B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share my result</button>
+          <button type="button" onClick="{{ onStory }}" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;">📸 Story image</button>
           <button type="button" onClick="{{ onRetake }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #F6F3EC;">Retake</button>
         </div>
         <p style="font-size: 13px; color: rgba(246,243,236,0.5); line-height: 1.5; margin-top: 16px; max-width: 52ch;">Share your result and see what your friends get — every Turnkii style is a costed kit, ready to build.</p>
@@ -200,6 +201,16 @@ class Component extends DCLogic {
         const url = S.url('/quiz.html', { medium: 'social', campaign: 'quiz_' + win });
         const text = 'I took the 60-second Turnkii style quiz and I’m ' + st.name + '. What’s yours?';
         S.go({ url: url, title: 'My Turnkii style: ' + st.name, text: text, item: 'quiz_' + win });
+      },
+      onStory: () => {
+        if (!S) return;
+        const url = S.url('/quiz.html', { medium: 'story', campaign: 'quiz_' + win });
+        S.shareStory({
+          kicker: 'My Turnkii style', title: st.name, subtitle: st.palette + ' — ' + st.blurb,
+          footer: 'Take the quiz · turnkii.app/quiz', url: url,
+          text: 'I took the Turnkii style quiz and I’m ' + st.name + '. What’s yours? ' + url,
+          item: 'quiz_' + win, filename: 'turnkii-style-' + win
+        });
       },
       onRetake: () => this.setState({ i: 0, scores: { warm: 0, neoclassic: 0, majlis: 0, eclectic: 0, coastal: 0 }, picks: [] })
     };
