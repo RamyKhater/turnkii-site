@@ -499,6 +499,11 @@ def sections_style():
         parts = [p.strip() for p in combo.split(",") if p.strip()]
         if parts and all(p in off for p in parts):
             sels.append(f'[data-vertical-all="{html.escape(combo, quote=True)}"]')
+    # Toggleable nav/footer links (admin: nav.<key> flags), e.g. data-nav="projects".
+    nav = (CONTENT or {}).get("nav") or {}
+    for k, v in nav.items():
+        if v is False:
+            sels.append(f'[data-nav="{html.escape(k, quote=True)}"]')
     if not sels:
         return ""
     return f'\n<style>{", ".join(sels)}{{display:none !important}}</style>'
