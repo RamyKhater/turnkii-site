@@ -188,7 +188,18 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const asking = s.i < QUESTIONS.length;
-    const bgImg = (src) => "background-image: url('" + src + "'); background-size: cover; background-position: center; width: 100%; height: 100%;";
+    // no height here — the card sets height via aspect-ratio (height:100% would collapse to 0).
+    const bgImg = (src) => "background-image: url('" + src + "'); background-size: cover; background-position: center; background-color: #EFEBE1;";
+    // Prefer the admin's real style photo (baked into window.TURNKII_CONTENT.styles),
+    // fall back to the bundled asset.
+    const styleImg = (key, fallback) => {
+      try {
+        var arr = (window.TURNKII_CONTENT && window.TURNKII_CONTENT.styles) || [];
+        var m = arr.find(function (x) { return x.key === key; });
+        if (m && m.image && /^https?:\/\//.test(m.image)) return m.image;
+      } catch (e) {}
+      return fallback;
+    };
 
     if (asking) {
       const cur = QUESTIONS[s.i];
@@ -206,12 +217,13 @@ class Component extends DCLogic {
 
     const win = this.winner();
     const st = QSTYLES[win];
+    const img = styleImg(win, st.img);
     const S = window.TurnkiiShare;
     return {
       asking: false, done: true,
       result: {
         name: st.name, blurb: st.blurb, palette: st.palette,
-        imgStyle: bgImg(st.img),
+        imgStyle: bgImg(img),
         briefHref: 'Turnkii v3.dc.html#brief',
         styleHref: 'Turnkii Style.dc.html#' + st.anchor
       },
@@ -225,8 +237,8 @@ class Component extends DCLogic {
         if (!S) return;
         const url = S.url('/quiz.html', { medium: 'story', campaign: 'quiz_' + win });
         S.shareStory({
-          kicker: 'My Turnkii style', title: st.name, subtitle: st.palette + ' — ' + st.blurb,
-          footer: 'Take the quiz · turnkii.app/quiz', url: url,
+          kicker: 'My design style', title: st.name, subtitle: st.palette + ' — ' + st.blurb,
+          image: img, footer: 'Take the quiz · turnkii.app/quiz', url: url,
           text: 'I took the Turnkii style quiz and I’m ' + st.name + '. What’s yours? ' + url,
           item: 'quiz_' + win, filename: 'turnkii-style-' + win
         });
