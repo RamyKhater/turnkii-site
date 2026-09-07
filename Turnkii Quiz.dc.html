@@ -25,53 +25,62 @@
 </style>
 </helmet>
 
-<div style="background: #12130E; color: #F6F3EC; min-height: 100vh;">
+<div style="background: #F6F3EC; color: #12130E; min-height: 100vh; display: flex; flex-direction: column;">
 
-  <header style="max-width: 780px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between;">
-    <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px;">
-      <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
-    </a>
-    <a href="Turnkii v3.dc.html#styles" style="color: rgba(246,243,236,0.7); font-size: 13px; font-weight: 600;" style-hover="color: #D6F23C;">All styles →</a>
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="styles" href="Turnkii v3.dc.html#styles" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Styles</a>
+        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+    </div>
   </header>
 
-  <main style="max-width: 780px; margin: 0 auto; padding: clamp(12px, 3vw, 30px) clamp(16px, 4vw, 32px) 80px;">
+  <main style="flex: 1 1 auto; max-width: 760px; width: 100%; margin: 0 auto; padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 32px) 72px;">
+    <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Style finder</div>
+    <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.04; letter-spacing: -0.02em; margin: 10px 0 0;">Find your Turnkii style</h2>
 
     <!-- QUESTIONS -->
     <sc-if value="{{ asking }}" hint-placeholder-val="{{ true }}">
-      <div style="animation: qRise 0.35s ease both;">
+      <div style="margin-top: 22px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 22px; padding: clamp(20px, 3vw, 32px); animation: qRise 0.35s ease both;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
-          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Style finder</div>
-          <div style="font-size: 12.5px; font-weight: 700; color: rgba(246,243,236,0.55);">{{ progressLabel }}</div>
+          <div style="font-size: 12.5px; font-weight: 700; color: #8A8A79;">{{ progressLabel }}</div>
         </div>
-        <div style="height: 4px; border-radius: 999px; background: rgba(246,243,236,0.14); margin-top: 12px; overflow: hidden;">
+        <div style="height: 5px; border-radius: 999px; background: #EFEBE1; margin-top: 10px; overflow: hidden;">
           <div style="height: 100%; background: #D6F23C; border-radius: 999px; width: {{ progressPct }}; transition: width .3s;"></div>
         </div>
 
-        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 5vw, 46px); line-height: 1.08; letter-spacing: -0.01em; margin: 30px 0 0;">{{ question }}</h1>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.01em; margin: 26px 0 0;">{{ question }}</h1>
 
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 26px;">
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 24px;">
           <sc-for list="{{ options }}" as="o" hint-placeholder-count="5">
-            <button type="button" onClick="{{ o.onPick }}" style="text-align: left; cursor: pointer; font-family: Manrope, sans-serif; background: rgba(246,243,236,0.05); border: 1px solid rgba(246,243,236,0.18); border-radius: 16px; padding: 18px 20px; color: #F6F3EC; display: flex; align-items: center; gap: 14px;" style-hover="border-color: #D6F23C; background: rgba(214,242,60,0.08);">
-              <span style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 999px; border: 1px solid rgba(246,243,236,0.4); display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; color: rgba(246,243,236,0.7);">{{ o.key }}</span>
-              <span style="font-size: 16.5px; font-weight: 600; line-height: 1.35;">{{ o.label }}</span>
+            <button type="button" onClick="{{ o.onPick }}" style="text-align: left; cursor: pointer; font-family: Manrope, sans-serif; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 14px; padding: 16px 18px; color: #12130E; display: flex; align-items: center; gap: 14px;" style-hover="border-color: #12130E; background: #F1F6DC;">
+              <span style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 999px; border: 1px solid #E4E0D5; display: inline-flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; color: #8A8A79;">{{ o.key }}</span>
+              <span style="font-size: 16px; font-weight: 600; line-height: 1.35;">{{ o.label }}</span>
             </button>
           </sc-for>
         </div>
 
         <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
-          <button type="button" onClick="{{ onBack }}" style="margin-top: 22px; background: transparent; border: none; color: rgba(246,243,236,0.55); font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="color: #F6F3EC;">← Back</button>
+          <button type="button" onClick="{{ onBack }}" style="margin-top: 20px; background: transparent; border: none; color: #8A8A79; font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="color: #12130E;">← Back</button>
         </sc-if>
       </div>
     </sc-if>
 
     <!-- RESULT -->
     <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
-      <div style="animation: qRise 0.4s ease both;">
-        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #D6F23C;">Your Turnkii style</div>
-        <div style="margin-top: 16px; border-radius: 22px; overflow: hidden; background: #FFFFFF; color: #12130E; border: 1px solid rgba(246,243,236,0.14);">
+      <div style="margin-top: 22px; animation: qRise 0.4s ease both;">
+        <div style="border-radius: 22px; overflow: hidden; background: #FFFFFF; border: 1px solid #E4E0D5;">
           <div role="img" aria-label="{{ result.name }}" style="{{ result.imgStyle }} aspect-ratio: 16 / 9;"></div>
           <div style="padding: clamp(20px, 3vw, 30px);">
-            <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 5vw, 52px); line-height: 1.02; margin: 0;">{{ result.name }}</h1>
+            <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Your Turnkii style</div>
+            <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 5vw, 52px); line-height: 1.02; margin: 8px 0 0;">{{ result.name }}</h1>
             <div style="font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #8A8A79; margin-top: 8px;">{{ result.palette }}</div>
             <p style="font-size: 16.5px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 52ch;">{{ result.blurb }}</p>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px;">
@@ -81,16 +90,26 @@
           </div>
         </div>
 
-        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #E6FF6B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share my result</button>
-          <button type="button" onClick="{{ onStory }}" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #D6F23C; color: #D6F23C;">📸 Story image</button>
-          <button type="button" onClick="{{ onRetake }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #F6F3EC;">Retake</button>
+        <div style="margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #12130E; color: #F6F3EC;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share my result</button>
+          <button type="button" onClick="{{ onStory }}" style="display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #E4E0D5; color: #12130E; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E;">📸 Story image</button>
+          <button type="button" onClick="{{ onRetake }}" style="background: transparent; border: 1px solid #E4E0D5; color: #5E5F52; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E; color: #12130E;">Retake</button>
         </div>
-        <p style="font-size: 13px; color: rgba(246,243,236,0.5); line-height: 1.5; margin-top: 16px; max-width: 52ch;">Share your result and see what your friends get — every Turnkii style is a costed kit, ready to build.</p>
+        <p style="font-size: 13px; color: #8A8A79; line-height: 1.5; margin-top: 16px; max-width: 52ch;">Share your result and see what your friends get — every Turnkii style is a costed kit, ready to build.</p>
       </div>
     </sc-if>
-
   </main>
+
+  <footer style="background: #12130E; color: rgba(246,243,236,0.7);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 30px clamp(16px, 3vw, 40px); display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+      <span style="font-size: 13px;">© Turnkii — turnkey home finishing, furniture &amp; handover.</span>
+      <span style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px;">
+        <a href="Turnkii v3.dc.html#styles" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">All styles</a>
+        <a href="Turnkii Privacy.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Privacy policy</a>
+        <a href="Turnkii Terms.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Terms &amp; conditions</a>
+      </span>
+    </div>
+  </footer>
 </div>
 </x-dc>
 

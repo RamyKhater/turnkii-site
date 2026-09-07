@@ -22,23 +22,36 @@
 </style>
 </helmet>
 
-<div style="background: #12130E; color: #F6F3EC; min-height: 100vh;">
-  <header style="max-width: 720px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between;">
-    <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px;">
-      <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
-    </a>
-    <a href="Turnkii v3.dc.html#brief" style="color: rgba(246,243,236,0.7); font-size: 13px; font-weight: 600;" style-hover="color: #D6F23C;">Start a brief →</a>
+<div style="background: #F6F3EC; color: #12130E; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Care.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Care &amp; maintenance</a>
+        <a href="Turnkii Refer.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Refer &amp; earn</a>
+      </nav>
+      <a href="Turnkii v3.dc.html#brief" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px;" style-hover="background: #E6FF6B;">Start a brief</a>
+    </div>
   </header>
 
-  <main style="max-width: 720px; margin: 0 auto; padding: clamp(16px, 3vw, 34px) clamp(16px, 4vw, 32px) 80px;">
-    <div style="display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #12130E; background: #D6F23C; padding: 5px 12px; border-radius: 999px;">Refer &amp; earn</div>
-    <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 5.5vw, 56px); line-height: 1.03; letter-spacing: -0.01em; margin: 20px 0 0; max-width: 16ch;">Send a friend, take {{ creditLabel }} off your fit-out.</h1>
-    <p style="font-size: 16.5px; line-height: 1.6; color: rgba(246,243,236,0.72); margin: 16px 0 0; max-width: 54ch;">Share your link. When someone you send finishes their place with Turnkii and signs a contract, you get <b style="color:#D6F23C;">{{ creditLabel }} credited</b> off your own unit. No limit — refer as many as you like.</p>
+  <section style="background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: clamp(40px, 6vw, 76px) clamp(16px, 3vw, 40px);">
+      <div style="display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #12130E; background: #D6F23C; padding: 5px 12px; border-radius: 999px;">Refer &amp; earn</div>
+      <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 5.5vw, 60px); line-height: 1.02; letter-spacing: -0.02em; margin: 20px 0 0; max-width: 16ch;">Send a friend, take {{ creditLabel }} off your fit-out.</h1>
+      <p style="font-size: 16.5px; line-height: 1.6; color: rgba(246,243,236,0.72); margin: 16px 0 0; max-width: 54ch;">Share your link. When someone you send finishes their place with Turnkii and signs a contract, you get <b style="color:#D6F23C;">{{ creditLabel }} credited</b> off your own unit. No limit — refer as many as you like.</p>
+    </div>
+  </section>
 
+  <main style="flex: 1 1 auto; max-width: 760px; width: 100%; margin: 0 auto; padding: clamp(28px, 4vw, 48px) clamp(16px, 4vw, 32px) 72px;">
     <!-- form -->
     <sc-if value="{{ form }}" hint-placeholder-val="{{ true }}">
-      <div style="margin-top: 30px; background: rgba(246,243,236,0.05); border: 1px solid rgba(246,243,236,0.16); border-radius: 20px; padding: clamp(20px, 3vw, 28px);">
-        <div style="font-size: 13px; font-weight: 700; color: rgba(246,243,236,0.75);">Get your link</div>
+      <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(20px, 3vw, 28px);">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Get your link</div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 14px;">
           <input type="text" placeholder="Your name" onInput="{{ onName }}" style="{{ inputStyle }}" />
           <input type="tel" placeholder="Your mobile · +20 1xx…" onInput="{{ onPhone }}" style="{{ inputStyle }}" />
@@ -50,30 +63,41 @@
 
     <!-- result -->
     <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
-      <div style="margin-top: 30px; background: #FFFFFF; color: #12130E; border-radius: 20px; padding: clamp(20px, 3vw, 28px);">
+      <div style="background: #FFFFFF; color: #12130E; border: 1px solid #E4E0D5; border-radius: 20px; padding: clamp(20px, 3vw, 28px);">
         <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Your referral link is ready</div>
         <div style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
           <div style="flex: 1 1 260px; min-width: 0; border: 1px solid #E4E0D5; border-radius: 12px; background: #F6F3EC; padding: 13px 15px; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ link }}</div>
-          <button type="button" onClick="{{ onCopy }}" style="flex: 0 0 auto; background: #12130E; color: #F6F3EC; border: none; border-radius: 12px; padding: 13px 18px; font-size: 14px; font-weight: 700; cursor: pointer;" style-hover="background: #D6F23C; color: #12130E;">Copy</button>
+          <button type="button" onClick="{{ onCopy }}" style="flex: 0 0 auto; background: #12130E; color: #F6F3EC; border: none; border-radius: 12px; padding: 13px 18px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #D6F23C; color: #12130E;">Copy</button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px;">
-          <button type="button" onClick="{{ onWhatsapp }}" style="display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #FFFFFF; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer;" style-hover="filter: brightness(1.05);">Share on WhatsApp</button>
-          <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #E4E0D5; color: #12130E; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer;" style-hover="border-color: #12130E;">More ways to share</button>
+          <button type="button" onClick="{{ onWhatsapp }}" style="display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #FFFFFF; border: none; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="filter: brightness(1.05);">Share on WhatsApp</button>
+          <button type="button" onClick="{{ onShare }}" style="display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #E4E0D5; color: #12130E; border-radius: 999px; padding: 14px 22px; font-size: 14.5px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E;">More ways to share</button>
         </div>
         <p style="font-size: 13px; color: #8A8A79; line-height: 1.5; margin: 16px 0 0;">Your credit ({{ creditLabel }}) is applied once your friend signs their contract. We’ll be in touch on {{ phoneMask }}.</p>
       </div>
     </sc-if>
 
-    <div style="margin-top: 34px; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));">
+    <div style="margin-top: 30px; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));">
       <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
-        <div style="border: 1px solid rgba(246,243,236,0.14); border-radius: 16px; padding: 18px;">
-          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; color: #D6F23C;">{{ s.n }}</div>
-          <div style="font-size: 14.5px; font-weight: 700; margin-top: 8px;">{{ s.t }}</div>
-          <div style="font-size: 13px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 5px;">{{ s.d }}</div>
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 16px; padding: 20px;">
+          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; color: #6C7A20;">{{ s.n }}</div>
+          <div style="font-size: 15px; font-weight: 700; margin-top: 8px;">{{ s.t }}</div>
+          <div style="font-size: 13.5px; color: #5E5F52; line-height: 1.5; margin-top: 5px;">{{ s.d }}</div>
         </div>
       </sc-for>
     </div>
   </main>
+
+  <footer style="background: #12130E; color: rgba(246,243,236,0.7);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 30px clamp(16px, 3vw, 40px); display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+      <span style="font-size: 13px;">© Turnkii — turnkey home finishing, furniture &amp; handover.</span>
+      <span style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px;">
+        <a href="Turnkii Privacy.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Privacy policy</a>
+        <a href="Turnkii Terms.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Terms &amp; conditions</a>
+        <a href="https://wa.me/201221188000" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">WhatsApp us</a>
+      </span>
+    </div>
+  </footer>
 </div>
 </x-dc>
 
@@ -122,13 +146,13 @@ class Component extends DCLogic {
       ready: !!s.code,
       link: link,
       phoneMask: s.phone,
-      inputStyle: 'background: #12130E; border: 1px solid rgba(246,243,236,0.22); border-radius: 12px; padding: 14px 15px; font-size: 15px; color: #F6F3EC; outline: none; width: 100%;',
+      inputStyle: 'background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 14px 15px; font-size: 15px; color: #12130E; outline: none; width: 100%;',
       onName: e => this.set('name', e.target.value),
       onPhone: e => this.set('phone', e.target.value),
       ctaLabel: s.loading ? 'Creating…' : 'Create my referral link',
-      ctaStyle: 'width: 100%; margin-top: 14px; border: none; border-radius: 12px; padding: 15px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (s.loading ? 'default' : 'pointer') + '; background: ' + (ok && !s.loading ? '#D6F23C' : 'rgba(246,243,236,0.14)') + '; color: ' + (ok && !s.loading ? '#12130E' : 'rgba(246,243,236,0.5)') + ';',
+      ctaStyle: 'width: 100%; margin-top: 14px; border: none; border-radius: 12px; padding: 15px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (s.loading ? 'default' : 'pointer') + '; background: ' + (ok && !s.loading ? '#D6F23C' : '#EFEBE1') + '; color: ' + (ok && !s.loading ? '#12130E' : '#A5A292') + ';',
       hint: s.error ? s.error : (!ok && s.tried ? 'Add your name and mobile to continue.' : 'We only use this to apply your credit — no spam.'),
-      hintColor: s.error || (!ok && s.tried) ? '#E5A48F' : 'rgba(246,243,236,0.5)',
+      hintColor: s.error || (!ok && s.tried) ? '#A34A3A' : '#8A8A79',
       onCreate: () => this.create(),
       onCopy: () => { if (S) S.copyLink({ url: link, item: 'referral' }); },
       onWhatsapp: () => { if (S) S.whatsapp({ url: link, text: inviteText, item: 'referral' }); },
