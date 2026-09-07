@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #12130E; text-decoration: none; }
+  a:hover { color: #6C7A20; }
+  input, select, textarea, button { font-family: inherit; }
+  ::selection { background: #D6F23C; color: #12130E; }
+</style>
+</helmet>
+
+<div style="background: #F6F3EC; color: #12130E; min-height: 100vh; display: flex; flex-direction: column;">
+
+  <header style="position: sticky; top: 0; z-index: 60; background: rgba(18,19,14,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 14px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <a href="Turnkii v3.dc.html#top" style="display: flex; align-items: center; gap: 10px; flex: 0 0 auto;">
+        <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" />
+      </a>
+      <nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); flex-wrap: wrap; flex: 1 1 auto;">
+        <a data-vertical="services" href="Turnkii v3.dc.html#services" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Services</a>
+        <a data-vertical="financing" href="Turnkii v3.dc.html#financing" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Financing</a>
+        <a href="Turnkii Projects.dc.html" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Projects &amp; bulk</a>
+        <a href="Turnkii Facility.dc.html" style="color: rgba(255,255,255,0.72); font-size: 14px; font-weight: 500;" style-hover="color: #D6F23C;">Facility management</a>
+      </nav>
+      <a href="#enquire" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px;" style-hover="background: #E6FF6B;">Request a proposal</a>
+    </div>
+  </header>
+
+  <section style="background: #12130E; color: #F6F3EC;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: clamp(44px, 6vw, 84px) clamp(16px, 3vw, 40px);">
+      <div style="display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #12130E; background: #D6F23C; padding: 5px 12px; border-radius: 999px;">Projects &amp; bulk units</div>
+      <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; margin: 22px 0 0; max-width: 20ch;">Finishing &amp; furnishing at project scale.</h1>
+      <p style="font-size: 16.5px; line-height: 1.65; color: rgba(246,243,236,0.72); margin: 18px 0 0; max-width: 58ch; text-wrap: pretty;">For developers, investors and portfolios — whole buildings, compounds and multi-unit handovers under one contract, one programme and one accountable team. Volume pricing, staged delivery, photographed QA.</p>
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; margin-top: 32px;">
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1;">240+</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 6px;">Units delivered</span></span>
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1;">1 team</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 6px;">One point of accountability</span></span>
+        <span style="display: block;"><span style="display: block; font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; line-height: 1;">Staged</span><span style="display: block; font-size: 13px; color: rgba(246,243,236,0.6); margin-top: 6px;">Rolling handover</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: clamp(40px, 5vw, 72px) clamp(16px, 3vw, 40px) 0;">
+    <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));">
+      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="3">
+        <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 18px; padding: 22px;">
+          <div style="font-size: 16px; font-weight: 700;">{{ p.t }}</div>
+          <div style="font-size: 14.5px; color: #5E5F52; line-height: 1.55; margin-top: 6px;">{{ p.d }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="enquire" style="flex: 1 1 auto; scroll-margin-top: 80px; max-width: 1200px; width: 100%; margin: 0 auto; padding: clamp(36px, 4vw, 64px) clamp(16px, 3vw, 40px) 72px;">
+    <sc-if value="{{ form }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+      <div style="flex: 1 1 340px; min-width: 280px;">
+        <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Request a proposal</div>
+        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.05; letter-spacing: -0.02em; margin: 10px 0 0;">Tell us about the project</h2>
+        <p style="font-size: 15.5px; color: #5E5F52; line-height: 1.6; margin: 14px 0 0; max-width: 44ch;">Send the basics and our projects team comes back within one working day with a scope, a volume price band and a delivery programme.</p>
+      </div>
+
+      <div style="flex: 1 1 460px; min-width: 300px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 22px; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #8A8A79;">What do you need</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+            <sc-for list="{{ services }}" as="c" hint-placeholder-count="7">
+              <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px;">
+          <label style="display: block;">
+            <span style="font-size: 12px; color: #8A8A79; font-weight: 700;">Project type</span>
+            <select onChange="{{ onType }}" style="{{ inputStyle }} margin-top: 6px; width: 100%;">
+              <sc-for list="{{ types }}" as="t" hint-placeholder-count="5"><option value="{{ t }}">{{ t }}</option></sc-for>
+            </select>
+          </label>
+          <label style="display: block;">
+            <span style="font-size: 12px; color: #8A8A79; font-weight: 700;">Number of units</span>
+            <input type="number" min="1" placeholder="e.g. 24" onInput="{{ onUnits }}" style="{{ inputStyle }} margin-top: 6px; width: 100%;" />
+          </label>
+          <label style="display: block;">
+            <span style="font-size: 12px; color: #8A8A79; font-weight: 700;">Total area (m², optional)</span>
+            <input type="number" min="1" placeholder="e.g. 3600" onInput="{{ onArea }}" style="{{ inputStyle }} margin-top: 6px; width: 100%;" />
+          </label>
+          <label style="display: block;">
+            <span style="font-size: 12px; color: #8A8A79; font-weight: 700;">Location / compound</span>
+            <input type="text" placeholder="City / project" onInput="{{ onLoc }}" style="{{ inputStyle }} margin-top: 6px; width: 100%;" />
+          </label>
+          <label style="display: block;">
+            <span style="font-size: 12px; color: #8A8A79; font-weight: 700;">Target start</span>
+            <select onChange="{{ onTimeline }}" style="{{ inputStyle }} margin-top: 6px; width: 100%;">
+              <sc-for list="{{ timelines }}" as="t" hint-placeholder-count="4"><option value="{{ t }}">{{ t }}</option></sc-for>
+            </select>
+          </label>
+        </div>
+
+        <div style="border-top: 1px solid #E4E0D5; padding-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px;">
+          <input type="text" placeholder="Your name" onInput="{{ onName }}" style="{{ inputStyle }}" />
+          <input type="text" placeholder="Company (optional)" onInput="{{ onCompany }}" style="{{ inputStyle }}" />
+          <input type="tel" placeholder="Mobile · +20 1xx…" onInput="{{ onPhone }}" style="{{ inputStyle }}" />
+          <input type="email" placeholder="Work email" onInput="{{ onEmail }}" style="{{ inputStyle }}" />
+        </div>
+        <input type="text" placeholder="Anything else? (spec level, phasing, deadline…)" onInput="{{ onNotes }}" style="{{ inputStyle }} width: 100%;" />
+
+        <button type="button" onClick="{{ onSubmit }}" style="{{ ctaStyle }}">{{ ctaLabel }}</button>
+        <div style="font-size: 12.5px; color: {{ hintColor }}; text-align: center;">{{ hint }}</div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width: 620px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 22px; padding: clamp(28px, 4vw, 44px); text-align: center;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #E8F4C4; color: #4E5A16; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 26px;">✓</div>
+        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.1; margin: 18px 0 0;">{{ confirmTitle }}</h2>
+        <p style="font-size: 15.5px; line-height: 1.6; color: #5E5F52; margin: 12px 0 0;">{{ confirmBody }}</p>
+        <a href="Turnkii v3.dc.html#top" style="display: inline-block; margin-top: 22px; background: #12130E; color: #F6F3EC; font-weight: 700; font-size: 14.5px; padding: 13px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Back to home</a>
+      </div>
+    </sc-if>
+  </section>
+
+  <footer style="background: #12130E; color: rgba(246,243,236,0.7);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 30px clamp(16px, 3vw, 40px); display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+      <span style="font-size: 13px;">© Turnkii — turnkey home finishing, furniture &amp; handover.</span>
+      <span style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px;">
+        <a href="Turnkii Facility.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Facility management</a>
+        <a href="Turnkii Privacy.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Privacy policy</a>
+        <a href="Turnkii Terms.dc.html" style="color: rgba(246,243,236,0.7);" style-hover="color: #D6F23C;">Terms &amp; conditions</a>
+      </span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props="{}">
+const SERVICES = ['Finishing', 'Furnishing & FF&E', 'Kitchens', 'MEP & HVAC', 'Joinery', 'Outdoor & landscaping', 'Handover & QA'];
+const TYPES = ['Residential compound', 'Apartment building', 'Commercial / office', 'Hospitality / hotel', 'Short-stay / rental portfolio', 'Mixed-use', 'Other'];
+const TIMELINES = ['As soon as possible', 'Within 3 months', '3–6 months', '6+ months', 'Just exploring'];
+
+class Component extends DCLogic {
+  state = { services: [], type: TYPES[0], units: '', area: '', loc: '', timeline: TIMELINES[0], name: '', company: '', phone: '', email: '', notes: '', sent: false, ref: '', tried: false };
+
+  set(k, v) { this.setState({ [k]: v }); }
+  toggle(s) { const has = this.state.services.indexOf(s) >= 0; this.setState({ services: has ? this.state.services.filter(x => x !== s) : this.state.services.concat([s]) }); }
+
+  renderVals() {
+    const s = this.state;
+    const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
+    const inputStyle = 'background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 14.5px; color: #12130E; outline: none;';
+    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
+    const scopeOk = s.services.length > 0 && Number(s.units) > 0;
+    const canSend = scopeOk && contactOk;
+
+    return {
+      form: !s.sent, sent: s.sent, inputStyle: inputStyle,
+      pillars: [
+        { t: 'One contract for the whole scheme', d: 'Finishing, FF&E, kitchens, MEP and joinery across every unit — no coordinating six trades per apartment.' },
+        { t: 'Volume pricing, fixed per unit', d: 'A rate card that scales with quantity, locked after a sample unit and a site survey.' },
+        { t: 'Rolling, photographed handover', d: 'Units delivered in phases with a QA report and snag list per unit, so you can hand over as you go.' }
+      ],
+      services: SERVICES.map(l => ({ label: l, onPick: () => this.toggle(l), style: chip(s.services.indexOf(l) >= 0) })),
+      types: TYPES,
+      timelines: TIMELINES,
+      onType: e => this.set('type', e.target.value),
+      onUnits: e => this.set('units', e.target.value),
+      onArea: e => this.set('area', e.target.value),
+      onLoc: e => this.set('loc', e.target.value),
+      onTimeline: e => this.set('timeline', e.target.value),
+      onName: e => this.set('name', e.target.value),
+      onCompany: e => this.set('company', e.target.value),
+      onPhone: e => this.set('phone', e.target.value),
+      onEmail: e => this.set('email', e.target.value),
+      onNotes: e => this.set('notes', e.target.value),
+      ctaLabel: canSend ? 'Request a proposal' : (!scopeOk ? 'Pick services & unit count' : 'Add your name & mobile'),
+      ctaStyle: 'width: 100%; border: none; border-radius: 14px; padding: 16px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (canSend ? 'pointer' : 'default') + '; background: ' + (canSend ? '#D6F23C' : '#EFEBE1') + '; color: ' + (canSend ? '#12130E' : '#A5A292') + ';',
+      hint: s.tried && !canSend ? 'Add the services, unit count, your name and mobile.' : 'No obligation — a scoped proposal within one working day.',
+      hintColor: s.tried && !canSend ? '#A34A3A' : '#8A8A79',
+      onSubmit: () => {
+        if (!canSend) { this.setState({ tried: true }); return; }
+        this.setState({ sent: true, ref: 'TP-' + String(Date.now()).slice(-6) });
+        var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'project', project_type: s.type || '', units: Number(s.units) || 0 }); } catch (e) {}
+        try {
+          var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
+          if (url) {
+            var who = s.name + (s.company ? ' · ' + s.company : '');
+            fetch(url, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                kind: 'project',
+                contactName: who, phone: s.phone, email: s.email || undefined,
+                propertyType: s.type || undefined, units: Number(s.units) || undefined, area: Number(s.area) || undefined,
+                location: s.loc || undefined, services: s.services, channel: 'Project / bulk',
+                referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
+                utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
+                utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
+                message: [s.type, (Number(s.units) || 0) + ' units', s.area ? s.area + ' m²' : '', s.services.join(', '), 'Start: ' + s.timeline, s.notes].filter(Boolean).join(' · ')
+              })
+            }).catch(function () {});
+          }
+        } catch (e) {}
+      },
+      confirmTitle: (s.name ? s.name.split(' ')[0] + ', got it.' : 'Got it.') + ' Your project enquiry is in.',
+      confirmBody: 'Our projects team reviews the scope and calls you on ' + (s.phone || 'your mobile') + ' within one working day with a volume price band and a delivery programme. Reference ' + s.ref + '.'
+    };
+  }
+}
+</script>
+</body>
+</html>

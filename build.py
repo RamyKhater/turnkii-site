@@ -368,6 +368,11 @@ PAGES = {
         "Refer a friend & earn — Turnkii",
         "Share your Turnkii referral link — when a friend you send signs their fit-out contract, you get an EGP credit off your own unit.",
     ),
+    "Turnkii Projects.dc.html": (
+        "projects.html",
+        "Projects & bulk units — Turnkii",
+        "Finishing and furnishing at project scale for developers, investors and portfolios — whole buildings and multi-unit handovers under one contract, with volume pricing and staged delivery.",
+    ),
     # ── Facility management (customer-facing, indexed) + internal admin consoles.
     "Turnkii Facility.dc.html": (
         "facility.html",
