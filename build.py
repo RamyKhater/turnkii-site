@@ -285,20 +285,27 @@ def fetch_content(url):
 CONTENT = fetch_content(CONTENT_URL)
 
 
+def bake_hero_image(text):
+    """Swap only the hero background <img> src to the admin-published hero image
+    (matched via its stable alt text). Used on its own for the Arabic build,
+    which keeps the translatable template copy but still wants the real hero
+    photo. Must run before any translation that rewrites the alt text."""
+    image = ((CONTENT or {}).get("hero") or {}).get("image")
+    if image:
+        url = html.escape(image.strip(), quote=True)
+        text = re.sub(r'(<img[^>]*\bsrc=")[^"]*("[^>]*\balt="Delivered living room)',
+                      lambda m: m.group(1) + url + m.group(2), text)
+    return text
+
+
 def bake_hero(text):
     """Replace the landing hero's default kicker/headline/sub with published copy.
     Keyed on stable text so it patches both the live template and the prerender
     snapshot (whose tag attributes differ). Wrap a word in **stars** to highlight."""
     hero = (CONTENT or {}).get("hero") or {}
     kicker, headline, sub = hero.get("kicker"), hero.get("headline"), hero.get("sub")
-    image = hero.get("image")
 
-    if image:
-        url = html.escape(image.strip(), quote=True)
-        # Swap the hero background <img> src (matched via its stable alt text),
-        # covering both the live template and the prerender snapshot.
-        text = re.sub(r'(<img[^>]*\bsrc=")[^"]*("[^>]*\balt="Delivered living room)',
-                      lambda m: m.group(1) + url + m.group(2), text)
+    text = bake_hero_image(text)
     if kicker:
         repl = html.escape(kicker.strip())
         text = re.sub(r"Turnkey delivery · Cairo &(?:amp;)? North Coast",
@@ -413,8 +420,17 @@ THEME_COLOR = "#12130E"
 AR_SOURCES = {
     "Turnkii v3.dc.html",
 }
-# Built slugs that have an Arabic twin (used for hreflang + link rewriting).
-AR_SLUGS = {PAGES[src][0] for src in AR_SOURCES if src in PAGES}
+# Arabic is gated behind an admin toggle (site-content "arabic": true) so it can
+# stay hidden until every inner page is translated. An env override is handy for
+# local previews: TURNKII_ARABIC=1. Default OFF — no /ar pages, no language
+# switch, no hreflang.
+AR_ENABLED = (
+    os.environ.get("TURNKII_ARABIC", "").strip().lower() in ("1", "true", "yes", "on")
+    or bool((CONTENT or {}).get("arabic"))
+)
+# Built slugs that have an Arabic twin (used for hreflang + link rewriting). Empty
+# while Arabic is disabled, which turns off the switch/hreflang/sitemap entries.
+AR_SLUGS = {PAGES[src][0] for src in AR_SOURCES if src in PAGES} if AR_ENABLED else set()
 
 
 def _clean(slug):
@@ -678,6 +694,11 @@ def build_ar_page(src_name):
     text = re.sub(r'\s*<link rel="preconnect"[^>]*/>', "", text)
     text = text.replace('src="./image-slot.js"', 'src="image-slot.js"')
 
+    # bake the admin hero image (copy stays templated so the dict can translate it);
+    # must run before translate(), which rewrites the alt text the matcher keys on.
+    if slug == "index.html":
+        text = bake_hero_image(text)
+
     # RTL + Arabic copy
     text = text.replace("<html>", '<html dir="rtl" lang="ar">', 1)
     text = translate(text, i18n_ar.PAGES.get(slug, {}))
@@ -901,7 +922,7 @@ def main():
 
     patch_support()
     slugs = [build_page(src) for src in PAGES]
-    ar_slugs = [build_ar_page(src) for src in PAGES if src in AR_SOURCES]
+    ar_slugs = [build_ar_page(src) for src in PAGES if src in AR_SOURCES] if AR_ENABLED else []
     write_static()
 
     print("Built dist/ ->")
