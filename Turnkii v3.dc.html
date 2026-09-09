@@ -217,9 +217,12 @@
           <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Five signed-off directions</h2>
         </div>
         <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; max-width: 40ch; margin: 0;">Each style is a costed kit — finishes, joinery, lighting and furniture already specified. Pick one to skip four weeks of design.</p>
-        <a href="Turnkii Quiz.dc.html" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; background: #12130E; color: #F6F3EC; font-size: 14px; font-weight: 700; padding: 12px 20px; border-radius: 999px; align-self: flex-start;" style-hover="background: #D6F23C; color: #12130E;">✨ Not sure? Take the 60-second style quiz</a>
       </div>
-      <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); margin-top: 40px;">
+      <div style="margin-top: 26px; display: flex; gap: 14px 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; border: 1px solid #E4E0D5; border-radius: 14px; background: #F6F3EC; padding: 16px 20px;">
+        <div style="font-size: 14.5px; color: #5E5F52; line-height: 1.5; max-width: 66ch;">Just exploring? Every style is already costed — browse freely, no account or obligation.</div>
+        <a data-vertical="styles" href="Turnkii Style.dc.html" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #12130E; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px;" style-hover="background: #12130E; color: #F6F3EC;">See how a style works →</a>
+      </div>
+      <div id="styles-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); margin-top: 20px;">
         <sc-for list="{{ styleCards }}" as="st" hint-placeholder-count="5">
           <div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 2px solid {{ st.bc }}; display: flex; flex-direction: column;" style-hover="border-color: #12130E;">
             <div style="aspect-ratio: 4 / 3.2; overflow: hidden; position: relative;">
@@ -240,6 +243,10 @@
             </div>
           </div>
         </sc-for>
+      </div>
+      <div style="margin-top: 30px; display: flex; gap: 14px 16px; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center;">
+        <a href="Turnkii Quiz.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #12130E; color: #F6F3EC; font-size: 14.5px; font-weight: 700; padding: 14px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">✨ Not sure which one fits? Take the 60-second style quiz →</a>
+        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #C9C4B4; color: #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="border-color: #12130E; background: #F1F6DC;">Or see a style in your own room →</a>
       </div>
     </div>
   </section>
