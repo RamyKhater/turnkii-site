@@ -19,6 +19,7 @@ image-slot.js + assets) and emits a self-contained, deployable static site into
 Run:  python3 build.py
 """
 import os, re, shutil, html, json, urllib.request, urllib.parse
+import i18n_ar  # Arabic (MSA) phrase dictionaries for the RTL /ar/* twins
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
@@ -406,6 +407,34 @@ PAGES = {
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
 
+# ── Arabic (RTL) twins. A source page listed here gets an /ar/<slug> build with
+#    MSA copy from i18n_ar, dir="rtl", absolute asset paths and a language switch.
+#    Rollout is core-pages-first: keys are the *source* filenames.
+AR_SOURCES = {
+    "Turnkii v3.dc.html",
+}
+# Built slugs that have an Arabic twin (used for hreflang + link rewriting).
+AR_SLUGS = {PAGES[src][0] for src in AR_SOURCES if src in PAGES}
+
+
+def _clean(slug):
+    """Extensionless public path for a slug ('' for the home page)."""
+    return "" if slug == "index.html" else slug[:-5] if slug.endswith(".html") else slug
+
+
+def hreflang_block(slug):
+    """<link rel=alternate hreflang> pairs for a page that has an Arabic twin."""
+    if slug not in AR_SLUGS:
+        return ""
+    c = _clean(slug)
+    en = f"{SITE_ORIGIN}/{c}"
+    ar = f"{SITE_ORIGIN}/ar/{c}".rstrip("/") + ("/" if c == "" else "")
+    return (
+        f'\n<link rel="alternate" hreflang="en" href="{en}" />'
+        f'\n<link rel="alternate" hreflang="ar" href="{ar}" />'
+        f'\n<link rel="alternate" hreflang="x-default" href="{en}" />'
+    )
+
 
 def rewrite_links(text):
     for old, new in LINK_MAP.items():
@@ -413,9 +442,12 @@ def rewrite_links(text):
     return text
 
 
-def meta_block(slug, title, desc):
-    url = f"{SITE_ORIGIN}/" + ("" if slug == "index.html" else slug)
+def meta_block(slug, title, desc, ar=False):
+    base = f"{SITE_ORIGIN}/" + ("ar/" if ar else "")
+    url = base + ("" if slug == "index.html" else slug)
     og_img = f"{SITE_ORIGIN}/og-image.png"
+    if ar:
+        title, desc = i18n_ar.META.get(slug, (title, desc))
     t = html.escape(title, quote=True)
     d = html.escape(desc, quote=True)
     # Variant-B pages: tag GA4 events with experiment_variant='B' (set before any
@@ -430,10 +462,10 @@ def meta_block(slug, title, desc):
     return variant + f"""<title>{t}</title>
 <meta name="description" content="{d}" />
 <meta name="theme-color" content="{THEME_COLOR}" />
-<link rel="canonical" href="{url}" />
-<link rel="icon" href="favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" href="icon-192.png" />
-<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="canonical" href="{url}" />{hreflang_block(slug)}
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" href="/icon-192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Turnkii" />
 <meta property="og:title" content="{t}" />
@@ -540,6 +572,134 @@ VENDOR_SCRIPTS = (
 )
 
 
+# ── Arabic build helpers ─────────────────────────────────────────────────────
+LANG_SWITCH_STYLE = (
+    "margin-inline-start:auto;color:#D6F23C;border:1px solid rgba(214,242,60,.5);"
+    "border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;"
+    "line-height:1;text-decoration:none;white-space:nowrap;"
+)
+
+
+def lang_switch(slug, ar=False):
+    """A pill link that jumps between the EN and AR twin of the same page."""
+    if slug not in AR_SLUGS:
+        return ""
+    c = _clean(slug)
+    if ar:
+        href = "/" + c
+        return (f'<a data-lang="en" href="{href or "/"}" hreflang="en" lang="en" '
+                f'aria-label="Switch to English" style="{LANG_SWITCH_STYLE}">EN</a>')
+    return (f'<a data-lang="ar" href="/ar/{c}" hreflang="ar" lang="ar" dir="rtl" '
+            f'aria-label="التبديل إلى العربية" style="{LANG_SWITCH_STYLE}">العربية</a>')
+
+
+def inject_lang_switch(text, slug, ar=False):
+    """Append the language switch as the last item of the header nav (first
+    </nav> in the template — call before any prerender snapshot is injected)."""
+    link = lang_switch(slug, ar)
+    return text.replace("</nav>", link + "</nav>", 1) if link else text
+
+
+# Relative → root-absolute asset paths so /ar/<page> resolves the same files as
+# the root pages (relative refs would look under /ar/ and 404).
+AR_ABS = [
+    ('href="vendor/', 'href="/vendor/'),
+    ('src="vendor/', 'src="/vendor/'),
+    # quote-prefixed paths — covers src=/href= AND bare JS string literals
+    # ("assets/style-warm.jpg") the DC logic loads at runtime.
+    ('"assets/', '"/assets/'),
+    ("'assets/", "'/assets/"),
+    ('url(assets/', 'url(/assets/'),
+    ('url("assets/', 'url("/assets/'),
+    ("url('assets/", "url('/assets/"),
+    ('src="support.js"', 'src="/support.js"'),
+    ('src="image-slot.js"', 'src="/image-slot.js"'),
+    ('src="pricing.js"', 'src="/pricing.js"'),
+    ('src="progress.js"', 'src="/progress.js"'),
+    ('src="cal.js"', 'src="/cal.js"'),
+    ('src="share.js"', 'src="/share.js"'),
+    ('src="ios-frame.jsx"', 'src="/ios-frame.jsx"'),
+]
+
+# Minimal RTL polish: Arabic-capable fallback fonts (Manrope / Instrument Serif
+# carry no Arabic glyphs). dir="rtl" on <html> handles direction + reading order.
+AR_RTL_STYLE = (
+    '<style id="ar-rtl">'
+    "html[dir=\"rtl\"] body,html[dir=\"rtl\"] input,html[dir=\"rtl\"] textarea,"
+    "html[dir=\"rtl\"] select,html[dir=\"rtl\"] button{"
+    "font-family:'Manrope','Noto Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;}"
+    "html[dir=\"rtl\"] [style*=\"Instrument Serif\"]{"
+    "font-family:'Instrument Serif','Noto Naskh Arabic','Amiri',Georgia,serif !important;}"
+    "</style>"
+)
+
+
+def translate(text, phrases):
+    """Replace every EN phrase with its AR value, longest key first so a longer
+    phrase is translated before any shorter phrase nested inside it. Matches are
+    guarded by identifier boundaries so a word key can't be replaced inside a JS
+    identifier (e.g. 'Share' inside 'TurnkiiShare', 'Materials' in showMaterials)
+    or a longer word — display text is always bounded by tags/quotes/spaces."""
+    IDENT = "A-Za-z0-9_$"
+    for en in sorted(phrases, key=len, reverse=True):
+        ar = phrases[en]
+        # Don't start a match right after `.` (a property read like `.plans`) or an
+        # identifier char (mid-word). Don't end a match right before an identifier
+        # char (mid-word) or `:` (an object-literal key like `plans:` / `services:`).
+        pre = f"(?<![{IDENT}.])" if en[:1].isalnum() else ""
+        post = f"(?![{IDENT}:])" if en[-1:].isalnum() else ""
+        text = re.sub(pre + re.escape(en) + post, lambda m, ar=ar: ar, text)
+    return text
+
+
+def build_ar_page(src_name):
+    """Emit the RTL Arabic twin at dist/ar/<slug> (no prerender snapshot — the
+    translated template renders client-side)."""
+    slug, title, desc = PAGES[src_name]
+    text = open(os.path.join(ROOT, src_name), encoding="utf-8").read()
+    text = rewrite_links(text)
+
+    # Internal links: keep readers inside /ar/ where an Arabic twin exists, else
+    # send them to the English page (absolute) until it's translated.
+    for s in set(LINK_MAP.values()):
+        dest = ("/ar/" + s) if s in AR_SLUGS else ("/" + s)
+        text = text.replace(f'href="{s}', f'href="{dest}')
+
+    text = text.replace(
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        + meta_block(slug, title, desc, ar=True),
+        1,
+    )
+    text = text.replace('<script src="./support.js"></script>', VENDOR_SCRIPTS, 1)
+    text = re.sub(
+        r'<link href="https://fonts\.googleapis\.com/css2[^"]*" rel="stylesheet" />',
+        '<link rel="stylesheet" href="vendor/fonts.css" />', text)
+    text = re.sub(r'\s*<link rel="preconnect"[^>]*/>', "", text)
+    text = text.replace('src="./image-slot.js"', 'src="image-slot.js"')
+
+    # RTL + Arabic copy
+    text = text.replace("<html>", '<html dir="rtl" lang="ar">', 1)
+    text = translate(text, i18n_ar.PAGES.get(slug, {}))
+
+    # root-absolute assets, then the RTL stylesheet (last, so it wins the cascade)
+    for a, b in AR_ABS:
+        text = text.replace(a, b)
+    # lift the page's critical CSS into <head> (same as the EN build) for no FOUC
+    m = re.search(r"<helmet>.*?(<style>.*?</style>).*?</helmet>", text, re.S)
+    if m:
+        text = text.replace("</head>", m.group(1) + "\n</head>", 1)
+    text = text.replace("</head>", AR_RTL_STYLE + "\n</head>", 1)
+
+    text = inject_lang_switch(text, slug, ar=True)
+    text = text.replace("</body>", whatsapp_widget() + "\n</body>", 1)
+
+    os.makedirs(os.path.join(DIST, "ar"), exist_ok=True)
+    with open(os.path.join(DIST, "ar", slug), "w", encoding="utf-8") as f:
+        f.write(text)
+    return "ar/" + slug
+
+
 def build_page(src_name):
     slug, title, desc = PAGES[src_name]
     text = open(os.path.join(ROOT, src_name), encoding="utf-8").read()
@@ -552,6 +712,10 @@ def build_page(src_name):
         + meta_block(slug, title, desc),
         1,
     )
+    text = text.replace("<html>", '<html lang="en">', 1)
+    # language switch into the header nav (before any snapshot is injected, so it
+    # lands on the live template header rather than the static snapshot copy)
+    text = inject_lang_switch(text, slug, ar=False)
     # vendor React + defer, replacing the single support.js include in <head>
     text = text.replace('<script src="./support.js"></script>', VENDOR_SCRIPTS, 1)
 
@@ -603,12 +767,13 @@ def patch_support():
     """Point the dc-runtime's CDN constants at local vendor paths so nothing
     external is ever requested (React is pre-loaded, so these are a safety net)."""
     s = open(os.path.join(ROOT, "support.js"), encoding="utf-8").read()
+    # Absolute (/vendor/...) so support.js resolves the same from "/" and "/ar/".
     s = s.replace("https://unpkg.com/react@18.3.1/umd/react.production.min.js",
-                  "vendor/react.production.min.js")
+                  "/vendor/react.production.min.js")
     s = s.replace("https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js",
-                  "vendor/react-dom.production.min.js")
+                  "/vendor/react-dom.production.min.js")
     s = s.replace("https://unpkg.com/@babel/standalone@7.29.0/babel.min.js",
-                  "vendor/babel.min.js")
+                  "/vendor/babel.min.js")
 
     # Reuse a pre-rendered #dc-root container if the build injected one, instead of
     # always creating a fresh div. React's createRoot() then clears the static
@@ -642,10 +807,24 @@ def write_static():
         if slug in VARIANT_PAGES or slug in NOINDEX_PAGES:
             continue  # experiment + internal admin pages stay out of the index
         loc = SITE_ORIGIN + "/" + ("" if slug == "index.html" else slug)
-        urls.append(f"  <url><loc>{loc}</loc><changefreq>weekly</changefreq></url>")
+        # hreflang alternates when the page has an Arabic twin
+        alts = ""
+        if slug in AR_SLUGS:
+            c = _clean(slug)
+            ar = f"{SITE_ORIGIN}/ar/{c}"
+            alts = (
+                f'\n    <xhtml:link rel="alternate" hreflang="en" href="{loc}"/>'
+                f'\n    <xhtml:link rel="alternate" hreflang="ar" href="{ar}"/>'
+                f'\n    <xhtml:link rel="alternate" hreflang="x-default" href="{loc}"/>'
+            )
+        urls.append(f"  <url><loc>{loc}</loc><changefreq>weekly</changefreq>{alts}</url>")
+        if slug in AR_SLUGS:
+            c = _clean(slug)
+            urls.append(f"  <url><loc>{SITE_ORIGIN}/ar/{c}</loc><changefreq>weekly</changefreq></url>")
     open(os.path.join(DIST, "sitemap.xml"), "w").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'
+        ' xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "\n".join(urls) + "\n</urlset>\n")
     # cache headers (Netlify / Cloudflare Pages)
     open(os.path.join(DIST, "_headers"), "w").write(
@@ -722,6 +901,7 @@ def main():
 
     patch_support()
     slugs = [build_page(src) for src in PAGES]
+    ar_slugs = [build_ar_page(src) for src in PAGES if src in AR_SOURCES]
     write_static()
 
     print("Built dist/ ->")
@@ -730,6 +910,8 @@ def main():
             p = os.path.join(base, f)
             print(f"  {os.path.getsize(p):>8}  {os.path.relpath(p, DIST)}")
     print(f"\nPages: {', '.join(slugs)}")
+    if ar_slugs:
+        print(f"Arabic: {', '.join(ar_slugs)}")
     print(f"SITE_ORIGIN = {SITE_ORIGIN}  (set env var to your real domain before deploy)")
 
 
