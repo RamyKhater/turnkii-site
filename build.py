@@ -76,7 +76,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -407,6 +407,11 @@ PAGES = {
         "Terms & conditions — Turnkii",
         "The terms that govern your use of the Turnkii website and services.",
     ),
+    "Turnkii Thanks.dc.html": (
+        "thank-you.html",
+        "Request received — Turnkii",
+        "Your request is in — the Turnkii team will be in touch within one working day.",
+    ),
     # ── A/B variant B (Turnkii B.dc.html / Turnkii Brief.dc.html) is intentionally
     #    NOT built into production — kept in the repo for a later A/B test. Re-add the
     #    two PAGES entries + `parts.append(BRIEF_ENGINE)` to bring it back.
@@ -721,10 +726,58 @@ def build_ar_page(src_name):
     return "ar/" + slug
 
 
+# ── Global mobile nav for secondary pages ────────────────────────────────────
+# The homepage carries its own DC-state hamburger; every other page shares one
+# identical inline-styled <nav>. We swap that for a class + a CSS-only checkbox
+# hamburger (no JS, no per-page DC state — the uncontrolled checkbox survives
+# design-canvas re-renders), so the drawer is consistent site-wide on mobile.
+_STD_NAV = ('<nav style="display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px); '
+            'flex-wrap: wrap; flex: 1 1 auto;">')
+
+TK_MOBILE_NAV_CSS = (
+    "<style>"
+    ".tk-nav{display:flex;align-items:center;gap:clamp(10px,1.2vw,20px);flex-wrap:wrap;flex:1 1 auto}"
+    ".tk-burger{display:none}"
+    "@media (max-width:1000px){"
+    ".tk-nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:60;flex-direction:column;"
+    "align-items:stretch;gap:0;background:#12130E;padding:6px clamp(16px,3vw,40px) 14px;"
+    "border-top:1px solid rgba(255,255,255,0.09);box-shadow:0 22px 46px rgba(0,0,0,0.45)}"
+    "header:has(.tk-nav-toggle:checked) .tk-nav{display:flex}"
+    ".tk-nav>a{padding:13px 2px;border-bottom:1px solid rgba(255,255,255,0.08)}"
+    ".tk-burger{display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;"
+    "height:40px;padding:0 10px;margin-left:auto;border:1px solid rgba(255,255,255,0.22);border-radius:11px;"
+    "background:transparent;cursor:pointer}"
+    ".tk-burger span{display:block;width:100%;height:2px;background:#F6F3EC;border-radius:2px;"
+    "transition:transform .25s,opacity .2s}"
+    "header:has(.tk-nav-toggle:checked) .tk-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}"
+    "header:has(.tk-nav-toggle:checked) .tk-burger span:nth-child(2){opacity:0}"
+    "header:has(.tk-nav-toggle:checked) .tk-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}"
+    "}@media (prefers-reduced-motion:reduce){.tk-burger span{transition:none}}"
+    "</style>"
+)
+
+
+def inject_mobile_nav(text):
+    """Give secondary pages a CSS-only hamburger drawer on mobile. No-op on pages
+    without the standard nav (homepage, thank-you, admin consoles)."""
+    if _STD_NAV not in text:
+        return text
+    replacement = (
+        '<input class="tk-nav-toggle" type="checkbox" id="tk-navmenu" hidden />'
+        '<label class="tk-burger" for="tk-navmenu" aria-label="Menu">'
+        '<span></span><span></span><span></span></label>'
+        '<nav class="tk-nav">'
+    )
+    text = text.replace(_STD_NAV, replacement, 1)
+    text = text.replace("</head>", TK_MOBILE_NAV_CSS + "\n</head>", 1)
+    return text
+
+
 def build_page(src_name):
     slug, title, desc = PAGES[src_name]
     text = open(os.path.join(ROOT, src_name), encoding="utf-8").read()
     text = rewrite_links(text)
+    text = inject_mobile_nav(text)
 
     # inject SEO/meta right after the viewport meta
     text = text.replace(

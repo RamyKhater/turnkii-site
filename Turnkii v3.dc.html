@@ -133,24 +133,6 @@
         </sc-if>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); border: 1px solid #E4E0D5; border-radius: 18px; margin-top: 16px; overflow: hidden; background: #FFFFFF;">
-        <div style="padding: 20px 22px; border-right: 1px solid #E4E0D5;">
-          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 32px; line-height: 1;">240+</div>
-          <div style="font-size: 13px; color: #8A8A79; margin-top: 5px;">Units handed over</div>
-        </div>
-        <div style="padding: 20px 22px; border-right: 1px solid #E4E0D5;">
-          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 32px; line-height: 1;">12 wks</div>
-          <div style="font-size: 13px; color: #8A8A79; margin-top: 5px;">Average apartment</div>
-        </div>
-        <div style="padding: 20px 22px; border-right: 1px solid #E4E0D5;">
-          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 32px; line-height: 1;">5</div>
-          <div style="font-size: 13px; color: #8A8A79; margin-top: 5px;">Costed design styles</div>
-        </div>
-        <div style="padding: 20px 22px;">
-          <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 32px; line-height: 1;">1</div>
-          <div style="font-size: 13px; color: #8A8A79; margin-top: 5px;">Contract, one team</div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -180,6 +162,158 @@
         <div style="font-size: 13.5px; color: #5E5F52; margin-top: 4px; line-height: 1.45;">{{ scopeLine }}</div>
       </div>
       <a data-track="cta_brief" href="#brief" style="flex: 0 0 auto; background: #12130E; color: #F6F3EC; font-weight: 700; font-size: 15px; padding: 15px 26px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">{{ scopeCta }}</a>
+    </div>
+  </section>
+
+  <section id="care" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);" data-comment-anchor="f1ba327456-div">
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+        <div>
+          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">After handover</div>
+          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Already living in it?</h2>
+        </div>
+        <p style="font-size: 15px; color: #5E5F52; margin: 0; max-width: 34ch; line-height: 1.6;">No brief needed — pick a service, a day, and we confirm the visit by WhatsApp.</p>
+      </div>
+
+      <sc-if value="{{ careOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin-top: 34px;">
+          <sc-for list="{{ careTiles }}" as="c" hint-placeholder-count="2">
+            <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}" style-hover="border-color: #12130E;">
+              <span style="display: flex; align-items: center; gap: 14px;">
+                <span style="width: 44px; height: 44px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: {{ c.iconBg }}; color: {{ c.iconFg }};">
+                  <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ c.icon }}"></path></svg>
+                </span>
+                <span style="flex: 1 1 auto; min-width: 0;">
+                  <span style="display: block; font-size: 20px; font-weight: 600; letter-spacing: -0.015em;">{{ c.title }}</span>
+                  <span style="display: block; font-size: 14px; color: #5E5F52; line-height: 1.45; margin-top: 3px;">{{ c.blurb }}</span>
+                </span>
+                <span style="flex: 0 0 auto; text-align: right;">
+                  <span style="display: block; font-size: 14.5px; font-weight: 700;">{{ c.price }}</span>
+                  <span style="display: block; font-size: 11.5px; color: #8A8A79; margin-top: 2px;">{{ c.priceNote }}</span>
+                </span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 14px; border: 1px solid #D3CEC0; border-radius: 22px; background: #FFFFFF; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 22px;">
+            <sc-if value="{{ careIsCleaning }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What to clean</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How many rooms</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
+            <sc-if value="{{ careIsMaint }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Which service</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careCategories }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ careSubShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What's needed</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careSubs }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ careUnitsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careUnitsLabel }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careUnits }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
+
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How often</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ carePlans }}" as="c" hint-placeholder-count="2">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
+                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Visit day</div>
+                <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #F6F3EC; padding: 14px 16px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
+                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
+                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
+                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
+                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
+                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1 1 240px; min-width: 200px;">
+                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Arrival window</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                  <sc-for list="{{ careSlots }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid #E4E0D5; padding-top: 20px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
+              <div style="flex: 1 1 260px; min-width: 220px;">
+                <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">{{ carePrice }}</div>
+                <div style="font-size: 13px; color: #8A8A79; margin-top: 5px; line-height: 1.45;">{{ carePriceNote }}</div>
+              </div>
+              <input value="{{ carePhone }}" onInput="{{ onCarePhone }}" placeholder="Mobile number" style="flex: 1 1 200px; min-width: 180px; border: 1px solid #E4E0D5; border-radius: 999px; background: #F6F3EC; padding: 15px 20px; font-size: 15px; color: #12130E; outline: none;" style-focus="border-color: #12130E;" />
+              <button type="button" onClick="{{ onCareSubmit }}" style="{{ careCtaStyle }}">{{ careCtaLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ careDone }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 34px; border: 1px solid #12130E; border-radius: 22px; background: #12130E; color: #F6F3EC; padding: clamp(24px, 3vw, 34px); display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <div style="flex: 1 1 320px; min-width: 260px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 6px 13px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Visit requested</div>
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(26px, 3vw, 38px); line-height: 1.06; margin-top: 16px;">{{ careDoneTitle }}</div>
+            <div style="font-size: 15px; color: rgba(246,243,236,0.66); line-height: 1.55; margin-top: 10px; max-width: 52ch;">{{ careDoneBody }}</div>
+          </div>
+          <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="Turnkii Account.dc.html" style="background: #D6F23C; color: #12130E; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700;">Track in my account</a>
+            <button type="button" onClick="{{ onCareReset }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;">Book another</button>
+          </div>
+        </div>
+      </sc-if>
     </div>
   </section>
 
@@ -455,7 +589,7 @@
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
         <div style="display: flex; gap: 22px; flex-wrap: wrap; margin-top: 44px; align-items: flex-start;">
 
-          <div style="flex: 3 1 560px; min-width: 300px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="flex: 1 1 100%; min-width: 300px; display: flex; flex-direction: column; gap: 12px;">
             <div style="border: 1px solid rgba(246,243,236,0.14); border-radius: 20px; background: rgba(246,243,236,0.03); overflow: hidden;">
               <button type="button" onClick="{{ p1Toggle }}" style="width: 100%; cursor: pointer; font-family: Manrope, sans-serif; background: transparent; border: 0; color: #F6F3EC; text-align: left; padding: 18px 20px; display: flex; gap: 16px; align-items: center;">
                 <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 22px; color: #D6F23C; line-height: 1; flex: 0 0 26px;">I</span>
@@ -756,8 +890,8 @@
             </div>
           </div>
 
-          <div style="flex: 1 1 360px; min-width: 300px; position: sticky; top: 88px;">
-            <div style="background: #F6F3EC; color: #12130E; border: 3px solid #D6F23C; border-radius: 22px; padding: 20px; box-shadow: 0 0 0 8px rgba(214,242,60,0.16), 0 26px 60px rgba(18,19,14,0.42);" data-comment-anchor="465d2531e4-div">
+          <div style="flex: 1 1 100%; min-width: 300px;">
+            <div style="background: #F6F3EC; color: #12130E; border: 2px solid #D6F23C; border-radius: 22px; padding: 20px; box-shadow: 0 0 0 6px rgba(214,242,60,0.14), 0 20px 50px rgba(18,19,14,0.36);" data-comment-anchor="465d2531e4-div">
               <div style="background: #D6F23C; color: #12130E; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                 <div style="font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;">Your brief so far</div>
                 <div style="font-size: 12.5px; font-weight: 700; background: #12130E; color: #D6F23C; padding: 4px 10px; border-radius: 999px;">{{ doneCount }}/{{ stepTotal }}</div>
@@ -765,9 +899,9 @@
               <div style="height: 6px; border-radius: 999px; background: #E0DCCE; margin-top: 12px; overflow: hidden;">
                 <div style="height: 100%; background: #A3BE2A; border-radius: 999px; width: {{ pct }};"></div>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #E4E0D5; border: 1px solid #E4E0D5; border-radius: 14px; overflow: hidden; margin-top: 18px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: #E4E0D5; border: 1px solid #E4E0D5; border-radius: 14px; overflow: hidden; margin-top: 18px;">
                 <sc-for list="{{ summary }}" as="row" hint-placeholder-count="8">
-                  <div style="background: #FFFFFF; padding: 11px 12px; min-width: 0; grid-column: {{ row.span }};">
+                  <div style="background: #FFFFFF; padding: 11px 12px; min-width: 0;">
                     <div style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">{{ row.label }}</div>
                     <div style="font-size: 13.5px; font-weight: 600; line-height: 1.35; margin-top: 4px; color: {{ row.color }};">{{ row.value }}</div>
                   </div>
@@ -857,157 +991,6 @@
     </div>
   </section>
 
-  <section id="care" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
-    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);" data-comment-anchor="f1ba327456-div">
-      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
-        <div>
-          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">After handover</div>
-          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Already living in it?</h2>
-        </div>
-        <p style="font-size: 15px; color: #5E5F52; margin: 0; max-width: 34ch; line-height: 1.6;">No brief needed — pick a service, a day, and we confirm the visit by WhatsApp.</p>
-      </div>
-
-      <sc-if value="{{ careOpen }}" hint-placeholder-val="{{ true }}">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin-top: 34px;">
-          <sc-for list="{{ careTiles }}" as="c" hint-placeholder-count="2">
-            <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}" style-hover="border-color: #12130E;">
-              <span style="display: flex; align-items: center; gap: 14px;">
-                <span style="width: 44px; height: 44px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: {{ c.iconBg }}; color: {{ c.iconFg }};">
-                  <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ c.icon }}"></path></svg>
-                </span>
-                <span style="flex: 1 1 auto; min-width: 0;">
-                  <span style="display: block; font-size: 20px; font-weight: 600; letter-spacing: -0.015em;">{{ c.title }}</span>
-                  <span style="display: block; font-size: 14px; color: #5E5F52; line-height: 1.45; margin-top: 3px;">{{ c.blurb }}</span>
-                </span>
-                <span style="flex: 0 0 auto; text-align: right;">
-                  <span style="display: block; font-size: 14.5px; font-weight: 700;">{{ c.price }}</span>
-                  <span style="display: block; font-size: 11.5px; color: #8A8A79; margin-top: 2px;">{{ c.priceNote }}</span>
-                </span>
-              </span>
-            </button>
-          </sc-for>
-        </div>
-
-        <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 14px; border: 1px solid #D3CEC0; border-radius: 22px; background: #FFFFFF; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 22px;">
-            <sc-if value="{{ careIsCleaning }}" hint-placeholder-val="{{ true }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What to clean</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How many rooms</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            </sc-if>
-            <sc-if value="{{ careIsMaint }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Which service</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careCategories }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            <sc-if value="{{ careSubShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What's needed</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careSubs }}" as="c" hint-placeholder-count="4">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            <sc-if value="{{ careUnitsShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careUnitsLabel }}</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careUnits }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            </sc-if>
-
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How often</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ carePlans }}" as="c" hint-placeholder-count="2">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 22px; flex-wrap: wrap;">
-              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Visit day</div>
-                <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #F6F3EC; padding: 14px 16px;">
-                  <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
-                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
-                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
-                  </div>
-                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
-                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
-                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
-                    </sc-for>
-                  </div>
-                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
-                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
-                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                    </sc-for>
-                  </div>
-                </div>
-              </div>
-              <div style="flex: 1 1 240px; min-width: 200px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Arrival window</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                  <sc-for list="{{ careSlots }}" as="c" hint-placeholder-count="4">
-                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                  </sc-for>
-                </div>
-              </div>
-            </div>
-
-            <div style="border-top: 1px solid #E4E0D5; padding-top: 20px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
-              <div style="flex: 1 1 260px; min-width: 220px;">
-                <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">{{ carePrice }}</div>
-                <div style="font-size: 13px; color: #8A8A79; margin-top: 5px; line-height: 1.45;">{{ carePriceNote }}</div>
-              </div>
-              <input value="{{ carePhone }}" onInput="{{ onCarePhone }}" placeholder="Mobile number" style="flex: 1 1 200px; min-width: 180px; border: 1px solid #E4E0D5; border-radius: 999px; background: #F6F3EC; padding: 15px 20px; font-size: 15px; color: #12130E; outline: none;" style-focus="border-color: #12130E;" />
-              <button type="button" onClick="{{ onCareSubmit }}" style="{{ careCtaStyle }}">{{ careCtaLabel }}</button>
-            </div>
-          </div>
-        </sc-if>
-      </sc-if>
-
-      <sc-if value="{{ careDone }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top: 34px; border: 1px solid #12130E; border-radius: 22px; background: #12130E; color: #F6F3EC; padding: clamp(24px, 3vw, 34px); display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
-          <div style="flex: 1 1 320px; min-width: 260px;">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 6px 13px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Visit requested</div>
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(26px, 3vw, 38px); line-height: 1.06; margin-top: 16px;">{{ careDoneTitle }}</div>
-            <div style="font-size: 15px; color: rgba(246,243,236,0.66); line-height: 1.55; margin-top: 10px; max-width: 52ch;">{{ careDoneBody }}</div>
-          </div>
-          <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="Turnkii Account.dc.html" style="background: #D6F23C; color: #12130E; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700;">Track in my account</a>
-            <button type="button" onClick="{{ onCareReset }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;">Book another</button>
-          </div>
-        </div>
-      </sc-if>
-    </div>
-  </section>
 
   <section id="about" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(64px, 8vw, 110px) clamp(16px, 3vw, 40px);">
     <div style="display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start;">
@@ -1939,14 +1922,14 @@ class Component extends DCLogic {
       onNotes: e => this.set('notes', e.target.value),
       onSubmit: () => {
         if (canSend) {
-          this.setState({ submitted: true, tried: false });
           var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
           try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', property_type: s.ptype || '', style: s.style || '', services: (Array.isArray(s.services) ? s.services : []).join(','), budget_plan: s.plan || '' }); } catch (e) {}
           try {
             var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
             if (url) {
+              // keepalive lets the POST finish even as we navigate to the confirmation page
               fetch(url, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   contactName: s.name, phone: s.phone, email: s.email || undefined,
                   propertyType: s.ptype || undefined, area: Number(s.area) || undefined, units: Number(s.units) || undefined,
@@ -1961,6 +1944,14 @@ class Component extends DCLogic {
               }).catch(function () {});
             }
           } catch (e) {}
+          // hand off to a dedicated confirmation page (pass the personalised copy along)
+          try {
+            var first = s.name ? s.name.split(' ')[0] : '';
+            var title = (first ? first + ', your brief is in.' : 'Your brief is in.') + ' We call you within 24 hours.';
+            var body = 'Our team confirms the survey by phone' + (dayObj ? ' — held for ' + dayObj.dow + ' ' + dayObj.day + ' ' + dayObj.mon + ' at ' + s.slot : '') + '. A surveyor and a designer attend for about 45 minutes, and a written scope with an EGP range follows within three working days' + (styleName ? ', built on the ' + styleName + ' direction' : '') + '. Confirmation sent to ' + (s.email || 'your mobile') + '.';
+            localStorage.setItem('tk_confirm', JSON.stringify({ title: title, body: body, ts: Date.now() }));
+          } catch (e) {}
+          window.location.assign('/thank-you');
         } else { this.setState({ tried: true, phase: !s.ptype ? 1 : 3 }); this.jump('brief'); }
       },
       onEdit: () => this.set('submitted', false),

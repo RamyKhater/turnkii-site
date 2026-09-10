@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #12130E; color: #F6F3EC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { text-decoration: none; }
+  @keyframes tkPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .tk-pop { animation: none !important; } }
+</style>
+</helmet>
+  <div style="min-height: 100vh; display: flex; flex-direction: column;">
+    <header style="padding: 20px clamp(16px, 3vw, 40px);">
+      <a href="Turnkii v3.dc.html" style="display: inline-flex; align-items: center;"><img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 22px; width: auto; display: block;" /></a>
+    </header>
+    <main style="flex: 1 1 auto; display: flex; align-items: center; justify-content: center; padding: 32px clamp(16px, 3vw, 40px) 56px;">
+      <div style="max-width: 640px; width: 100%; text-align: center;">
+        <div class="tk-pop" style="width: 74px; height: 74px; border-radius: 999px; background: #D6F23C; color: #12130E; display: flex; align-items: center; justify-content: center; margin: 0 auto; animation: tkPop 0.4s cubic-bezier(0.2, 0.8, 0.3, 1.2) both;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"></path></svg>
+        </div>
+        <div style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #D6F23C; margin-top: 26px;">Request received</div>
+        <h1 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 6vw, 60px); line-height: 1.04; letter-spacing: -0.02em; margin: 12px 0 0;">{{ title }}</h1>
+        <p style="font-size: 16px; line-height: 1.65; color: rgba(246,243,236,0.72); margin: 18px auto 0; max-width: 46ch;">{{ body }}</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 34px;">
+          <a href="Turnkii v3.dc.html" style="background: #D6F23C; color: #12130E; font-weight: 700; font-size: 15px; padding: 14px 24px; border-radius: 999px;" style-hover="background: #E6FF6B; color: #12130E;">Back to home</a>
+          <a href="Turnkii Style.dc.html" style="border: 1px solid rgba(246,243,236,0.4); color: #F6F3EC; font-weight: 600; font-size: 15px; padding: 14px 24px; border-radius: 999px;" style-hover="border-color: #D6F23C; color: #D6F23C;">Browse styles</a>
+        </div>
+      </div>
+    </main>
+    <footer style="padding: 22px clamp(16px, 3vw, 40px); border-top: 1px solid rgba(246,243,236,0.12); font-size: 13px; color: rgba(246,243,236,0.5); text-align: center;">© 2026 Turnkii · <a href="Turnkii v3.dc.html" style="color: rgba(246,243,236,0.7);">turnkii.app</a></footer>
+  </div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = {
+    title: 'Your request is in.',
+    body: 'Thank you — our team will be in touch within one working day to confirm the next step. A confirmation has been sent to your contact details.'
+  };
+  componentDidMount() {
+    try {
+      var raw = localStorage.getItem('tk_confirm');
+      if (raw) {
+        var c = JSON.parse(raw);
+        if (c && c.title) this.setState({ title: c.title, body: c.body || this.state.body });
+      }
+    } catch (e) {}
+  }
+  renderVals() { return { title: this.state.title, body: this.state.body }; }
+}
+</script>
+</body>
+</html>
