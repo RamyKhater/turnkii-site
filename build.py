@@ -89,6 +89,9 @@ GADS_ID = os.environ.get("GADS_ID", "").strip()                  # AW-XXXXXXXXX
 GADS_LEAD_LABEL = os.environ.get("GADS_LEAD_LABEL", "").strip()  # conversion label
 TIKTOK_PIXEL_ID = os.environ.get("TIKTOK_PIXEL_ID", "").strip()
 LINKEDIN_PARTNER_ID = os.environ.get("LINKEDIN_PARTNER_ID", "").strip()
+# True when any analytics/ad tag is configured — gates the consent banner +
+# Consent-Mode bootstrap. With none set (e.g. local builds) nothing is injected.
+ANALYTICS_ON = any([GA4_ID, GADS_ID, META_PIXEL_ID, TIKTOK_PIXEL_ID, LINKEDIN_PARTNER_ID])
 
 
 # ── Brief basket engine. Injected into <head> on every page so the "brief cart"
@@ -188,27 +191,41 @@ def analytics_head():
     always-present tkTrack/UTM helper so component event calls never error."""
     parts = []
     google_ids = [i for i in (GA4_ID, GADS_ID) if i]
+    if ANALYTICS_ON:
+        # Consent bootstrap — deny by default (Google Consent Mode). GA stays
+        # cookieless and no ad pixel loads until the visitor accepts. __tkGrant/
+        # __tkDeny are called by the banner (or restored from a prior choice).
+        parts.append(
+            "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;"
+            "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});"
+            "try{window.__tkConsent=localStorage.getItem('tk_consent')}catch(e){window.__tkConsent=null;}"
+            "window.__tkGrant=function(persist){gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});"
+            "if(persist){try{localStorage.setItem('tk_consent','granted')}catch(e){}window.__tkConsent='granted';}"
+            "if(window.__tkLoadPixels)window.__tkLoadPixels();};"
+            "window.__tkDeny=function(persist){if(persist){try{localStorage.setItem('tk_consent','denied')}catch(e){}window.__tkConsent='denied';}};</script>"
+        )
     if google_ids:
         configs = "".join(f"gtag('config','{i}');" for i in google_ids)
         parts.append(
             f'<script async src="https://www.googletagmanager.com/gtag/js?id={google_ids[0]}"></script>\n'
-            "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
-            "gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});"
-            "gtag('set','user_properties',{experiment_variant:(window.TK_VARIANT||'A')});"
+            "<script>gtag('set','user_properties',{experiment_variant:(window.TK_VARIANT||'A')});"
             f"gtag('js',new Date());{configs}</script>"
         )
+    # Ad pixels — defined but NOT loaded until consent is granted (they have no
+    # native consent mode, so gating = not loading them).
+    pixels = []
     if META_PIXEL_ID:
-        parts.append(
-            "<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
+        pixels.append(
+            "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
             "n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;"
             "n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;"
             "s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',"
             "'https://connect.facebook.net/en_US/fbevents.js');"
-            f"fbq('init','{META_PIXEL_ID}');fbq('track','PageView');</script>"
+            f"fbq('init','{META_PIXEL_ID}');fbq('track','PageView');"
         )
     if TIKTOK_PIXEL_ID:
-        parts.append(
-            "<script>!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];"
+        pixels.append(
+            "!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];"
             "ttq.methods=['page','track','identify','instances','debug','on','off','once','ready','alias','group','enableCookie','disableCookie'];"
             "ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};"
             "for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);"
@@ -216,15 +233,20 @@ def analytics_head():
             "ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};"
             "var o=d.createElement('script');o.type='text/javascript';o.async=!0;o.src=i+'?sdkid='+e+'&lib='+t;"
             "var a=d.getElementsByTagName('script')[0];a.parentNode.insertBefore(o,a)};"
-            f"ttq.load('{TIKTOK_PIXEL_ID}');ttq.page();}}(window,document,'ttq');</script>"
+            f"ttq.load('{TIKTOK_PIXEL_ID}');ttq.page();}}(window,document,'ttq');"
         )
     if LINKEDIN_PARTNER_ID:
-        parts.append(
-            f"<script>_linkedin_partner_id='{LINKEDIN_PARTNER_ID}';window._linkedin_data_partner_ids="
+        pixels.append(
+            f"_linkedin_partner_id='{LINKEDIN_PARTNER_ID}';window._linkedin_data_partner_ids="
             "window._linkedin_data_partner_ids||[];window._linkedin_data_partner_ids.push(_linkedin_partner_id);"
             "(function(l){if(!l){window.lintrk=function(a,b){window.lintrk.q.push([a,b])};window.lintrk.q=[]}"
             "var s=document.getElementsByTagName('script')[0];var b=document.createElement('script');b.type='text/javascript';"
-            "b.async=true;b.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';s.parentNode.insertBefore(b,s)})(window.lintrk);</script>"
+            "b.async=true;b.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';s.parentNode.insertBefore(b,s)})(window.lintrk);"
+        )
+    if pixels:
+        parts.append(
+            "<script>window.__tkLoadPixels=function(){if(window.__tkPixelsLoaded)return;window.__tkPixelsLoaded=1;"
+            + "".join(pixels) + "};</script>"
         )
     gads_conv = (
         f"if(window.gtag)gtag('event','conversion',{{send_to:'{GADS_ID}/{GADS_LEAD_LABEL}'}});"
@@ -263,6 +285,9 @@ def analytics_head():
         "})();</script>"
     ).replace("__GADS__", gads_conv)
     parts.append(helper)
+    if ANALYTICS_ON:
+        # Returning visitor who already accepted — re-apply the grant (no re-prompt).
+        parts.append("<script>if(window.__tkConsent==='granted'&&window.__tkGrant)window.__tkGrant(false);</script>")
     # Variant-B brief-basket engine is excluded from production (see PAGES note).
     # parts.append(BRIEF_ENGINE)
     return "\n" + "\n".join(parts)
@@ -779,6 +804,36 @@ def inject_mobile_nav(text):
     return text
 
 
+def consent_banner():
+    """Cookie-consent banner, shown until the visitor accepts or declines. Accept
+    grants Google Consent Mode + loads the ad pixels; decline keeps GA cookieless
+    with no pixels. The choice is remembered. Empty when no analytics is set."""
+    if not ANALYTICS_ON:
+        return ""
+    return (
+        '\n<div id="tk-consent" role="dialog" aria-label="Cookie consent" '
+        'style="position:fixed;left:16px;right:16px;bottom:16px;z-index:2147482000;max-width:540px;margin:0 auto;'
+        'background:#12130E;color:#F6F3EC;border:1px solid rgba(214,242,60,0.4);border-radius:16px;padding:16px 18px;'
+        'box-shadow:0 20px 50px rgba(0,0,0,0.4);font-family:Manrope,system-ui,sans-serif;display:none;">'
+        '<div style="font-size:13.5px;line-height:1.55;color:rgba(246,243,236,0.82);">'
+        'We use cookies to measure traffic and improve our ads. Accept to help us out, or decline — '
+        'either way we remember your choice. <a href="privacy.html" style="color:#D6F23C;text-decoration:underline;">Privacy policy</a>.'
+        '</div>'
+        '<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">'
+        '<button type="button" id="tk-consent-accept" style="flex:1 1 auto;background:#D6F23C;color:#12130E;border:0;'
+        'border-radius:999px;padding:11px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;">Accept</button>'
+        '<button type="button" id="tk-consent-decline" style="flex:1 1 auto;background:transparent;color:#F6F3EC;'
+        'border:1px solid rgba(246,243,236,0.3);border-radius:999px;padding:11px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;">Decline</button>'
+        '</div></div>'
+        '<script>(function(){var el=document.getElementById("tk-consent");if(!el)return;'
+        'if(!window.__tkConsent){el.style.display="block";}'
+        'var a=document.getElementById("tk-consent-accept"),d=document.getElementById("tk-consent-decline");'
+        'if(a)a.addEventListener("click",function(){if(window.__tkGrant)window.__tkGrant(true);el.style.display="none";});'
+        'if(d)d.addEventListener("click",function(){if(window.__tkDeny)window.__tkDeny(true);el.style.display="none";});'
+        '})();</script>'
+    )
+
+
 def build_page(src_name):
     slug, title, desc = PAGES[src_name]
     text = open(os.path.join(ROOT, src_name), encoding="utf-8").read()
@@ -833,10 +888,10 @@ def build_page(src_name):
     if vert and CONTENT and (CONTENT.get("sections") or {}).get(vert) is False:
         text = text.replace("<head>", '<head>\n<script>location.replace("/")</script>', 1)
 
-    # floating WhatsApp click-to-chat button on public pages (not the internal
-    # admin consoles baked into the site).
+    # floating WhatsApp click-to-chat button + cookie-consent banner on public
+    # pages (not the internal admin consoles baked into the site).
     if slug not in NOINDEX_PAGES:
-        text = text.replace("</body>", whatsapp_widget() + "\n</body>", 1)
+        text = text.replace("</body>", whatsapp_widget() + consent_banner() + "\n</body>", 1)
 
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).
