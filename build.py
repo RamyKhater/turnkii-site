@@ -284,6 +284,12 @@ def fetch_content(url):
 
 CONTENT = fetch_content(CONTENT_URL)
 
+# Admin-editable site copy. The panel stores a { "exact source string": "new
+# text" } map (edited via the "Site copy" screen, keyed off copy-manifest.json);
+# it's applied at build time with the same boundary-safe replacement used for
+# translation, so any visible string — footer included — can be overridden.
+COPY_OVERRIDES = (CONTENT or {}).get("copy") or {}
+
 
 def bake_hero_image(text):
     """Swap only the hero background <img> src to the admin-published hero image
@@ -832,6 +838,11 @@ def build_page(src_name):
     if slug not in NOINDEX_PAGES:
         text = text.replace("</body>", whatsapp_widget() + "\n</body>", 1)
 
+    # admin copy overrides — applied last so they hit both the live template and
+    # the injected prerender snapshot (footer, headings, body… all overridable).
+    if COPY_OVERRIDES:
+        text = translate(text, COPY_OVERRIDES)
+
     with open(os.path.join(DIST, slug), "w", encoding="utf-8") as f:
         f.write(text)
     return slug
@@ -936,6 +947,69 @@ NOT_FOUND = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 """
 
 
+_COPY_SKIP = re.compile(r"=>|\b(function|return|const|let|var|undefined|null|true|false)\b")
+_COPY_PATH = re.compile(r"[MmLlHhVvCcSsQqTtAaZz0-9 .,\-]+$")
+_COPY_ALLOWED = re.compile(r"[A-Za-z0-9 –—·,.!?%&'’/():+°²\-]")
+
+
+def _looks_copy(s):
+    """True when a string is human-visible display copy (not code/CSS/SVG)."""
+    s = s.strip()
+    if len(s) < 3 or not re.search(r"[A-Za-z]{2}", s):
+        return False
+    if "\n" in s or any(c in s for c in ";{}<>=\\|"):
+        return False
+    if _COPY_SKIP.search(s) or _COPY_PATH.fullmatch(s):
+        return False
+    if re.search(r"(px|rem|vw|vh|#[0-9A-Fa-f]{3,6}|rgba?\()", s) and ":" in s:
+        return False
+    if re.search(r"\b[a-zA-Z]\.[a-zA-Z]", s) and " " not in s.split(".")[0]:
+        return False
+    if re.sub(_COPY_ALLOWED, "", s):  # leftover after allowed chars → not prose
+        return False
+    return True
+
+
+def _extract_copy(src_text):
+    """Ordered, de-duplicated list of editable display strings on one page."""
+    m = re.search(r'(<script type="text/x-dc"[^>]*>)(.*?)(</script>)', src_text, re.S)
+    tmpl = src_text[:m.start()] if m else src_text
+    script = m.group(2) if m else ""
+    out, seen = [], set()
+    def add(v):
+        v = v.strip()
+        if v and v not in seen and _looks_copy(v):
+            seen.add(v); out.append(v)
+    for txt in re.findall(r">([^<>]+)<", tmpl):
+        for part in re.split(r"\{\{.*?\}\}", txt):
+            add(part)
+    for a, b in re.findall(r"'((?:[^'\\]|\\.)*)'|\"((?:[^\"\\]|\\.)*)\"", script):
+        add(a or b)
+    return out
+
+
+def write_copy_manifest():
+    """Emit dist/copy-manifest.json — every editable string per page. The admin
+    'Site copy' editor reads this to render its fields; overrides post back
+    through the content API and are applied by COPY_OVERRIDES at build time."""
+    pages = []
+    for src, (slug, title, _desc) in PAGES.items():
+        if slug in NOINDEX_PAGES:
+            continue
+        try:
+            keys = _extract_copy(open(os.path.join(ROOT, src), encoding="utf-8").read())
+        except OSError:
+            continue
+        if keys:
+            pages.append({"slug": slug, "title": title, "keys": keys})
+    manifest = {"generatedAt": None, "pages": pages,
+                "count": sum(len(p["keys"]) for p in pages)}
+    with open(os.path.join(DIST, "copy-manifest.json"), "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False)
+    # allow the admin (another origin) to fetch it
+    return manifest["count"]
+
+
 def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
@@ -977,6 +1051,8 @@ def main():
     slugs = [build_page(src) for src in PAGES]
     ar_slugs = [build_ar_page(src) for src in PAGES if src in AR_SOURCES] if AR_ENABLED else []
     write_static()
+    copy_count = write_copy_manifest()
+    print(f"copy-manifest.json: {copy_count} editable strings")
 
     print("Built dist/ ->")
     for base, _dirs, files in os.walk(DIST):
