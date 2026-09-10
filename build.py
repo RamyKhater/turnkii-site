@@ -769,6 +769,7 @@ TK_MOBILE_NAV_CSS = (
     "<style>"
     ".tk-nav{display:flex;align-items:center;gap:clamp(10px,1.2vw,20px);flex-wrap:wrap;flex:1 1 auto}"
     ".tk-burger{display:none}"
+    ".tk-nav-toggle{position:absolute!important;width:1px;height:1px;opacity:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);pointer-events:none}"
     "@media (max-width:1000px){"
     ".tk-nav{display:none;position:absolute;top:100%;left:0;right:0;z-index:60;flex-direction:column;"
     "align-items:stretch;gap:0;background:#12130E;padding:6px clamp(16px,3vw,40px) 14px;"
