@@ -44,6 +44,11 @@ CONTENT_URL = os.environ.get("TURNKII_CONTENT_URL", "").strip()
 REFERRAL_URL = os.environ.get("TURNKII_REFERRAL_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/referrals/register") if INTAKE_URL else ""
 )
+# WhatsApp click events post here so the admin can count WhatsApp intent
+# separately from real form leads. Derived from the intake host unless set.
+WHATSAPP_EVENTS_URL = os.environ.get("TURNKII_WA_EVENTS_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/events/whatsapp") if INTAKE_URL else ""
+)
 REF_CAPTURE = (
     "\n<script>(function(){try{var r=new URL(location.href).searchParams.get('ref');"
     "if(r){localStorage.setItem('tk_ref',r);}window.TURNKII_REF=r||localStorage.getItem('tk_ref')||'';}"
@@ -268,6 +273,16 @@ def analytics_head():
         "};"
         "document.addEventListener('click',function(e){if(!e.target.closest)return;var el=e.target.closest('[data-track]');"
         "if(el){var n=el.getAttribute('data-track');var lbl=el.getAttribute('data-track-label');window.tkTrack(n,lbl?{label:lbl}:{});}},true);"
+        # Every WhatsApp click-to-chat link → its own GA4 `whatsapp_click` event
+        # (kept out of generate_lead) + a beacon to the admin so it counts there.
+        "document.addEventListener('click',function(e){if(!e.target.closest)return;"
+        "var w=e.target.closest('a[href*=\"wa.me\"],a[href*=\"api.whatsapp.com\"],a[href*=\"whatsapp://\"]');if(!w)return;"
+        "var a=window.tkAttrib?window.tkAttrib():{};"
+        "try{if(window.tkTrack)window.tkTrack('whatsapp_click',{method:'whatsapp',page:location.pathname});}catch(e){}"
+        "try{var u=window.TURNKII_WA_EVENTS_URL;if(u)fetch(u,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},"
+        "body:JSON.stringify({path:location.pathname,referrer:document.referrer||undefined,"
+        "utmSource:a.utm_source||undefined,utmMedium:a.utm_medium||undefined,utmCampaign:a.utm_campaign||undefined,"
+        "gclid:a.gclid||undefined,fbclid:a.fbclid||undefined})}).catch(function(){});}catch(e){}},true);"
         "document.addEventListener('submit',function(e){var f=e.target;if(!f||f.id!=='tk-aftercare')return;e.preventDefault();"
         "var fd=new FormData(f);var svcs=fd.getAll('svc');var a=window.tkAttrib?window.tkAttrib():{};"
         "if(window.tkTrack)window.tkTrack('generate_lead',{type:'aftercare',services:svcs.join(',')});"
@@ -531,6 +546,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_INTAKE_URL="{INTAKE_URL}";</script>' if INTAKE_URL else ""
     ) + (
         f'\n<script>window.TURNKII_REFERRAL_URL="{REFERRAL_URL}";</script>' if REFERRAL_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_WA_EVENTS_URL="{WHATSAPP_EVENTS_URL}";</script>' if WHATSAPP_EVENTS_URL else ""
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
@@ -562,10 +579,11 @@ def whatsapp_widget():
         'c-.22 0-.6.08-.91.42-.31.34-1.2 1.17-1.2 2.85s1.23 3.3 1.4 3.53c.17.22 2.42 3.7 5.86 5.19.82.35 1.46.56 1.96.72'
         '.82.26 1.57.22 2.16.14.66-.1 2.02-.83 2.31-1.62.28-.8.28-1.48.2-1.62-.08-.14-.31-.22-.65-.39z"/></svg>'
     )
-    onclick = "try{window.tkTrack&&window.tkTrack('generate_lead',{method:'whatsapp',currency:'EGP'})}catch(e){}"
+    # No inline onclick — the global WhatsApp handler (analytics_head) tracks
+    # this and every other wa.me link uniformly as a `whatsapp_click`.
     return (
         '\n<a href="' + html.escape(href, quote=True) + '" target="_blank" rel="noopener noreferrer"'
-        ' aria-label="Chat with Turnkii on WhatsApp" onclick="' + html.escape(onclick, quote=True) + '"'
+        ' aria-label="Chat with Turnkii on WhatsApp"'
         ' style="position:fixed;right:20px;bottom:20px;z-index:2147483000;width:56px;height:56px;'
         'border-radius:50%;background:#25D366;box-shadow:0 6px 20px rgba(0,0,0,.24);display:flex;'
         'align-items:center;justify-content:center;text-decoration:none;">' + glyph + '</a>'
