@@ -840,9 +840,14 @@
 
                 <div style="background: #1A1C15; border: 1px solid rgba(246,243,236,0.12); border-radius: 18px; padding: 18px; grid-column: 1 / -1;">
                   <div style="display: flex; gap: 10px; align-items: baseline; justify-content: space-between;">
-                    <div style="font-size: 11.5px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.5);">Book the free 45-minute survey</div>
+                    <div style="font-size: 11.5px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 700; color: rgba(246,243,236,0.5);">{{ visitLabel }}</div>
                     <div style="font-size: 12.5px; font-weight: 700; color: {{ selVisitColor }}; text-align: right;">{{ selVisit }}</div>
                   </div>
+                  <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button type="button" onClick="{{ onVisitSite }}" style="{{ visitSiteStyle }}" style-hover="border-color: #D6F23C;">On-site visit</button>
+                    <button type="button" onClick="{{ onVisitOnline }}" style="{{ visitOnlineStyle }}" style-hover="border-color: #D6F23C;">Online meeting</button>
+                  </div>
+                  <div style="font-size: 12px; color: rgba(246,243,236,0.55); line-height: 1.5; margin-top: 10px;">{{ visitHint }}</div>
                   <div style="display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 4px;">
                     <sc-for list="{{ dayChoices }}" as="d" hint-placeholder-count="8">
                       <button onClick="{{ d.onPick }}" style="cursor: pointer; font-family: Manrope, sans-serif; flex: 0 0 auto; border: 1px solid {{ d.bc }}; background: {{ d.bg }}; color: {{ d.fg }}; border-radius: 12px; padding: 10px 13px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 62px;" style-hover="border-color: #D6F23C;">
@@ -871,7 +876,12 @@
                     </label>
                     <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
                       <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(246,243,236,0.45); font-weight: 700;">Mobile / WhatsApp</span>
-                      <input type="tel" placeholder="+20 1xx xxx xxxx" onInput="{{ onPhone }}" style="background: #12130E; border: 1px solid rgba(246,243,236,0.18); border-radius: 12px; padding: 12px 14px; color: #F6F3EC; font-size: 15px; outline: none; width: 100%;" style-focus="border-color: #D6F23C;" />
+                      <div style="display: flex; gap: 8px;">
+                        <select value="{{ phoneCode }}" onChange="{{ onPhoneCode }}" aria-label="Country code" style="flex: 0 0 auto; background: #12130E; border: 1px solid rgba(246,243,236,0.18); border-radius: 12px; padding: 12px 10px; color: #F6F3EC; font-size: 15px; outline: none; font-family: Manrope, sans-serif; cursor: pointer;" style-focus="border-color: #D6F23C;">
+                          <sc-for list="{{ codeChoices }}" as="cc" hint-placeholder-count="6"><option value="{{ cc.c }}">{{ cc.label }}</option></sc-for>
+                        </select>
+                        <input type="tel" placeholder="1xx xxx xxxx" onInput="{{ onPhone }}" style="flex: 1 1 auto; min-width: 0; background: #12130E; border: 1px solid rgba(246,243,236,0.18); border-radius: 12px; padding: 12px 14px; color: #F6F3EC; font-size: 15px; outline: none; width: 100%;" style-focus="border-color: #D6F23C;" />
+                      </div>
                     </label>
                     <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
                       <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(246,243,236,0.45); font-weight: 700;">Email (optional)</span>
@@ -1286,6 +1296,15 @@ const BUDGETS = [
 ];
 const TIMELINES = ['Ready now — keys in hand', 'Within a month', '1–3 months', '3–6 months', 'Planning ahead'];
 const SLOTS = ['10:00', '12:00', '14:00', '16:00'];
+// Dial codes for non-Egyptian numbers (Egypt default). label shown in the select.
+const COUNTRY_CODES = [
+  { c: '+20', n: 'EG' }, { c: '+966', n: 'SA' }, { c: '+971', n: 'AE' }, { c: '+965', n: 'KW' },
+  { c: '+974', n: 'QA' }, { c: '+973', n: 'BH' }, { c: '+968', n: 'OM' }, { c: '+962', n: 'JO' },
+  { c: '+961', n: 'LB' }, { c: '+964', n: 'IQ' }, { c: '+970', n: 'PS' }, { c: '+218', n: 'LY' },
+  { c: '+249', n: 'SD' }, { c: '+212', n: 'MA' }, { c: '+216', n: 'TN' }, { c: '+1', n: 'US' },
+  { c: '+44', n: 'GB' }, { c: '+49', n: 'DE' }, { c: '+33', n: 'FR' }, { c: '+90', n: 'TR' },
+  { c: '+91', n: 'IN' }, { c: '+86', n: 'CN' }
+];
 const FAQS = [
   { q: 'What exactly is Turnkii?', a: 'Turnkii is a turnkey property delivery platform. The work itself is executed by our vetted network of contractors, workshops and suppliers — that network is our execution arm, and our job is to manage and coordinate it: scoping, pricing, procurement, programme, quality control and snagging, so the owner deals with us instead of chasing six trades. Around that we provide the financial and technology layer — payment plans, milestone-gated payments, live progress tracking and after-handover care — so a customer can finish and then manage their property entirely through Turnkii. The mission: nobody should lose a year of rent, or a year of their life, to a fit-out.' },
   { q: 'How is pricing structured?', a: 'Finishing is quoted per square metre against a fixed scope; furniture and FF&E are quoted per unit against the style and package you chose. Ranges are shared on the site visit, once we have measured.' },
@@ -1364,7 +1383,7 @@ const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 class Component extends DCLogic {
   state = {
     services: [], ptype: '', area: '', units: '', location: '', style: '', pkg: '', materials: [],
-    budget: '', timeline: '', name: '', phone: '', email: '', notes: '', day: '', slot: '',
+    budget: '', timeline: '', name: '', phone: '', phoneCode: '+20', email: '', notes: '', day: '', slot: '', visitMode: 'site',
     careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', careMonthOffset: 0, carePhone: '', careDone: false, careTried: false,
     plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, navOpen: false, shot: {}
   };
@@ -1905,6 +1924,26 @@ class Component extends DCLogic {
       onName: e => this.set('name', e.target.value),
       onPhone: e => this.set('phone', e.target.value),
       onEmail: e => this.set('email', e.target.value),
+      // country code for non-Egyptian numbers
+      phoneCode: s.phoneCode,
+      codeChoices: COUNTRY_CODES.map(x => ({ c: x.c, label: x.n + ' ' + x.c })),
+      onPhoneCode: e => this.set('phoneCode', e.target.value),
+      // on-site visit vs online meeting (fallback when no visit date works)
+      visitMode: s.visitMode,
+      onVisitSite: () => this.set('visitMode', 'site'),
+      onVisitOnline: () => this.set('visitMode', 'online'),
+      visitLabel: s.visitMode === 'online' ? 'Book a free online meeting' : 'Book the free 45-minute survey',
+      visitHint: s.visitMode === 'online'
+        ? 'No date works for a site visit? Pick a day and time for a video call with our team instead.'
+        : 'Free 45-minute survey on site — pick the day and window that suit you.',
+      visitSiteStyle: 'cursor: pointer; font-family: Manrope, sans-serif; flex: 1 1 auto; border-radius: 999px; padding: 11px 14px; font-size: 13.5px; font-weight: 700; border: 1px solid '
+        + (s.visitMode === 'site' ? '#D6F23C' : 'rgba(246,243,236,0.2)') + '; background: '
+        + (s.visitMode === 'site' ? 'rgba(214,242,60,0.14)' : 'transparent') + '; color: '
+        + (s.visitMode === 'site' ? '#D6F23C' : '#F6F3EC') + ';',
+      visitOnlineStyle: 'cursor: pointer; font-family: Manrope, sans-serif; flex: 1 1 auto; border-radius: 999px; padding: 11px 14px; font-size: 13.5px; font-weight: 700; border: 1px solid '
+        + (s.visitMode === 'online' ? '#D6F23C' : 'rgba(246,243,236,0.2)') + '; background: '
+        + (s.visitMode === 'online' ? 'rgba(214,242,60,0.14)' : 'transparent') + '; color: '
+        + (s.visitMode === 'online' ? '#D6F23C' : '#F6F3EC') + ';',
       onNotes: e => this.set('notes', e.target.value),
       onSubmit: () => {
         if (canSend) {
@@ -1917,10 +1956,11 @@ class Component extends DCLogic {
               fetch(url, {
                 method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  contactName: s.name, phone: s.phone, email: s.email || undefined,
+                  contactName: s.name, phone: ((s.phoneCode || '+20') + ' ' + s.phone).trim(), email: s.email || undefined,
                   propertyType: s.ptype || undefined, area: Number(s.area) || undefined, units: Number(s.units) || undefined,
                   location: s.location || undefined, style: s.style || undefined,
                   services: Array.isArray(s.services) ? s.services : [], budgetPlan: s.plan || undefined,
+                  visitDay: s.day || undefined, visitSlot: s.slot || undefined, visitType: s.visitMode || 'site',
                   channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
                 referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
                   utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
@@ -1933,8 +1973,12 @@ class Component extends DCLogic {
           // hand off to a dedicated confirmation page (pass the personalised copy along)
           try {
             var first = s.name ? s.name.split(' ')[0] : '';
+            var when = dayObj ? ' — held for ' + dayObj.dow + ' ' + dayObj.day + ' ' + dayObj.mon + ' at ' + s.slot : '';
+            var tail = (styleName ? ', built on the ' + styleName + ' direction' : '') + '. Confirmation sent to ' + (s.email || 'your mobile') + '.';
             var title = (first ? first + ', your brief is in.' : 'Your brief is in.') + ' We call you within 24 hours.';
-            var body = 'Our team confirms the survey by phone' + (dayObj ? ' — held for ' + dayObj.dow + ' ' + dayObj.day + ' ' + dayObj.mon + ' at ' + s.slot : '') + '. A surveyor and a designer attend for about 45 minutes, and a written scope with an EGP range follows within three working days' + (styleName ? ', built on the ' + styleName + ' direction' : '') + '. Confirmation sent to ' + (s.email || 'your mobile') + '.';
+            var body = (s.visitMode === 'online'
+              ? 'Our team confirms your online meeting by phone' + when + '. We send a video-call link, and a written scope with an EGP range follows within three working days'
+              : 'Our team confirms the survey by phone' + when + '. A surveyor and a designer attend for about 45 minutes, and a written scope with an EGP range follows within three working days') + tail;
             localStorage.setItem('tk_confirm', JSON.stringify({ title: title, body: body, ts: Date.now() }));
           } catch (e) {}
           window.location.assign('/thank-you');
