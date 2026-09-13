@@ -583,7 +583,7 @@
           <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #D6F23C; font-weight: 700;">Project brief</div>
           <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.6vw, 62px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0; max-width: 24ch;" data-comment-anchor="270e6b9355-h2">Tell us the unit. We are in touch within 24 hours.</h2>
         </div>
-        <p style="font-size: 16px; line-height: 1.6; color: rgba(246,243,236,0.6); max-width: 34ch; margin: 0;">Three short steps. Send it and our team calls you within one working day to confirm the survey — only the property, a slot and your mobile are required.</p>
+        <p style="font-size: 16px; line-height: 1.6; color: rgba(246,243,236,0.6); max-width: 34ch; margin: 0;">Three short steps. Send it and our team calls you within one working day to confirm the survey — only the property, a slot and your contact details are required.</p>
       </div>
 
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
@@ -884,7 +884,7 @@
                       </div>
                     </label>
                     <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
-                      <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(246,243,236,0.45); font-weight: 700;">Email (optional)</span>
+                      <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(246,243,236,0.45); font-weight: 700;">{{ emailLabel }}</span>
                       <input type="email" placeholder="you@company.com" onInput="{{ onEmail }}" style="background: #12130E; border: 1px solid rgba(246,243,236,0.18); border-radius: 12px; padding: 12px 14px; color: #F6F3EC; font-size: 15px; outline: none; width: 100%;" style-focus="border-color: #D6F23C;" />
                     </label>
                     <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
@@ -1096,6 +1096,10 @@
               <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
                 <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Mobile</span>
                 <input type="tel" placeholder="+20 1xx xxx xxxx" onInput="{{ onPrePhone }}" style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-family: Manrope, sans-serif; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+                <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">{{ preEmailLabel }}</span>
+                <input type="email" placeholder="you@company.com" onInput="{{ onPreEmail }}" style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-family: Manrope, sans-serif; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" />
               </label>
               <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
                 <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Monthly income, EGP</span>
@@ -1385,7 +1389,7 @@ class Component extends DCLogic {
     services: [], ptype: '', area: '', units: '', location: '', style: '', pkg: '', materials: [],
     budget: '', timeline: '', name: '', phone: '', phoneCode: '+20', email: '', notes: '', day: '', slot: '', visitMode: 'site',
     careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', careMonthOffset: 0, carePhone: '', careDone: false, careTried: false,
-    plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, navOpen: false, shot: {}
+    plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preEmail: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, navOpen: false, shot: {}
   };
 
   get shortCopy() {
@@ -1468,10 +1472,14 @@ class Component extends DCLogic {
     const budgetName = (BUDGETS.find(x => x.id === s.budget) || {}).title;
     const dayObj = this.days.find(d => d.id === s.day);
     const has = id => s.services.includes(id);
-    const preOk = s.preName.trim().length > 1 && s.prePhone.trim().length > 7 && Number(s.preIncome) > 0;
+    const preEmailReq = !!(typeof window !== 'undefined' && window.tkEmailRequired && window.tkEmailRequired());
+    const preEmailOk = !preEmailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.preEmail.trim());
+    const preOk = s.preName.trim().length > 1 && s.prePhone.trim().length > 7 && preEmailOk && Number(s.preIncome) > 0;
     const preLimit = finBudget(s.preIncome);
     const detailBits = ['kitchen', 'hvac', 'shutters', 'outdoor'].filter(k => has(k) && s.detail[k]).map(k => s.detail[k]);
-    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 5;
+    const emailReq = !!(typeof window !== 'undefined' && window.tkEmailRequired && window.tkEmailRequired());
+    const emailOk = !emailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim());
+    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 5 && emailOk;
     const visitOk = !!s.day && !!s.slot;
     const canSend = contactOk && visitOk && !!s.ptype;
 
@@ -1581,7 +1589,8 @@ class Component extends DCLogic {
       ctaLabel: contactOk && visitOk
         ? 'Confirm & book the visit'
         : (!s.ptype ? 'Choose a property type to book'
-          : (!contactOk ? 'Add your name and mobile to book' : 'Pick a visit slot to book')),
+          : (!contactOk ? (emailReq ? 'Add your name, mobile and email to book' : 'Add your name and mobile to book') : 'Pick a visit slot to book')),
+      emailLabel: emailReq ? 'Email' : 'Email (optional)',
       ctaBg: canSend ? '#A3BE2A' : '#12130E',
       ctaFg: canSend ? '#12130E' : '#F6F3EC',
       selScope: s.services.length ? s.services.length + ' selected' : 'Any',
@@ -1600,7 +1609,7 @@ class Component extends DCLogic {
       barTitle: canSend ? doneCount + '/' + stepTotal + ' · brief ready to send' : doneCount + '/' + stepTotal + ' · your brief so far',
       barLine: canSend
         ? (dayObj ? 'Site visit ' + dayObj.dow + ' ' + dayObj.day + ' ' + dayObj.mon + ', ' + s.slot : 'Ready to send')
-        : doneCount + ' of ' + stepTotal + ' complete · still needed: ' + [!s.ptype ? 'property type' : '', !contactOk ? 'name and mobile' : '', !visitOk ? 'a visit slot' : ''].filter(Boolean).join(', '),
+        : doneCount + ' of ' + stepTotal + ' complete · still needed: ' + [!s.ptype ? 'property type' : '', !contactOk ? (emailReq ? 'name, mobile and email' : 'name and mobile') : '', !visitOk ? 'a visit slot' : ''].filter(Boolean).join(', '),
 
       serviceCards: SERVICES.map(x => ({
         num: x.num, tag: x.tag, title: x.title, blurb: x.blurb, details: x.details, lead: x.lead, owner: x.owner,
@@ -1671,6 +1680,7 @@ class Component extends DCLogic {
       onClosePre: () => this.setState({ preOpen: false }),
       onPreName: e => this.setState({ preName: e.target.value }),
       onPrePhone: e => this.setState({ prePhone: e.target.value }),
+      onPreEmail: e => this.setState({ preEmail: e.target.value }),
       onPreIncome: e => this.setState({ preIncome: e.target.value }),
       onPreAmount: e => this.setState({ preAmount: e.target.value }),
       preJobs: ['Salaried', 'Business owner', 'Self-employed', 'Expat income'].map(j => ({
@@ -1680,7 +1690,8 @@ class Component extends DCLogic {
         fg: s.preJob === j ? '#F6F3EC' : '#5E5F52',
         onPick: () => this.setState({ preJob: j })
       })),
-      preBtnLabel: preOk ? 'Submit for pre-approval' : 'Fill name, mobile and income',
+      preBtnLabel: preOk ? 'Submit for pre-approval' : (preEmailReq ? 'Fill name, mobile, email and income' : 'Fill name, mobile and income'),
+      preEmailLabel: preEmailReq ? 'Email' : 'Email (optional)',
       preBtnBg: preOk ? '#A3BE2A' : '#12130E',
       preBtnFg: preOk ? '#12130E' : '#F6F3EC',
       preHint: 'Soft check only. We share your details with our partner bank solely to size the limit.',
@@ -1698,7 +1709,8 @@ class Component extends DCLogic {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 kind: 'financing',
-                contactName: s.preName, phone: s.prePhone,
+                contactName: s.preName, phone: s.prePhone, email: s.preEmail.trim() || undefined,
+                expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
                 monthlyIncome: Number(s.preIncome) || undefined,
                 financeAmount: Number(s.preAmount) || undefined,
                 employment: s.preJob || undefined,
@@ -1948,7 +1960,7 @@ class Component extends DCLogic {
       onSubmit: () => {
         if (canSend) {
           var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-          try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', property_type: s.ptype || '', style: s.style || '', services: (Array.isArray(s.services) ? s.services : []).join(','), budget_plan: s.plan || '' }); } catch (e) {}
+          try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', property_type: s.ptype || '', style: s.style || '', services: (Array.isArray(s.services) ? s.services : []).join(','), budget_plan: s.plan || '', email_required: (window.TK_EXP_EMAIL || 'A') }); } catch (e) {}
           try {
             var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
             if (url) {
@@ -1956,7 +1968,8 @@ class Component extends DCLogic {
               fetch(url, {
                 method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  contactName: s.name, phone: ((s.phoneCode || '+20') + ' ' + s.phone).trim(), email: s.email || undefined,
+                  contactName: s.name, phone: ((s.phoneCode || '+20') + ' ' + s.phone).trim(), email: s.email.trim() || undefined,
+                  expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
                   propertyType: s.ptype || undefined, area: Number(s.area) || undefined, units: Number(s.units) || undefined,
                   location: s.location || undefined, style: s.style || undefined,
                   services: Array.isArray(s.services) ? s.services : [], budgetPlan: s.plan || undefined,

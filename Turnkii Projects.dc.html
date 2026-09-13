@@ -161,7 +161,8 @@ class Component extends DCLogic {
     const s = this.state;
     const chip = on => 'cursor: pointer; font-family: Manrope, sans-serif; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600; border: 1px solid ' + (on ? '#12130E' : '#E4E0D5') + '; background: ' + (on ? '#12130E' : '#FFFFFF') + '; color: ' + (on ? '#F6F3EC' : '#5E5F52') + ';';
     const inputStyle = 'background: #F6F3EC; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 14.5px; color: #12130E; outline: none;';
-    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
+    const emailReq = !!(typeof window !== 'undefined' && window.tkEmailRequired && window.tkEmailRequired());
+    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7 && (!emailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim()));
     const scopeOk = s.services.length > 0 && Number(s.units) > 0;
     const canSend = scopeOk && contactOk;
 
@@ -185,15 +186,15 @@ class Component extends DCLogic {
       onPhone: e => this.set('phone', e.target.value),
       onEmail: e => this.set('email', e.target.value),
       onNotes: e => this.set('notes', e.target.value),
-      ctaLabel: canSend ? 'Request a proposal' : (!scopeOk ? 'Pick services & unit count' : 'Add your name & mobile'),
+      ctaLabel: canSend ? 'Request a proposal' : (!scopeOk ? 'Pick services & unit count' : (emailReq ? 'Add your name, mobile & email' : 'Add your name & mobile')),
       ctaStyle: 'width: 100%; border: none; border-radius: 14px; padding: 16px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (canSend ? 'pointer' : 'default') + '; background: ' + (canSend ? '#D6F23C' : '#EFEBE1') + '; color: ' + (canSend ? '#12130E' : '#A5A292') + ';',
-      hint: s.tried && !canSend ? 'Add the services, unit count, your name and mobile.' : 'No obligation — a scoped proposal within one working day.',
+      hint: s.tried && !canSend ? (emailReq ? 'Add the services, unit count, your name, mobile and work email.' : 'Add the services, unit count, your name and mobile.') : 'No obligation — a scoped proposal within one working day.',
       hintColor: s.tried && !canSend ? '#A34A3A' : '#8A8A79',
       onSubmit: () => {
         if (!canSend) { this.setState({ tried: true }); return; }
         this.setState({ sent: true, ref: 'TP-' + String(Date.now()).slice(-6) });
         var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'project', project_type: s.type || '', units: Number(s.units) || 0 }); } catch (e) {}
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'project', project_type: s.type || '', units: Number(s.units) || 0, email_required: (window.TK_EXP_EMAIL || 'A') }); } catch (e) {}
         try {
           var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
           if (url) {
@@ -202,7 +203,8 @@ class Component extends DCLogic {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 kind: 'project',
-                contactName: who, phone: s.phone, email: s.email || undefined,
+                contactName: who, phone: s.phone, email: s.email.trim() || undefined,
+                expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
                 propertyType: s.type || undefined, units: Number(s.units) || undefined, area: Number(s.area) || undefined,
                 location: s.loc || undefined, services: s.services, channel: 'Project / bulk',
                 referrer: (typeof document !== 'undefined' && document.referrer) || undefined,

@@ -283,7 +283,8 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
-    const ok = !!(s.svc.length && s.type && s.phone.trim().length > 5);
+    const emailReq = !!(typeof window !== 'undefined' && window.tkEmailRequired && window.tkEmailRequired());
+    const ok = !!(s.svc.length && s.type && s.phone.trim().length > 5 && (!emailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim())));
     return {
       stats: [
         { n: '1,900+', l: 'units under management' },
@@ -316,7 +317,9 @@ class Component extends DCLogic {
       onNotes: e => this.setState({ notes: e.target.value }),
       hint: ok
         ? 'Goes to Eltizam Asset Management. It does not touch your Turnkii unit brief.'
-        : (s.tried ? 'Pick at least one service, a property type, and leave a phone number.' : 'Service, property type and a phone number is the minimum.'),
+        : (emailReq
+            ? (s.tried ? 'Pick at least one service, a property type, and leave a phone and work email.' : 'Service, property type, a phone number and a work email are the minimum.')
+            : (s.tried ? 'Pick at least one service, a property type, and leave a phone number.' : 'Service, property type and a phone number is the minimum.')),
       hintColor: !ok && s.tried ? '#9A3B24' : '#8A8A79',
       form: !s.sent,
       sent: s.sent,
@@ -328,7 +331,7 @@ class Component extends DCLogic {
         if (!ok) { this.setState({ tried: true }); return; }
         this.setState({ sent: true, ref: 'FM-' + String(Date.now()).slice(-6) });
         var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-        try { if (window.tkTrack) window.tkTrack('generate_lead', { type: 'facility', services: (s.svc || []).join(','), property_type: s.type || '' }); } catch (e) {}
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { type: 'facility', services: (s.svc || []).join(','), property_type: s.type || '', email_required: (window.TK_EXP_EMAIL || 'A') }); } catch (e) {}
         try {
           var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
           if (url) {
@@ -337,7 +340,8 @@ class Component extends DCLogic {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 kind: 'service',
-                contactName: s.name, phone: s.phone, email: s.email || undefined,
+                contactName: s.name, phone: s.phone, email: s.email.trim() || undefined,
+                expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
                 propertyType: s.type || undefined, location: s.loc || undefined,
                 services: Array.isArray(s.svc) ? s.svc : [], channel: 'Facility (Eltizam)',
                 referrer: (typeof document !== 'undefined' && document.referrer) || undefined,

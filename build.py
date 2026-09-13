@@ -98,6 +98,17 @@ LINKEDIN_PARTNER_ID = os.environ.get("LINKEDIN_PARTNER_ID", "").strip()
 # Consent-Mode bootstrap. With none set (e.g. local builds) nothing is injected.
 ANALYTICS_ON = any([GA4_ID, GADS_ID, META_PIXEL_ID, TIKTOK_PIXEL_ID, LINKEDIN_PARTNER_ID])
 
+# ── Email-required A/B experiment. Controls whether the lead forms force a valid
+#    email before submit. Independent of the homepage-layout variant (TK_VARIANT).
+#      experiment → sticky 50/50 per visitor: arm 'A' keeps email optional (the
+#                   control), arm 'B' requires it. Segment GA4 by exp_email_required.
+#      required   → email mandatory for everyone (post-experiment rollout).
+#      optional   → email optional for everyone (pre-experiment / rollback).
+#    Set TK_EMAIL_MODE in Vercel. Default 'experiment' so staging + prod both split.
+EMAIL_MODE = os.environ.get("TK_EMAIL_MODE", "experiment").strip().lower()
+if EMAIL_MODE not in ("experiment", "required", "optional"):
+    EMAIL_MODE = "experiment"
+
 
 # ── Brief basket engine. Injected into <head> on every page so the "brief cart"
 #    survives design-canvas re-renders and works site-wide. Selections (services,
@@ -196,6 +207,21 @@ def analytics_head():
     always-present tkTrack/UTM helper so component event calls never error."""
     parts = []
     google_ids = [i for i in (GA4_ID, GADS_ID) if i]
+    # Email-required experiment bootstrap — runs FIRST (before gtag user_properties
+    # and before any form renders) and unconditionally (form behaviour must work
+    # even when no analytics tag is configured). Assigns a sticky 50/50 arm, honours
+    # a ?tk_exp=A|B override for QA, and exposes window.tkEmailRequired().
+    parts.append(
+        "<script>(function(){var MODE='" + EMAIL_MODE + "';window.TK_EMAIL_MODE=MODE;"
+        "var v;try{var q=new URLSearchParams(location.search).get('tk_exp');"
+        "if(q==='A'||q==='B'){v=q;try{localStorage.setItem('tk_exp_email',v)}catch(e){}}"
+        "else{try{v=localStorage.getItem('tk_exp_email')}catch(e){}}}catch(e){}"
+        "if(v!=='A'&&v!=='B'){v=Math.random()<0.5?'A':'B';try{localStorage.setItem('tk_exp_email',v)}catch(e){}}"
+        "window.TK_EXP_EMAIL=v;"
+        "window.tkEmailRequired=function(){var m=window.TK_EMAIL_MODE;"
+        "if(m==='required')return true;if(m==='optional')return false;return window.TK_EXP_EMAIL==='B';};"
+        "})();</script>"
+    )
     if ANALYTICS_ON:
         # Consent bootstrap — deny by default (Google Consent Mode). GA stays
         # cookieless and no ad pixel loads until the visitor accepts. __tkGrant/
@@ -213,7 +239,7 @@ def analytics_head():
         configs = "".join(f"gtag('config','{i}');" for i in google_ids)
         parts.append(
             f'<script async src="https://www.googletagmanager.com/gtag/js?id={google_ids[0]}"></script>\n'
-            "<script>gtag('set','user_properties',{experiment_variant:(window.TK_VARIANT||'A')});"
+            "<script>gtag('set','user_properties',{experiment_variant:(window.TK_VARIANT||'A'),exp_email_required:(window.TK_EXP_EMAIL||'A')});"
             f"gtag('js',new Date());{configs}</script>"
         )
     # Ad pixels — defined but NOT loaded until consent is granted (they have no

@@ -179,7 +179,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 12px;">
               <input type="text" placeholder="Full name" onInput="{{ onName }}" style="{{ inputStyle }}" />
               <input type="tel" placeholder="Mobile · +20 1xx xxx xxxx" onInput="{{ onPhone }}" style="{{ inputStyle }}" />
-              <input type="email" placeholder="Email (optional)" onInput="{{ onEmail }}" style="{{ inputStyle }}" />
+              <input type="email" placeholder="{{ emailPh }}" onInput="{{ onEmail }}" style="{{ inputStyle }}" />
               <input type="text" placeholder="Area / compound" onInput="{{ onLoc }}" style="{{ inputStyle }}" />
             </div>
             <input type="text" placeholder="Anything else? (access, timing, the issue…)" onInput="{{ onNotes }}" style="{{ inputStyle }} margin-top: 12px; width: 100%;" />
@@ -280,7 +280,8 @@ class Component extends DCLogic {
 
     const q = P ? P.careQuote({ service: s.service || 'cleaning', scope: s.scope, rooms: s.rooms, category: s.category, sub: s.sub, units: s.units, plan: s.plan }) : null;
     const selDone = isCleaning ? (!!s.scope && s.rooms > 0) : (isMaint ? (!!s.category && !!s.sub && s.units > 0) : false);
-    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7;
+    const emailReq = !!(typeof window !== 'undefined' && window.tkEmailRequired && window.tkEmailRequired());
+    const contactOk = s.name.trim().length > 1 && s.phone.trim().length > 7 && (!emailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email.trim()));
     const canSend = !!s.service && selDone && contactOk;
     const dayLabel = (function (id) {
       if (!id) return '';
@@ -387,14 +388,15 @@ class Component extends DCLogic {
         { label: 'Preferred', value: dayObj && s.slot ? dayObj.long + ', ' + s.slot : (dayObj ? dayObj.long : 'we call to book') }
       ]),
 
-      ctaLabel: canSend ? 'Request this visit' : (!s.service ? 'Pick a service' : !selDone ? 'Finish your selection' : 'Add name & mobile'),
+      ctaLabel: canSend ? 'Request this visit' : (!s.service ? 'Pick a service' : !selDone ? 'Finish your selection' : (emailReq ? 'Add name, mobile & email' : 'Add name & mobile')),
+      emailPh: emailReq ? 'Email' : 'Email (optional)',
       ctaStyle: 'width: 100%; margin-top: 18px; border: none; border-radius: 14px; padding: 15px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; cursor: ' + (canSend ? 'pointer' : 'default') + '; background: ' + (canSend ? '#D6F23C' : 'rgba(246,243,236,0.14)') + '; color: ' + (canSend ? '#12130E' : 'rgba(246,243,236,0.45)') + ';',
       hint: 'No payment now — the crew confirms the scope and price on arrival.',
       onSubmit: () => {
         if (!canSend) { this.setState({ tried: true }); return; }
         this.setState({ sent: true, ref: 'TS-' + String(Date.now()).slice(-6) });
         var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'service', service: s.service || '', category: s.category || '', sub: s.sub || '' }); } catch (e) {}
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'service', service: s.service || '', category: s.category || '', sub: s.sub || '', email_required: (window.TK_EXP_EMAIL || 'A') }); } catch (e) {}
         var detail = isCleaning
           ? ('Deep cleaning — ' + s.scope + ' · ' + n(s.rooms, 'room'))
           : (s.category + ' — ' + s.sub + ' · ' + nUnit(s.units, unitWord));
@@ -405,7 +407,8 @@ class Component extends DCLogic {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 kind: 'service',
-                contactName: s.name, phone: s.phone, email: s.email || undefined,
+                contactName: s.name, phone: s.phone, email: s.email.trim() || undefined,
+                expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
                 location: s.loc || undefined,
                 services: [detail],
                 channel: 'Care booking',
