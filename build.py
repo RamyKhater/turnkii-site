@@ -49,6 +49,11 @@ REFERRAL_URL = os.environ.get("TURNKII_REFERRAL_URL", "").strip() or (
 WHATSAPP_EVENTS_URL = os.environ.get("TURNKII_WA_EVENTS_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/events/whatsapp") if INTAKE_URL else ""
 )
+# The hidden /p proposal page fetches a client's proposal from here by its token.
+# Base of the admin proposals API — derived from the intake host unless set.
+PROPOSALS_URL = os.environ.get("TURNKII_PROPOSALS_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/proposals") if INTAKE_URL else ""
+)
 REF_CAPTURE = (
     "\n<script>(function(){try{var r=new URL(location.href).searchParams.get('ref');"
     "if(r){localStorage.setItem('tk_ref',r);}window.TURNKII_REF=r||localStorage.getItem('tk_ref')||'';}"
@@ -81,7 +86,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -115,7 +120,10 @@ if EMAIL_MODE not in ("experiment", "required", "optional"):
 #    assigns each visitor a sticky 50/50 arm and sends arm 'B' to the audit
 #    homepage ('/b'). GA4 already tags the served page (experiment_variant 'A' on
 #    '/', 'B' on '/b'). ?tk_home=A|B forces an arm for QA. Off → control only.
-HOME_EXP = os.environ.get("TK_HOME_EXP", "on").strip().lower() not in ("off", "0", "false", "no")
+#    Parked for now (default off): the split is dormant and every visitor stays on
+#    the control home. Flip TK_HOME_EXP=on to resume the 50/50 test. The /b page
+#    still builds (noindexed, direct-URL only) so it's ready when the test resumes.
+HOME_EXP = os.environ.get("TK_HOME_EXP", "off").strip().lower() in ("on", "1", "true", "yes")
 # Injected first in <head> on the control home only. Synchronous + pre-paint so an
 # arm-B visitor never sees the control flash before the /b swap.
 HOME_SPLIT_SCRIPT = (
@@ -518,6 +526,14 @@ PAGES = {
         "Your brief — Turnkii",
         "Review and send your brief. No payment now — a real person reviews it and calls within a working day.",
     ),
+    # Hidden client proposal page. Reached only via a private tokened link
+    # (/p#<token>); noindexed and kept out of the sitemap + nav. Renders a
+    # proposal fetched from the admin proposals API by its token.
+    "Turnkii Proposal.dc.html": (
+        "p.html",
+        "Your Turnkii proposal",
+        "A private proposal prepared by Turnkii.",
+    ),
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
@@ -605,6 +621,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_REFERRAL_URL="{REFERRAL_URL}";</script>' if REFERRAL_URL else ""
     ) + (
         f'\n<script>window.TURNKII_WA_EVENTS_URL="{WHATSAPP_EVENTS_URL}";</script>' if WHATSAPP_EVENTS_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_PROPOSALS_URL="{PROPOSALS_URL}";</script>' if PROPOSALS_URL else ""
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""

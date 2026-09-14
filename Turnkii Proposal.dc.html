@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{ --paper:#F6F3EC; --paper2:#EFEBE1; --card:#FFFFFF; --line:#E4E0D5; --ink:#12130E; --sub:#5E5F52; --faint:#8A8A79; --lime:#D6F23C; --limeSoft:#EAF4C6; --olive:#4E5A16; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  a{color:inherit}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+  .wrap{max-width:840px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
+  .eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  header{padding:20px 0}
+  header img{height:22px;width:auto;display:block}
+  .state{min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 0}
+  .state .box{max-width:420px}
+  .state h1{font-size:26px;margin:14px 0 8px}
+  .state p{color:var(--sub);font-size:15px;margin:0}
+  .spinner{width:30px;height:30px;border-radius:999px;border:3px solid var(--line);border-top-color:var(--olive);margin:0 auto;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .hero{padding:clamp(24px,5vw,52px) 0 clamp(16px,3vw,28px)}
+  .hero .client{font-size:13px;font-weight:700;color:var(--olive);text-transform:uppercase;letter-spacing:.06em}
+  .hero h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:10px 0 0}
+  .intro{font-size:clamp(16px,2vw,18px);color:var(--sub);margin:16px 0 0;max-width:60ch}
+
+  section.blk{padding:clamp(22px,3.5vw,34px) 0;border-top:1px solid var(--line)}
+  .blk h2{font-size:clamp(20px,2.6vw,26px);line-height:1.1;margin:0 0 4px}
+  .blk .lede{color:var(--sub);font-size:14.5px;margin:0 0 18px}
+
+  .palette{display:inline-flex;align-items:center;gap:8px;background:var(--limeSoft);color:var(--olive);font-size:13px;font-weight:700;padding:6px 13px;border-radius:999px;margin-top:6px}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:16px}
+  .gallery img{width:100%;height:150px;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
+
+  .items{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card)}
+  .item{display:flex;justify-content:space-between;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:0}
+  .item .l .lab{font-size:15px;font-weight:600}
+  .item .l .note{font-size:13px;color:var(--sub);margin-top:2px}
+  .item .price{font-size:14px;font-weight:700;color:var(--olive);white-space:nowrap}
+  .invest{margin-top:16px;background:var(--ink);color:var(--paper);border-radius:16px;padding:20px 22px}
+  .invest .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);font-weight:700}
+  .invest .v{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(26px,4vw,38px);line-height:1.05;margin-top:6px}
+  .invest .fin{font-size:13px;color:rgba(246,243,236,.66);margin-top:8px}
+
+  .steps{display:grid;gap:12px}
+  .step{display:flex;gap:14px;align-items:flex-start}
+  .step .n{flex:0 0 auto;width:30px;height:30px;border-radius:999px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .step .ph{font-size:15px;font-weight:600}
+  .step .dur{font-size:12.5px;font-weight:700;color:var(--olive);margin-left:8px}
+  .step .snote{font-size:13px;color:var(--sub);margin-top:2px}
+
+  .cta{margin:8px 0 0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;text-align:center}
+  .cta h2{font-size:clamp(20px,2.6vw,26px);margin:0 0 6px}
+  .cta p{color:var(--sub);font-size:14px;margin:0 0 16px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;padding:14px 26px;border-radius:999px;cursor:pointer;border:0;background:var(--lime);color:var(--ink);text-decoration:none}
+  .btn:hover{background:#E6FF6B}
+  .btn[disabled]{opacity:.6;cursor:default}
+  .cta .done{color:var(--olive);font-weight:700;font-size:15px}
+
+  footer{border-top:1px solid var(--line);margin-top:24px;padding:22px 0 60px;color:var(--faint);font-size:12.5px;text-align:center}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header><img src="assets/turnkii-logo.png" alt="Turnkii" /></header>
+  </div>
+
+  <!-- loading -->
+  <div id="p-loading" class="state"><div class="box"><div class="spinner"></div><p style="margin-top:16px">Loading your proposal…</p></div></div>
+
+  <!-- error / invalid -->
+  <div id="p-error" class="state" hidden><div class="box">
+    <div class="serif" style="font-size:40px">🔒</div>
+    <h1 class="serif">This link isn't valid</h1>
+    <p>The proposal link is incomplete or has expired. Please use the exact link the Turnkii team sent you, or get in touch and we'll re-share it.</p>
+  </div></div>
+
+  <!-- content -->
+  <main id="p-content" hidden>
+    <div class="wrap">
+      <div class="hero">
+        <div class="client" id="p-client" hidden></div>
+        <h1 class="serif" id="p-title"></h1>
+        <p class="intro" id="p-intro" hidden></p>
+      </div>
+
+      <section class="blk" id="p-direction" hidden>
+        <h2 class="serif">Design direction</h2>
+        <div id="p-style" style="font-size:16px;font-weight:600"></div>
+        <div id="p-palette-wrap" hidden><span class="palette" id="p-palette"></span></div>
+        <p class="lede" id="p-direction-note" style="margin-top:12px" hidden></p>
+        <div class="gallery" id="p-gallery" hidden></div>
+      </section>
+
+      <section class="blk" id="p-scope" hidden>
+        <h2 class="serif">Scope &amp; investment</h2>
+        <div class="items" id="p-scope-items" hidden></div>
+        <div class="invest" id="p-invest" hidden>
+          <div class="k">Indicative investment</div>
+          <div class="v" id="p-price"></div>
+          <div class="fin" id="p-financing" hidden></div>
+        </div>
+      </section>
+
+      <section class="blk" id="p-timeline" hidden>
+        <h2 class="serif">Timeline &amp; next steps</h2>
+        <p class="lede" id="p-timeline-note" hidden></p>
+        <div class="steps" id="p-steps"></div>
+      </section>
+
+      <section class="blk" id="p-cta-wrap" hidden style="border-top:0">
+        <div class="cta">
+          <h2 class="serif" id="p-cta-title">Happy with this direction?</h2>
+          <p id="p-cta-sub">Approve it and the Turnkii team moves straight to booking your site survey.</p>
+          <a id="p-cta-btn" class="btn"></a>
+          <div class="done" id="p-cta-done" hidden>✓ Approved — we'll be in touch shortly.</div>
+        </div>
+      </section>
+
+      <footer>Turnkii — turnkey home finishing, furniture &amp; handover. This proposal was prepared just for you.</footer>
+    </div>
+  </main>
+
+  <script>
+  (function(){
+    var $ = function(id){ return document.getElementById(id); };
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+    function show(el){ if(el) el.hidden=false; }
+    function state(which){ ['p-loading','p-error','p-content'].forEach(function(id){ var el=$(id); if(el) el.hidden = (id!==which); }); }
+
+    var base = window.TURNKII_PROPOSALS_URL;
+    var token = (location.hash||'').replace(/^#/,'').trim();
+    if(!base || !token || token.length < 24){ state('p-error'); return; }
+
+    fetch(base + '/' + encodeURIComponent(token), { headers:{ 'Accept':'application/json' } })
+      .then(function(r){ if(!r.ok) throw new Error('nf'); return r.json(); })
+      .then(function(p){ render(p); state('p-content'); })
+      .catch(function(){ state('p-error'); });
+
+    function render(p){
+      document.title = (p.title || 'Proposal') + ' — Turnkii';
+      if(p.clientName){ $('p-client').textContent = 'Prepared for ' + p.clientName; show($('p-client')); }
+      $('p-title').textContent = p.title || 'Your Turnkii proposal';
+      if(p.intro){ $('p-intro').textContent = p.intro; show($('p-intro')); }
+
+      // ── direction
+      var d = p.direction || {};
+      if(d.styleName || d.palette || d.note || (d.images&&d.images.length)){
+        if(d.styleName) $('p-style').textContent = d.styleName; else $('p-style').hidden = true;
+        if(d.palette){ $('p-palette').textContent = d.palette; show($('p-palette-wrap')); }
+        if(d.note){ $('p-direction-note').textContent = d.note; show($('p-direction-note')); }
+        if(d.images && d.images.length){
+          $('p-gallery').innerHTML = d.images.slice(0,8).map(function(u){ return '<img src="'+esc(u)+'" alt="" loading="lazy" />'; }).join('');
+          show($('p-gallery'));
+        }
+        show($('p-direction'));
+      }
+
+      // ── scope & investment
+      var sc = p.scope || {};
+      var items = sc.items || [];
+      if(items.length || sc.priceLabel){
+        if(items.length){
+          $('p-scope-items').innerHTML = items.map(function(it){
+            return '<div class="item"><div class="l"><div class="lab">'+esc(it.label)+'</div>'+
+              (it.note?'<div class="note">'+esc(it.note)+'</div>':'')+'</div>'+
+              (it.price?'<div class="price">'+esc(it.price)+'</div>':'')+'</div>';
+          }).join('');
+          show($('p-scope-items'));
+        }
+        if(sc.priceLabel){
+          $('p-price').textContent = sc.priceLabel;
+          if(sc.financingNote){ $('p-financing').textContent = sc.financingNote; show($('p-financing')); }
+          show($('p-invest'));
+        }
+        show($('p-scope'));
+      }
+
+      // ── timeline
+      var tl = p.timeline || {};
+      var steps = tl.items || [];
+      if(steps.length || tl.note){
+        if(tl.note){ $('p-timeline-note').textContent = tl.note; show($('p-timeline-note')); }
+        $('p-steps').innerHTML = steps.map(function(s,i){
+          return '<div class="step"><div class="n">'+(i+1)+'</div><div><div class="ph">'+esc(s.phase)+
+            (s.duration?'<span class="dur">'+esc(s.duration)+'</span>':'')+'</div>'+
+            (s.note?'<div class="snote">'+esc(s.note)+'</div>':'')+'</div></div>';
+        }).join('');
+        show($('p-timeline'));
+      }
+
+      // ── client action
+      var cta = p.cta || {};
+      var type = cta.type || 'none';
+      if(type !== 'none' && p.status !== 'archived'){
+        var btn = $('p-cta-btn');
+        if(p.status === 'approved'){ btn.hidden = true; show($('p-cta-done')); show($('p-cta-wrap')); return; }
+        if(type === 'approve'){
+          btn.textContent = cta.label || 'Approve this direction';
+          btn.href = 'javascript:void(0)';
+          btn.addEventListener('click', function(){ approve(btn); });
+        } else if(type === 'call'){
+          btn.textContent = cta.label || 'Book a call';
+          btn.href = 'tel:' + (cta.value||'').replace(/\s+/g,'');
+        } else if(type === 'whatsapp'){
+          btn.textContent = cta.label || 'Chat on WhatsApp';
+          var num = (cta.value||'').replace(/[^0-9]/g,'');
+          btn.href = 'https://wa.me/' + num;
+          btn.target = '_blank'; btn.rel = 'noopener noreferrer';
+        }
+        show($('p-cta-wrap'));
+      }
+    }
+
+    function approve(btn){
+      btn.setAttribute('disabled','');
+      btn.textContent = 'Sending…';
+      fetch(base + '/' + encodeURIComponent(token), {
+        method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ action:'approve' })
+      }).then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+        .then(function(){ btn.hidden = true; show($('p-cta-done')); })
+        .catch(function(){ btn.removeAttribute('disabled'); btn.textContent = 'Approve this direction'; alert('Something went wrong — please try again.'); });
+    }
+  })();
+  </script>
+
+</body>
+</html>
