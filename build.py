@@ -105,9 +105,28 @@ ANALYTICS_ON = any([GA4_ID, GADS_ID, META_PIXEL_ID, TIKTOK_PIXEL_ID, LINKEDIN_PA
 #      required   → email mandatory for everyone (post-experiment rollout).
 #      optional   → email optional for everyone (pre-experiment / rollback).
 #    Set TK_EMAIL_MODE in Vercel. Default 'experiment' so staging + prod both split.
-EMAIL_MODE = os.environ.get("TK_EMAIL_MODE", "experiment").strip().lower()
+#    Parked at 'optional' (dormant, = original behaviour) while the homepage-variant
+#    experiment runs; flip TK_EMAIL_MODE=experiment to revive it later.
+EMAIL_MODE = os.environ.get("TK_EMAIL_MODE", "optional").strip().lower()
 if EMAIL_MODE not in ("experiment", "required", "optional"):
-    EMAIL_MODE = "experiment"
+    EMAIL_MODE = "optional"
+
+# ── Homepage UX/conversion A/B experiment. When on, the control homepage ('/')
+#    assigns each visitor a sticky 50/50 arm and sends arm 'B' to the audit
+#    homepage ('/b'). GA4 already tags the served page (experiment_variant 'A' on
+#    '/', 'B' on '/b'). ?tk_home=A|B forces an arm for QA. Off → control only.
+HOME_EXP = os.environ.get("TK_HOME_EXP", "on").strip().lower() not in ("off", "0", "false", "no")
+# Injected first in <head> on the control home only. Synchronous + pre-paint so an
+# arm-B visitor never sees the control flash before the /b swap.
+HOME_SPLIT_SCRIPT = (
+    "<script>(function(){try{"
+    "var q=new URLSearchParams(location.search).get('tk_home');var v;"
+    "if(q==='A'||q==='B'){v=q;try{localStorage.setItem('tk_home',v)}catch(e){}}"
+    "else{try{v=localStorage.getItem('tk_home')}catch(e){}}"
+    "if(v!=='A'&&v!=='B'){v=Math.random()<0.5?'A':'B';try{localStorage.setItem('tk_home',v)}catch(e){}}"
+    "if(v==='B'){location.replace('/b'+location.search+location.hash);}"
+    "}catch(e){}})();</script>"
+)
 
 
 # ── Brief basket engine. Injected into <head> on every page so the "brief cart"
@@ -484,9 +503,21 @@ PAGES = {
         "Request received — Turnkii",
         "Your request is in — the Turnkii team will be in touch within one working day.",
     ),
-    # ── A/B variant B (Turnkii B.dc.html / Turnkii Brief.dc.html) is intentionally
-    #    NOT built into production — kept in the repo for a later A/B test. Re-add the
-    #    two PAGES entries + `parts.append(BRIEF_ENGINE)` to bring it back.
+    # ── A/B variant B: the UX/conversion-audit homepage. A leaner, focus-first
+    #    catalog (b.html) that carries a trust layer + estimate teaser, feeding a
+    #    trimmed brief checkout (brief.html). Noindexed and reached only via the
+    #    50/50 split on the control homepage; the brief engine is injected on these
+    #    two pages only (see build_page) so control/inner pages stay untouched.
+    "Turnkii B.dc.html": (
+        "b.html",
+        "Turnkii — Turnkey home finishing, furniture & handover",
+        "Finishing, furniture, kitchens, HVAC and outdoor under one contract. Build a costed brief in two minutes — a real person reviews it and calls within a working day.",
+    ),
+    "Turnkii Brief.dc.html": (
+        "brief.html",
+        "Your brief — Turnkii",
+        "Review and send your brief. No payment now — a real person reviews it and calls within a working day.",
+    ),
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
@@ -893,6 +924,14 @@ def build_page(src_name):
         1,
     )
     text = text.replace("<html>", '<html lang="en">', 1)
+    # Variant-B pages carry the brief-basket engine (catalog toggles + checkout);
+    # it is NOT injected globally, so control/inner pages never show its brief bar.
+    if slug in VARIANT_PAGES:
+        text = text.replace("</head>", BRIEF_ENGINE + "\n</head>", 1)
+    # 50/50 homepage split: on the control home only, assign a sticky arm and send
+    # arm B to /b before first paint (script runs earliest, right after <head>).
+    if slug == "index.html" and HOME_EXP:
+        text = text.replace("<head>", "<head>\n" + HOME_SPLIT_SCRIPT, 1)
     # language switch into the header nav (before any snapshot is injected, so it
     # lands on the live template header rather than the static snapshot copy)
     text = inject_lang_switch(text, slug, ar=False)

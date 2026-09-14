@@ -106,6 +106,43 @@
   #tk-aftercare-modal input,#tk-aftercare-modal select{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 13px;font-size:14px;margin-top:10px}
   #tk-aftercare-modal .close{position:absolute;top:14px;right:16px;font-size:22px;color:var(--faint);cursor:pointer;background:none;border:0}
   .svc-check{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;margin:10px 8px 0 0;font-size:14px;cursor:pointer}
+
+  /* ── UX/conversion-audit variant B additions ── */
+  .trustbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .tb{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 13px;font-size:13px;font-weight:600;color:var(--ink)}
+  .tb b{color:var(--olive)} .tb .st{color:#C9A227;letter-spacing:1px}
+  .ph-note{display:inline-block;font-size:11px;font-weight:700;color:#B23B2E;background:#F6DED9;border-radius:6px;padding:3px 9px;letter-spacing:.03em;text-transform:uppercase}
+
+  .est{background:var(--ink);color:var(--paper);border-radius:20px;padding:clamp(20px,3vw,32px);display:grid;gap:20px;grid-template-columns:1fr;align-items:center}
+  @media(min-width:760px){.est{grid-template-columns:1.05fr .95fr}}
+  .est h2{color:var(--paper);font-size:clamp(22px,3vw,32px);line-height:1.1;margin:6px 0 8px}
+  .est p{color:rgba(246,243,236,.66);font-size:14.5px;margin:0;max-width:46ch}
+  .est .card{background:#1A1C15;border:1px solid rgba(246,243,236,.14);border-radius:16px;padding:18px}
+  .est .card label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(246,243,236,.5);font-weight:700;margin:0 0 6px}
+  .est .card .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .est .card input,.est .card select{width:100%;background:#12130E;border:1px solid rgba(246,243,236,.2);border-radius:10px;padding:11px 12px;color:var(--paper);font-size:14px;font-family:inherit}
+  .est .card input:focus,.est .card select:focus{outline:none;border-color:var(--lime)}
+  .est .out{margin-top:14px}
+  .est .out .range{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(24px,3.6vw,34px);line-height:1.04}
+  .est .out .meta{font-size:12px;color:rgba(246,243,236,.6);margin-top:7px;line-height:1.45}
+
+  .reviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .rev{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .rev .st{color:#C9A227;letter-spacing:2px;font-size:14px}
+  .rev .q{font-size:14.5px;line-height:1.5;color:var(--ink);margin:10px 0 12px}
+  .rev .who{display:flex;align-items:center;gap:10px}
+  .rev .av{width:34px;height:34px;border-radius:999px;background:var(--limeSoft);color:var(--olive);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .rev .nm{font-size:13px;font-weight:700} .rev .loc{font-size:12px;color:var(--faint)}
+
+  .stickycta{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(18,19,14,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(214,242,60,.4);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .stickycta .lbl{color:var(--paper);font-size:13px;font-weight:600} .stickycta .lbl b{color:var(--lime)}
+  .stickycta a{white-space:nowrap;padding:11px 18px}
+  @media(min-width:760px){.stickycta{display:none}}
+  @media(max-width:759px){
+    body{padding-bottom:68px}
+    #tk-brief-bar{display:none!important}                                   /* sticky CTA covers this on mobile */
+    a[aria-label="Chat with Turnkii on WhatsApp"]{bottom:80px!important}    /* clear the sticky bar */
+  }
 </style>
 </head>
 <body>
@@ -135,7 +172,47 @@
         <a href="brief.html" class="btn btn-lime" data-track="cta_hero_brief">Build your brief →</a>
         <a data-vertical="ai_studio" href="ai-studio.html" class="btn btn-ghost" data-track="cta_hero_visualise">See it in your space</a>
       </div>
-      <div class="trust"><span>240+ units delivered</span><span>Reply within 24 hrs</span><span>12-month workmanship cover</span></div>
+      <div class="trustbar">
+        <span class="tb"><span class="st">★★★★★</span> <b>4.9</b>/5 · <span style="color:var(--faint);font-weight:600">sample</span></span>
+        <span class="tb"><b>240+</b> units delivered</span>
+        <span class="tb"><b>Fixed-price</b> scope</span>
+        <span class="tb"><b>12-month</b> workmanship cover</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="estimate">
+    <div class="wrap" style="padding:clamp(26px,4vw,44px) 0 0">
+      <div class="est">
+        <div>
+          <div class="eyebrow" style="color:var(--lime)">Instant estimate</div>
+          <h2 class="serif">See a costed range in about two minutes — before you give any contact details</h2>
+          <p>Pick your unit type and area for an indicative finishing range right now. Add services below to sharpen it; a fixed price follows the free site survey.</p>
+        </div>
+        <div class="card">
+          <div class="two">
+            <div>
+              <label for="est-ptype">Property</label>
+              <select id="est-ptype">
+                <option value="Apartment">Apartment</option>
+                <option value="Villa / townhouse">Villa / townhouse</option>
+                <option value="Multiple units">Multiple units</option>
+                <option value="Short-stay rental">Short-stay rental</option>
+                <option value="Commercial / hospitality">Commercial / hospitality</option>
+              </select>
+            </div>
+            <div>
+              <label for="est-area">Area (m²)</label>
+              <input id="est-area" inputmode="numeric" autocomplete="off" placeholder="e.g. 140" />
+            </div>
+          </div>
+          <div class="out">
+            <div class="range" id="est-range">Enter an area to price it</div>
+            <div class="meta" id="est-meta">Indicative finishing only · no contact details needed · fixed after the free survey</div>
+            <a href="brief.html" class="btn btn-lime" data-track="cta_estimate_brief" style="width:100%;justify-content:center;margin-top:14px">Build your full brief →</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -204,7 +281,21 @@
     </div>
   </section>
 
-  <section class="band" id="aftercare">
+  <section class="band" id="reviews">
+    <div class="wrap sec-pad">
+      <div class="sec-head">
+        <div><div class="eyebrow">What clients say</div><h2 class="serif">Rated by the people we hand over to</h2></div>
+        <p><span class="ph-note">Sample content — replace with real reviews before launch</span></p>
+      </div>
+      <div class="reviews">
+        <div class="rev"><div class="st">★★★★★</div><div class="q">"Sample review — swap for a real client quote about the scope, the programme and how the handover went."</div><div class="who"><div class="av">A</div><div><div class="nm">Client name</div><div class="loc">2-bed apartment · New Cairo</div></div></div></div>
+        <div class="rev"><div class="st">★★★★★</div><div class="q">"Sample review — a second real testimonial goes here, ideally naming the unit type and the result they cared about."</div><div class="who"><div class="av">M</div><div><div class="nm">Client name</div><div class="loc">Villa · Sheikh Zayed</div></div></div></div>
+        <div class="rev"><div class="st">★★★★★</div><div class="q">"Sample review — a third quote, e.g. from a portfolio owner about delivering several units on one programme."</div><div class="who"><div class="av">S</div><div><div class="nm">Client name</div><div class="loc">6 chalets · North Coast</div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="aftercare">
     <div class="wrap sec-pad">
       <div class="sec-head"><div><div class="eyebrow">After handover · recurring</div><h2 class="serif">Keep the home in shape</h2></div><p>Separate from the fit-out contract — request it when you're ready, one-off or on a schedule.</p></div>
       <div class="after">
@@ -261,6 +352,49 @@
       </form>
     </div>
   </div>
+
+  <div class="stickycta">
+    <span class="lbl">Costed brief in <b>2 min</b> — no payment now</span>
+    <a href="brief.html" class="btn btn-lime" data-track="cta_sticky_brief">Build your brief →</a>
+  </div>
+
+  <script src="pricing.js"></script>
+  <script>
+  (function(){
+    // Honest inline estimator: real rates from pricing.js. Reads the brief basket
+    // for selected services (defaults to finishing) so the range sharpens as the
+    // visitor adds scope. No number is shown until an area is entered.
+    function calc(){
+      var P=window.TurnkiiPricing; if(!P) return;
+      var areaEl=document.getElementById('est-area'), ptEl=document.getElementById('est-ptype');
+      var rEl=document.getElementById('est-range'), mEl=document.getElementById('est-meta');
+      if(!rEl||!mEl) return;
+      var area=Number(areaEl&&areaEl.value)||0;
+      var ptype=(ptEl&&ptEl.value)||'';
+      var b=(window.tkBrief&&window.tkBrief.read)?window.tkBrief.read():{services:[]};
+      var svc=(b.services||[]).map(function(s){return s.key;});
+      var onlyFinishing=!svc.length;
+      if(onlyFinishing) svc=['finishing'];
+      var est=P.estimate({services:svc,area:area,ptype:ptype,units:1,style:(b.style&&b.style.key)||'warm',answered:area?3:1,answerTotal:8});
+      if(area>0&&est&&est.ready){
+        rEl.textContent=P.range(est.lo,est.hi);
+        mEl.textContent=(onlyFinishing?'Indicative finishing':'Indicative for your selected scope')+' · '+P.full(est.rate)+'/m² · ~'+est.weeks+' weeks · fixed after the free survey';
+      } else {
+        rEl.textContent='Enter an area to price it';
+        mEl.textContent='Indicative range · no contact details needed · fixed after the free survey';
+      }
+    }
+    function bind(){
+      ['est-area','est-ptype'].forEach(function(id){var el=document.getElementById(id);if(el){el.addEventListener('input',calc);el.addEventListener('change',calc);}});
+      // re-price when the brief basket changes (service added/removed elsewhere)
+      window.addEventListener('tkbrief:change',calc);
+      calc();
+    }
+    function ready(){ if(document.readyState!=='loading')bind(); else document.addEventListener('DOMContentLoaded',bind); }
+    if(window.TurnkiiPricing) ready();
+    else window.addEventListener('turnkii-pricing-ready',ready);
+  })();
+  </script>
 
 </body>
 </html>
