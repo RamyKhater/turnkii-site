@@ -99,9 +99,10 @@ GADS_ID = os.environ.get("GADS_ID", "").strip()                  # AW-XXXXXXXXX
 GADS_LEAD_LABEL = os.environ.get("GADS_LEAD_LABEL", "").strip()  # conversion label
 TIKTOK_PIXEL_ID = os.environ.get("TIKTOK_PIXEL_ID", "").strip()
 LINKEDIN_PARTNER_ID = os.environ.get("LINKEDIN_PARTNER_ID", "").strip()
+HOTJAR_ID = os.environ.get("HOTJAR_ID", "").strip()               # numeric Hotjar Site ID
 # True when any analytics/ad tag is configured — gates the consent banner +
 # Consent-Mode bootstrap. With none set (e.g. local builds) nothing is injected.
-ANALYTICS_ON = any([GA4_ID, GADS_ID, META_PIXEL_ID, TIKTOK_PIXEL_ID, LINKEDIN_PARTNER_ID])
+ANALYTICS_ON = any([GA4_ID, GADS_ID, META_PIXEL_ID, TIKTOK_PIXEL_ID, LINKEDIN_PARTNER_ID, HOTJAR_ID])
 
 # ── Email-required A/B experiment. Controls whether the lead forms force a valid
 #    email before submit. Independent of the homepage-layout variant (TK_VARIANT).
@@ -300,6 +301,15 @@ def analytics_head():
             "(function(l){if(!l){window.lintrk=function(a,b){window.lintrk.q.push([a,b])};window.lintrk.q=[]}"
             "var s=document.getElementsByTagName('script')[0];var b=document.createElement('script');b.type='text/javascript';"
             "b.async=true;b.src='https://snap.licdn.com/li.lms-analytics/insight.min.js';s.parentNode.insertBefore(b,s)})(window.lintrk);"
+        )
+    if HOTJAR_ID:
+        # Hotjar (behaviour analytics / heatmaps). Sets cookies and records
+        # sessions, so — like the ad pixels — it loads only after consent.
+        pixels.append(
+            "(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};"
+            f"h._hjSettings={{hjid:{HOTJAR_ID},hjsv:6}};a=o.getElementsByTagName('head')[0];"
+            "r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;"
+            "a.appendChild(r);})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');"
         )
     if pixels:
         parts.append(
