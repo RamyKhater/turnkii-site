@@ -54,6 +54,10 @@ WHATSAPP_EVENTS_URL = os.environ.get("TURNKII_WA_EVENTS_URL", "").strip() or (
 PROPOSALS_URL = os.environ.get("TURNKII_PROPOSALS_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/proposals") if INTAKE_URL else ""
 )
+# The hidden /w sample-work page fetches a showcase from here by its token.
+SHOWCASE_URL = os.environ.get("TURNKII_SHOWCASE_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/showcases") if INTAKE_URL else ""
+)
 REF_CAPTURE = (
     "\n<script>(function(){try{var r=new URL(location.href).searchParams.get('ref');"
     "if(r){localStorage.setItem('tk_ref',r);}window.TURNKII_REF=r||localStorage.getItem('tk_ref')||'';}"
@@ -86,7 +90,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -544,6 +548,14 @@ PAGES = {
         "Your Turnkii proposal",
         "A private proposal prepared by Turnkii.",
     ),
+    # Hidden sample-work showcase — reached only via a private tokened link
+    # (/w#<token>); noindexed, out of the sitemap + nav. Deep-zoom gallery of
+    # finishing / furniture work fetched from the admin showcases API.
+    "Turnkii Showcase.dc.html": (
+        "w.html",
+        "Turnkii — sample work",
+        "A private showcase of Turnkii finishing & furniture.",
+    ),
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
@@ -633,6 +645,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_WA_EVENTS_URL="{WHATSAPP_EVENTS_URL}";</script>' if WHATSAPP_EVENTS_URL else ""
     ) + (
         f'\n<script>window.TURNKII_PROPOSALS_URL="{PROPOSALS_URL}";</script>' if PROPOSALS_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_SHOWCASE_URL="{SHOWCASE_URL}";</script>' if SHOWCASE_URL else ""
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
