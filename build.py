@@ -58,6 +58,25 @@ PROPOSALS_URL = os.environ.get("TURNKII_PROPOSALS_URL", "").strip() or (
 SHOWCASE_URL = os.environ.get("TURNKII_SHOWCASE_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/showcases") if INTAKE_URL else ""
 )
+# Overall client rating (average of all sample-work image ratings) for the
+# homepage trust badge. Derived from the intake host unless set.
+RATING_URL = os.environ.get("TURNKII_RATING_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/showcases/rating") if INTAKE_URL else ""
+)
+# Homepage: fetch the overall client rating and fill any [data-rating-slot]. Shown
+# only past a small threshold, and re-filled via MutationObserver so it survives
+# the design-canvas re-renders. Injected on the home page only.
+RATING_MIN = int(os.environ.get("TURNKII_RATING_MIN", "5") or "5")
+HOME_RATING_SCRIPT = (
+    "<script>(function(){var url=window.TURNKII_RATING_URL;if(!url)return;var MIN=" + str(RATING_MIN) + ";var data=null;"
+    "function badge(d){var full=Math.round(d.avg),s='';for(var i=1;i<=5;i++)s+=(i<=full?'\\u2605':'\\u2606');"
+    "return '<div style=\"display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(214,242,60,0.35);border-radius:999px;padding:8px 15px;\">'"
+    "+'<span style=\"color:#F5C518;font-size:16px;letter-spacing:2px;\">'+s+'</span>'"
+    "+'<span style=\"color:#FFFFFF;font-weight:700;font-size:14px;\">'+d.avg.toFixed(1)+'<span style=\"color:rgba(255,255,255,0.6);font-weight:500;\">/5 \\u00b7 '+d.count+' client ratings</span></span></div>';}"
+    "function fill(){if(!data||data.count<MIN)return;var sl=document.querySelectorAll('[data-rating-slot]');for(var i=0;i<sl.length;i++){if(!sl[i].firstChild)sl[i].innerHTML=badge(data);}}"
+    "fetch(url).then(function(r){return r.json();}).then(function(d){data=d;fill();try{new MutationObserver(function(){fill();}).observe(document.body,{childList:true,subtree:true});}catch(e){}}).catch(function(){});"
+    "})();</script>"
+)
 REF_CAPTURE = (
     "\n<script>(function(){try{var r=new URL(location.href).searchParams.get('ref');"
     "if(r){localStorage.setItem('tk_ref',r);}window.TURNKII_REF=r||localStorage.getItem('tk_ref')||'';}"
@@ -647,6 +666,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_PROPOSALS_URL="{PROPOSALS_URL}";</script>' if PROPOSALS_URL else ""
     ) + (
         f'\n<script>window.TURNKII_SHOWCASE_URL="{SHOWCASE_URL}";</script>' if SHOWCASE_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_RATING_URL="{RATING_URL}";</script>' if RATING_URL else ""
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
@@ -1018,6 +1039,10 @@ def build_page(src_name):
     # pages (not the internal admin consoles baked into the site).
     if slug not in NOINDEX_PAGES:
         text = text.replace("</body>", whatsapp_widget() + consent_banner() + "\n</body>", 1)
+
+    # homepage: overall client-rating badge (fills the hero [data-rating-slot]).
+    if slug == "index.html" and RATING_URL:
+        text = text.replace("</body>", HOME_RATING_SCRIPT + "\n</body>", 1)
 
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).
