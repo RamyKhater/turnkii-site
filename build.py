@@ -58,6 +58,11 @@ PROPOSALS_URL = os.environ.get("TURNKII_PROPOSALS_URL", "").strip() or (
 SHOWCASE_URL = os.environ.get("TURNKII_SHOWCASE_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/showcases") if INTAKE_URL else ""
 )
+# The hidden /sow scope-of-work page fetches a customer SoW (filled by flpp,
+# shared back to the admin) from here by its token.
+SOW_URL = os.environ.get("TURNKII_SOW_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/sow") if INTAKE_URL else ""
+)
 # Overall client rating (average of all sample-work image ratings) for the
 # homepage trust badge. Derived from the intake host unless set.
 RATING_URL = os.environ.get("TURNKII_RATING_URL", "").strip() or (
@@ -109,7 +114,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html", "sow.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -575,6 +580,15 @@ PAGES = {
         "Turnkii — sample work",
         "A private showcase of Turnkii finishing & furniture.",
     ),
+    # Hidden client Scope of Work page. Reached only via a private tokened link
+    # (/sow#<token>); noindexed, out of the sitemap + nav. Renders a SoW (filled
+    # by flpp, shared to the admin) fetched from the admin SoW API by its token,
+    # with a Download-PDF (browser print via doc-page.js) action.
+    "Turnkii Scope of Work.dc.html": (
+        "sow.html",
+        "Turnkii — Scope of Work",
+        "A private Scope of Work prepared by Turnkii.",
+    ),
 }
 LINK_MAP = {src: meta[0] for src, meta in PAGES.items()}
 THEME_COLOR = "#12130E"
@@ -666,6 +680,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_PROPOSALS_URL="{PROPOSALS_URL}";</script>' if PROPOSALS_URL else ""
     ) + (
         f'\n<script>window.TURNKII_SHOWCASE_URL="{SHOWCASE_URL}";</script>' if SHOWCASE_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_SOW_URL="{SOW_URL}";</script>' if SOW_URL else ""
     ) + (
         f'\n<script>window.TURNKII_RATING_URL="{RATING_URL}";</script>' if RATING_URL else ""
     ) + REF_CAPTURE + (
@@ -1000,6 +1016,8 @@ def build_page(src_name):
     text = inject_lang_switch(text, slug, ar=False)
     # vendor React + defer, replacing the single support.js include in <head>
     text = text.replace('<script src="./support.js"></script>', VENDOR_SCRIPTS, 1)
+    # normalise the /sow page's doc-page.js runtime ref to a root-served path
+    text = text.replace('src="./doc-page.js"', 'src="doc-page.js"')
 
     # self-host fonts: swap the Google Fonts stylesheet + drop preconnects
     text = re.sub(
@@ -1231,6 +1249,14 @@ def main():
     for f in os.listdir(os.path.join(ROOT, "vendor", "brand")):
         shutil.copy(os.path.join(ROOT, "vendor", "brand", f), os.path.join(DIST, f))
     shutil.copy(os.path.join(ROOT, "image-slot.js"), os.path.join(DIST, "image-slot.js"))
+    # doc-page.js — the paged-document (print-to-PDF) runtime the hidden /sow
+    # Scope of Work page loads; ship it so the customer document paginates + prints.
+    if os.path.exists(os.path.join(ROOT, "doc-page.js")):
+        shutil.copy(os.path.join(ROOT, "doc-page.js"), os.path.join(DIST, "doc-page.js"))
+    # uploads/ — the /sow page's turnkii logo (header + watermark). Copy the whole
+    # tree so any referenced upload resolves.
+    if os.path.isdir(os.path.join(ROOT, "uploads")):
+        shutil.copytree(os.path.join(ROOT, "uploads"), os.path.join(DIST, "uploads"))
     # pricing.js — the shared pricing engine (window.TurnkiiPricing) the brief rail
     # loads from its <helmet>; ship it so the estimate resolves at runtime.
     if os.path.exists(os.path.join(ROOT, "pricing.js")):

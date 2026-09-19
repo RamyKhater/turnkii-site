@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  doc-page:not(:defined){visibility:hidden}
+  [hidden]{display:none !important}
+  body{margin:0;font-family:Archivo,system-ui,sans-serif;background:#f5f5f4;color:#1a1a1a}
+  a{color:#0f0f0f;text-decoration:underline}
+  a:hover{color:#6b7a00}
+  .sow h2{break-after:avoid}
+  .sow table{break-inside:auto}
+  .sow tr{break-inside:avoid}
+  .sow .keep{break-inside:avoid;orphans:3;widows:3}
+  .state{min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 20px}
+  .state h1{font-size:22px;margin:0 0 8px}
+  .state p{color:#5a5a5a;font-size:14px;margin:0;max-width:32em}
+  /* screen-only action bar */
+  .bar{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;
+       padding:10px clamp(14px,3vw,28px);background:rgba(15,15,15,.92);color:#fff;backdrop-filter:blur(8px)}
+  .bar .brand{font-weight:700;letter-spacing:.02em;font-size:14px}
+  .bar .actions{display:flex;gap:8px}
+  .btn{border:0;cursor:pointer;font-family:inherit;font-weight:600;font-size:13px;border-radius:999px;padding:9px 16px}
+  .btn-lime{background:#dff23f;color:#0f0f0f}
+  .btn-lime:hover{background:#e6ff6b}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)}
+  .btn-ghost:hover{border-color:#fff}
+  @media print{ .bar{display:none !important} body{background:#fff} }
+</style>
+</head>
+<body>
+
+  <div id="sow-loading" class="state"><div><h1>Loading your Scope of Work…</h1><p>One moment.</p></div></div>
+
+  <div id="sow-error" class="state" hidden><div>
+    <h1>This link isn’t available</h1>
+    <p>The Scope of Work link may have expired or is incorrect. Please contact turnkii and we’ll re-send it.</p>
+  </div></div>
+
+  <div id="sow-bar" class="bar" hidden>
+    <span class="brand">turnkii · Scope of Work</span>
+    <div class="actions">
+      <button id="sow-print" class="btn btn-lime" type="button">Download PDF</button>
+    </div>
+  </div>
+
+  <doc-page id="sow-doc" margin="0.6in" hidden></doc-page>
+
+  <script src="./doc-page.js"></script>
+  <script>
+  (function(){
+    var $ = function(id){ return document.getElementById(id); };
+    function state(which){
+      ['sow-loading','sow-error'].forEach(function(id){ $(id).hidden = (id !== which); });
+      if(which === 'content'){ $('sow-loading').hidden = true; $('sow-error').hidden = true; $('sow-bar').hidden = false; $('sow-doc').hidden = false; }
+    }
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function li(arr){ return (arr||[]).map(function(x){ return '<li>'+esc(x)+'</li>'; }).join(''); }
+
+    var LOGO = 'uploads/turnkii black logo 1.png';
+    var H2 = 'font-size:10pt;text-transform:uppercase;letter-spacing:0.14em;margin:0 0 8px;font-weight:600;color:#0f0f0f';
+    var TD = 'padding:6px 10px 6px 0;border-bottom:1px solid #e6e6e6;color:#6a6a6a';
+    var TDV = 'padding:6px 0;border-bottom:1px solid #e6e6e6;font-weight:500';
+
+    function body(d){
+      var s = d.summary || {};
+      var areas = (d.areas||[]).map(function(a){
+        return '<tr><td style="padding:7px 10px;border-bottom:1px solid #e6e6e6;font-weight:600;vertical-align:top">'+esc(a.area)+'</td>'+
+          '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6">'+esc(a.works)+'</td>'+
+          '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6">'+esc(a.qty)+'</td></tr>';
+      }).join('');
+      var miles = (d.milestones||[]).map(function(m){
+        return '<tr><td style="padding:5px 10px 5px 0;border-bottom:1px solid #e6e6e6">'+esc(m.label)+'</td>'+
+          '<td style="padding:5px 0;border-bottom:1px solid #e6e6e6;text-align:right">'+esc(m.pct)+'</td></tr>';
+      }).join('');
+      return ''+
+      '<div slot="header" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:0 0 10px;border-bottom:2px solid #0f0f0f">'+
+        '<img src="'+LOGO+'" alt="turnkii" style="height:26px;width:auto;display:block">'+
+        '<div style="text-align:right;font-size:8.5pt;line-height:1.45;color:#5a5a5a;letter-spacing:0.02em">'+
+          '<div style="color:#0f0f0f;font-weight:600;text-transform:uppercase;letter-spacing:0.12em">Scope of Work Confirmation</div>'+
+          '<div>turnkii — turnkey design, finishing, renovation &amp; FF&amp;E delivery</div></div></div>'+
+      '<div slot="footer" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 0;border-top:1px solid #d8d8d8;font-size:8pt;color:#6a6a6a;letter-spacing:0.02em">'+
+        '<span>turnkii · hello@turnkii.com · +20 000 000 0000</span>'+
+        '<span>Confidential — issued for client confirmation prior to quotation</span></div>'+
+      '<div class="sow" style="position:relative;color:#1a1a1a;font-size:10.5pt;line-height:1.6">'+
+        '<img src="'+LOGO+'" alt="" aria-hidden="true" style="position:absolute;top:26%;left:50%;transform:translate(-50%,-50%) rotate(-24deg);width:118%;opacity:0.035;pointer-events:none;z-index:0">'+
+        '<div style="position:relative;z-index:1">'+
+          '<h1 style="font-size:26pt;line-height:1.1;margin:14px 0 6px;font-weight:700;letter-spacing:-0.02em">Scope of Work — Confirmation for Quotation</h1>'+
+          '<p style="margin:0 0 18px;font-size:10pt;color:#5a5a5a;max-width:44em">'+esc(d.intro)+'</p>'+
+          '<h2 style="'+H2+'">1. Project summary</h2>'+
+          '<table class="keep" style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><tbody>'+
+            '<tr><td style="width:24%;'+TD+'">Client</td><td style="'+TDV+'">'+esc(s.client)+'</td><td style="width:22%;padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Document ref.</td><td style="'+TDV+'">'+esc(d.docRef)+'</td></tr>'+
+            '<tr><td style="'+TD+'">Project</td><td style="'+TDV+'">'+esc(s.project)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Issue date</td><td style="'+TDV+'">'+esc(s.issueDate)+'</td></tr>'+
+            '<tr><td style="'+TD+'">Address</td><td style="'+TDV+'">'+esc(s.address)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Revision</td><td style="'+TDV+'">'+esc(s.revision)+'</td></tr>'+
+            '<tr><td style="'+TD+'">Area</td><td style="'+TDV+'">'+esc(s.area)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Currency</td><td style="'+TDV+'">'+esc(s.currency)+'</td></tr>'+
+            '<tr><td style="padding:6px 10px 6px 0;color:#6a6a6a">Basis of scope</td><td colspan="3" style="padding:6px 0;font-weight:500">'+esc(s.basis)+'</td></tr>'+
+          '</tbody></table>'+
+          '<h2 style="'+H2+'">2. Scope of work by area &amp; trade</h2>'+
+          '<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><thead>'+
+            '<tr style="background:#0f0f0f;color:#fff"><th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:20%">Area</th>'+
+            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em">Works included</th>'+
+            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:16%">Qty / unit</th></tr></thead>'+
+            '<tbody>'+areas+'</tbody></table>'+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:0 0 20px">'+
+            '<div class="keep"><h2 style="'+H2+'">3. Inclusions</h2><ul style="margin:0;padding-left:1.1em;font-size:9.5pt;line-height:1.55">'+li(d.inclusions)+'</ul></div>'+
+            '<div class="keep"><h2 style="'+H2+'">4. Exclusions</h2><ul style="margin:0;padding-left:1.1em;font-size:9.5pt;line-height:1.55">'+li(d.exclusions)+'</ul></div></div>'+
+          '<h2 style="'+H2+'">5. Deliverables</h2>'+
+          '<ul style="margin:0 0 20px;padding-left:1.1em;font-size:9.5pt;line-height:1.55;columns:2;column-gap:32px">'+li(d.deliverables)+'</ul>'+
+          '<h2 style="'+H2+'">6. Commercial basis &amp; payment terms</h2>'+
+          '<p style="margin:0 0 8px;font-size:9.5pt">'+esc(d.commercialNote)+'</p>'+
+          '<table class="keep" style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><thead>'+
+            '<tr><th style="text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid #0f0f0f;font-weight:600">Milestone</th>'+
+            '<th style="text-align:right;padding:5px 0;border-bottom:1px solid #0f0f0f;font-weight:600;width:18%">% of contract</th></tr></thead>'+
+            '<tbody>'+miles+'</tbody></table>'+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:0 0 20px">'+
+            '<div class="keep"><h2 style="'+H2+'">7. Client responsibilities</h2><ul style="margin:0;padding-left:1.1em;font-size:9.5pt;line-height:1.55">'+li(d.responsibilities)+'</ul></div>'+
+            '<div class="keep"><h2 style="'+H2+'">8. Change control</h2><p style="margin:0;font-size:9.5pt;line-height:1.55">'+esc(d.changeControl)+'</p></div></div>'+
+          '<div class="keep" style="border:2px solid #0f0f0f;padding:16px 18px;margin:4px 0 0">'+
+            '<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px"><span style="display:inline-block;width:10px;height:10px;background:#dff23f;border-radius:5px"></span>'+
+            '<h2 style="'+H2+';margin:0">9. Client confirmation of scope</h2></div>'+
+            '<p style="margin:0 0 18px;font-size:9.5pt;max-width:50em">By signing below, the Client confirms the scope of work set out in this document is complete and correct, and authorises turnkii to proceed with preparation of the priced quotation.</p>'+
+            '<div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:26px;font-size:9pt">'+
+              '<div><div style="height:34px;border-bottom:1px solid #0f0f0f"></div><div style="margin-top:5px;color:#6a6a6a">Name &amp; signature</div></div>'+
+              '<div><div style="height:34px;border-bottom:1px solid #0f0f0f"></div><div style="margin-top:5px;color:#6a6a6a">Company / position</div></div>'+
+              '<div><div style="height:34px;border-bottom:1px solid #0f0f0f"></div><div style="margin-top:5px;color:#6a6a6a">Date</div></div></div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    }
+
+    function render(d){
+      document.title = 'Scope of Work' + (d.summary && d.summary.client ? ' — ' + d.summary.client : '') + ' · turnkii';
+      $('sow-doc').innerHTML = body(d);
+      state('content');
+    }
+
+    $('sow-print').addEventListener('click', function(){ window.print(); });
+
+    var base = window.TURNKII_SOW_URL;
+    var token = (location.hash||'').replace(/^#/,'').trim();
+    if(!base || !token || token.length < 24){ state('sow-error'); return; }
+
+    fetch(base + '/' + encodeURIComponent(token), { headers:{ 'Accept':'application/json' } })
+      .then(function(r){ if(!r.ok) throw new Error('nf'); return r.json(); })
+      .then(function(d){ render(d); })
+      .catch(function(){ state('sow-error'); });
+  })();
+  </script>
+
+</body>
+</html>
