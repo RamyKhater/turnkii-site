@@ -362,10 +362,11 @@
 
   <section data-vertical="handovers" id="work" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(50px, 6vw, 90px) clamp(16px, 3vw, 40px);">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
-      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.4vw, 56px); line-height: 1.02; letter-spacing: -0.02em; margin: 0;">Recent handovers</h2>
-      <p style="font-size: 15px; color: #8A8A79; margin: 0; max-width: 32ch;">Delivered with our own crews and named partner suppliers.</p>
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.4vw, 56px); line-height: 1.02; letter-spacing: -0.02em; margin: 0;">Our recent work</h2>
+      <p style="font-size: 15px; color: #8A8A79; margin: 0; max-width: 34ch;">Delivered with our own crews and named partner suppliers — tap any shot to zoom into the detail.</p>
     </div>
-    <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; margin-top: 30px;">
+    <div data-projwork-slot></div>
+    <div id="work-fallback" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; margin-top: 30px;">
       <sc-for list="{{ handovers }}" as="p" hint-placeholder-count="4">
         <div>
           <div style="position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 5 / 4; background: #EFEBE1;">

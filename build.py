@@ -62,6 +62,11 @@ SHOWCASE_URL = os.environ.get("TURNKII_SHOWCASE_URL", "").strip() or (
 PJ_SHOWCASE_URL = os.environ.get("TURNKII_PROJECT_SHOWCASE_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/project-showcases") if INTAKE_URL else ""
 )
+# Public aggregate of every "show on homepage" project showcase — the homepage
+# "our recent work" gallery (projwork.js) reads this. Derived from intake host.
+PJ_FEATURED_URL = os.environ.get("TURNKII_PROJECT_FEATURED_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/project-showcases/featured") if INTAKE_URL else ""
+)
 # The hidden /sow scope-of-work page fetches a customer SoW (filled by flpp,
 # shared back to the admin) from here by its token.
 SOW_URL = os.environ.get("TURNKII_SOW_URL", "").strip() or (
@@ -695,6 +700,8 @@ def meta_block(slug, title, desc, ar=False):
     ) + (
         f'\n<script>window.TURNKII_PROJECT_SHOWCASE_URL="{PJ_SHOWCASE_URL}";</script>' if PJ_SHOWCASE_URL else ""
     ) + (
+        f'\n<script>window.TURNKII_PROJECT_FEATURED_URL="{PJ_FEATURED_URL}";</script>' if PJ_FEATURED_URL else ""
+    ) + (
         f'\n<script>window.TURNKII_SOW_URL="{SOW_URL}";</script>' if SOW_URL else ""
     ) + (
         f'\n<script>window.TURNKII_RATING_URL="{RATING_URL}";</script>' if RATING_URL else ""
@@ -1076,6 +1083,11 @@ def build_page(src_name):
     if slug == "index.html" and RATING_URL:
         text = text.replace("</body>", HOME_RATING_SCRIPT + "\n</body>", 1)
 
+    # homepage: "our recent work" gallery — fills [data-projwork-slot] from the
+    # featured project showcases, with a deep-zoom viewer (projwork.js).
+    if slug == "index.html" and PJ_FEATURED_URL:
+        text = text.replace("</body>", '<script defer src="/projwork.js"></script>\n</body>', 1)
+
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).
     if COPY_OVERRIDES:
@@ -1263,6 +1275,9 @@ def main():
     for f in os.listdir(os.path.join(ROOT, "vendor", "brand")):
         shutil.copy(os.path.join(ROOT, "vendor", "brand", f), os.path.join(DIST, f))
     shutil.copy(os.path.join(ROOT, "image-slot.js"), os.path.join(DIST, "image-slot.js"))
+    # projwork.js — the public "our recent work" homepage gallery + deep-zoom viewer.
+    if os.path.exists(os.path.join(ROOT, "projwork.js")):
+        shutil.copy(os.path.join(ROOT, "projwork.js"), os.path.join(DIST, "projwork.js"))
     # doc-page.js — the paged-document (print-to-PDF) runtime the hidden /sow
     # Scope of Work page loads; ship it so the customer document paginates + prints.
     if os.path.exists(os.path.join(ROOT, "doc-page.js")):
