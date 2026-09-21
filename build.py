@@ -58,6 +58,10 @@ PROPOSALS_URL = os.environ.get("TURNKII_PROPOSALS_URL", "").strip() or (
 SHOWCASE_URL = os.environ.get("TURNKII_SHOWCASE_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/showcases") if INTAKE_URL else ""
 )
+# The hidden /pj project-showcase page fetches a showcase from here by its token.
+PJ_SHOWCASE_URL = os.environ.get("TURNKII_PROJECT_SHOWCASE_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/project-showcases") if INTAKE_URL else ""
+)
 # The hidden /sow scope-of-work page fetches a customer SoW (filled by flpp,
 # shared back to the admin) from here by its token.
 SOW_URL = os.environ.get("TURNKII_SOW_URL", "").strip() or (
@@ -114,7 +118,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html", "sow.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html", "sow.html", "pj.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -580,6 +584,14 @@ PAGES = {
         "Turnkii — sample work",
         "A private showcase of Turnkii finishing & furniture.",
     ),
+    # Hidden project showcase — reached only via a private tokened link
+    # (/pj#<token>); noindexed, out of nav + sitemap. Deep-zoom gallery organised
+    # into service sections with optional supplier/contractor credits.
+    "Turnkii Project Showcase.dc.html": (
+        "pj.html",
+        "Turnkii — project showcase",
+        "A private showcase of a Turnkii project, service by service.",
+    ),
     # Hidden client Scope of Work page. Reached only via a private tokened link
     # (/sow#<token>); noindexed, out of the sitemap + nav. Renders a SoW (filled
     # by flpp, shared to the admin) fetched from the admin SoW API by its token,
@@ -680,6 +692,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_PROPOSALS_URL="{PROPOSALS_URL}";</script>' if PROPOSALS_URL else ""
     ) + (
         f'\n<script>window.TURNKII_SHOWCASE_URL="{SHOWCASE_URL}";</script>' if SHOWCASE_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_PROJECT_SHOWCASE_URL="{PJ_SHOWCASE_URL}";</script>' if PJ_SHOWCASE_URL else ""
     ) + (
         f'\n<script>window.TURNKII_SOW_URL="{SOW_URL}";</script>' if SOW_URL else ""
     ) + (
