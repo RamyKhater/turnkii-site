@@ -80,7 +80,7 @@ RATING_URL = os.environ.get("TURNKII_RATING_URL", "").strip() or (
 # Homepage: fetch the overall client rating and fill any [data-rating-slot]. Shown
 # only past a small threshold, and re-filled via MutationObserver so it survives
 # the design-canvas re-renders. Injected on the home page only.
-RATING_MIN = int(os.environ.get("TURNKII_RATING_MIN", "5") or "5")
+RATING_MIN = int(os.environ.get("TURNKII_RATING_MIN", "1") or "1")
 HOME_RATING_SCRIPT = (
     "<script>(function(){var url=window.TURNKII_RATING_URL;if(!url)return;var MIN=" + str(RATING_MIN) + ";var data=null;"
     "function badge(d){var full=Math.round(d.avg),s='';for(var i=1;i<=5;i++)s+=(i<=full?'\\u2605':'\\u2606');"
