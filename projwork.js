@@ -7,6 +7,26 @@
 (function () {
   var base = window.TURNKII_PROJECT_FEATURED_URL;
   if (!base) return;
+  // rate endpoint base: …/project-showcases/featured → …/project-showcases
+  var rateBase = base.replace(/\/featured(\b[^]*)?$/, "");
+
+  // one anonymous voter id per browser, reused for sample-work + project ratings
+  function voterId() {
+    try { var k = "tk_voter", v = localStorage.getItem(k); if (!v) { v = Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem(k, v); } return v; }
+    catch (e) { return "anon" + Math.random().toString(36).slice(2, 12); }
+  }
+  function voteKey(im) { return "tk_pjvote_" + im.token + "_" + im.index; }
+  function myVote(im) { try { var v = localStorage.getItem(voteKey(im)); return v ? Number(v) : 0; } catch (e) { return 0; } }
+  function sendRate(im, val) {
+    if (!im || !im.token) return;
+    fetch(rateBase + "/" + encodeURIComponent(im.token) + "/rate", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ index: im.index, value: val, voter: voterId() }),
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (res) { if (res && res.rating) { im.rating = res.rating; try { localStorage.setItem(voteKey(im), String(val)); } catch (e) {} if (view[idx] === im) paintRate(im); } })
+      .catch(function () {});
+  }
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""); }
@@ -46,7 +66,14 @@
     + ".pw-info .pw-t{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(19px,2.6vw,26px);line-height:1.1;margin-top:2px}"
     + ".pw-info .pw-n{font-size:14px;color:rgba(246,243,236,.82);margin-top:6px;max-width:70ch}"
     + ".pw-info .pw-s{display:inline-flex;gap:7px;margin-top:10px;font-size:12.5px;font-weight:600;background:rgba(246,243,236,.1);border:1px solid rgba(246,243,236,.16);border-radius:999px;padding:5px 12px}.pw-info .pw-s b{color:#D6F23C}"
-    + ".pw-info:empty{display:none}"
+    + ".pw-itext:empty{display:none}"
+    + ".pw-rate{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(246,243,236,.12)}"
+    + ".pw-rate .pw-rl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(246,243,236,.7)}"
+    + ".pw-stars{display:inline-flex;gap:1px}"
+    + ".pw-stars button{background:none;border:0;cursor:pointer;font-size:24px;line-height:1;color:rgba(246,243,236,.3);padding:0 1px}"
+    + ".pw-stars button.on{color:#F5C518}"
+    + ".pw-rate .pw-ravg{font-size:13px;font-weight:600;color:rgba(246,243,236,.82)}"
+    + ".pw-rate .pw-rthx{font-size:13px;font-weight:700;color:#D6F23C}"
     + "@media(max-width:600px){.pw-prev,.pw-next{top:auto;transform:none;bottom:calc(env(safe-area-inset-bottom) + 66px);width:44px;height:44px}.pw-prev{left:12px}.pw-next{right:12px}}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -61,7 +88,7 @@
       '<div class="pw-tools"><button class="pw-btn pw-out" type="button" aria-label="Zoom out">−</button><button class="pw-btn pw-reset" type="button" aria-label="Reset zoom">⤢</button><button class="pw-btn pw-in" type="button" aria-label="Zoom in">+</button></div>' +
     '</div>' +
     '<button class="pw-btn pw-next" type="button" aria-label="Next">›</button>' +
-    '<div class="pw-info"></div>';
+    '<div class="pw-info"><div class="pw-itext"></div><div class="pw-rate"></div></div>';
   var appended = false;
   function ensureV() { if (!appended) { document.body.appendChild(V); appended = true; wireViewer(); } }
 
@@ -122,7 +149,22 @@
     if (im.caption) h += '<div class="pw-t">' + esc(im.caption) + "</div>";
     if (im.note) h += '<div class="pw-n">' + esc(im.note) + "</div>";
     if (im.spec) h += '<div class="pw-s"><b>Spec</b> ' + esc(im.spec) + "</div>";
-    q(".pw-info").innerHTML = h;
+    q(".pw-itext").innerHTML = h;
+    paintRate(im);
+  }
+  // ── per-image star rating (feeds the homepage hero badge) ─────────────────
+  function paintRate(im) {
+    var box = q(".pw-rate"); if (!box) return;
+    if (!im || !im.token) { box.style.display = "none"; return; }
+    box.style.display = "";
+    var mv = myVote(im), fillN = mv || (im.rating ? Math.round(im.rating.avg) : 0), stars = "";
+    for (var i = 1; i <= 5; i++) stars += '<button type="button" data-v="' + i + '" class="' + (i <= fillN ? "on" : "") + '" aria-label="' + i + ' star' + (i > 1 ? "s" : "") + '">' + (i <= fillN ? "★" : "☆") + "</button>";
+    var meta = mv
+      ? '<span class="pw-rthx">Thanks for rating!</span>'
+      : (im.rating && im.rating.count
+        ? '<span class="pw-ravg">' + im.rating.avg.toFixed(1) + " · " + im.rating.count + " rating" + (im.rating.count > 1 ? "s" : "") + "</span>"
+        : '<span class="pw-ravg" style="color:rgba(246,243,236,.55)">Be the first to rate</span>');
+    box.innerHTML = '<span class="pw-rl">Rate this work</span><span class="pw-stars">' + stars + "</span>" + meta;
   }
   function openAt(i) { ensureV(); idx = i; lastFocus = document.activeElement; paint(); V.hidden = false; requestAnimationFrame(function () { V.classList.add("pw-open"); }); document.body.classList.add("pw-lock"); q(".pw-close").focus(); }
   function closeV() { V.classList.remove("pw-open"); document.body.classList.remove("pw-lock"); setTimeout(function () { V.hidden = true; vimg.src = ""; }, 200); if (lastFocus && lastFocus.focus) lastFocus.focus(); }
@@ -136,6 +178,10 @@
     q(".pw-out").addEventListener("click", function () { bump(1 / 1.6); });
     q(".pw-reset").addEventListener("click", function () { bump(1 / (scale || 1)); });
     q(".pw-tools").addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+    var rate = q(".pw-rate");
+    rate.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest("button[data-v]"); if (b) sendRate(view[idx], Number(b.getAttribute("data-v"))); });
+    rate.addEventListener("mouseover", function (e) { var b = e.target.closest && e.target.closest("button[data-v]"); if (!b) return; var v = Number(b.getAttribute("data-v")); var bs = rate.querySelectorAll("button[data-v]"); for (var i = 0; i < bs.length; i++) { var xi = Number(bs[i].getAttribute("data-v")); bs[i].textContent = xi <= v ? "★" : "☆"; bs[i].className = xi <= v ? "on" : ""; } });
+    rate.addEventListener("mouseleave", function () { paintRate(view[idx]); });
     document.addEventListener("keydown", function (e) { if (V.hidden) return; if (e.key === "Escape") closeV(); else if (e.key === "ArrowLeft") go(-1); else if (e.key === "ArrowRight") go(1); else if (e.key === "+" || e.key === "=") bump(1.6); else if (e.key === "-") bump(1 / 1.6); });
     stage.addEventListener("wheel", function (e) { e.preventDefault(); zoomTo(scale * (1 - e.deltaY * 0.0016), e.clientX, e.clientY); }, { passive: false });
     stage.addEventListener("dblclick", function (e) { anim(true); zoomTo(scale > 1 ? 1 : 3, e.clientX, e.clientY); setTimeout(function () { anim(false); }, 220); });
