@@ -31,6 +31,7 @@
     + ".pw-cap{position:absolute;left:0;right:0;bottom:0;padding:24px 12px 10px;color:#fff;font-size:13px;font-weight:600;line-height:1.3;background:linear-gradient(to top,rgba(10,10,8,.86),rgba(10,10,8,0))}"
     + "body.pw-lock{overflow:hidden}"
     + ".pw-viewer{position:fixed;inset:0;z-index:2147483000;background:#0A0A07;opacity:0;transition:opacity .2s;display:flex;flex-direction:column;font-family:Manrope,system-ui,sans-serif}"
+    + ".pw-viewer[hidden]{display:none!important;pointer-events:none}"
     + ".pw-viewer.pw-open{opacity:1}"
     + ".pw-stage{flex:1;position:relative;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center;cursor:grab}.pw-stage.pw-grab{cursor:grabbing}"
     + ".pw-stage img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;user-select:none;-webkit-user-drag:none;pointer-events:none}"
@@ -69,7 +70,7 @@
   // ── data + rendering ──────────────────────────────────────────────────────
   fetch(base, { headers: { Accept: "application/json" } })
     .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (d) { if (!d || !d.items || !d.items.length) return; data = d; ensureV(); fill();
+    .then(function (d) { if (!d || !d.items || !d.items.length) return; data = d; fill();
       try { new MutationObserver(fill).observe(document.body, { childList: true, subtree: true }); } catch (e) {} })
     .catch(function () {});
 
@@ -97,8 +98,9 @@
       }).join("");
       return '<section class="pw-svc" id="pw-' + slug(s) + '"><div class="pw-head"><div><div class="pw-eb">Service</div><h3>' + esc(s) + "</h3></div>" + (cs ? '<div class="pw-credits">' + cs + "</div>" : "") + '</div><div class="pw-grid">' + grid + "</div></section>";
     }).join("");
-    slot.addEventListener("click", function (e) { var b = e.target.closest(".pw-item"); if (b) openAt(Number(b.getAttribute("data-i"))); });
   }
+  // one delegated handler (survives re-renders without stacking listeners)
+  document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".pw-item"); if (b && b.closest("[data-projwork-slot]")) openAt(Number(b.getAttribute("data-i"))); });
 
   // ── deep-zoom viewer ──────────────────────────────────────────────────────
   var stage, vimg, scale = 1, tx = 0, ty = 0, MIN = 1, MAX = 6;
