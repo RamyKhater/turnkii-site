@@ -42,7 +42,20 @@
     else { a.setAttribute("style", "color:rgba(246,243,236,0.7);font-size:14px;font-weight:600;"); f.appendChild(a); }
   }
 
-  function run() { try { ensureNav(); ensureFooter(); } catch (e) {} }
+  // Move the "My account" link to the very end of the header nav.
+  function ensureAccountLast() {
+    var nav = document.querySelector("header .tk-nav") || document.querySelector("header nav") || document.querySelector(".tk-nav");
+    if (!nav) return;
+    var links = nav.querySelectorAll("a"), acct = null, i;
+    for (i = 0; i < links.length; i++) {
+      var a = links[i];
+      if (a.getAttribute("data-nav") === "account" || /\bmy account\b/i.test(a.textContent || "")) { acct = a; break; }
+    }
+    if (!acct || nav.lastElementChild === acct) return; // already last → avoid observer loop
+    nav.appendChild(acct);
+  }
+
+  function run() { try { ensureNav(); ensureFooter(); ensureAccountLast(); } catch (e) {} }
   run();
   document.addEventListener("DOMContentLoaded", run);
   try { new MutationObserver(run).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
