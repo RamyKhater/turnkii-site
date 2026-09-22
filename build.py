@@ -1095,13 +1095,30 @@ def build_page(src_name):
     # project showcases, with a deep-zoom viewer + per-image rating (projwork.js).
     # On the homepage section and the dedicated page.
     if slug in ("index.html", "our-work.html") and PJ_FEATURED_URL:
-        text = text.replace("</body>", '<script defer src="/projwork.js"></script>\n</body>', 1)
+        # homepage shows the gallery as a per-service horizontal carousel (≈5 per
+        # row, scroll sideways); the dedicated /our-work page shows the full grid.
+        flag = "<script>window.TURNKII_PROJWORK_CAROUSEL=1</script>" if slug == "index.html" else ""
+        text = text.replace("</body>", flag + '<script defer src="/projwork.js"></script>\n</body>', 1)
 
     # site-wide: a header-nav + footer link to the dedicated /our-work page
     # (repoints any existing "recent work" link, else inserts one). Skips the
     # noindex consoles and the page itself.
     if slug not in NOINDEX_PAGES and slug != "our-work.html":
         text = text.replace("</body>", '<script defer src="/worklink.js"></script>\n</body>', 1)
+
+    # /our-work: admin-set hero background photo (content block "ourWork.image").
+    # Baked as a darkened cover behind the hero text; absent → the flat dark hero.
+    if slug == "our-work.html":
+        ow_img = ((CONTENT or {}).get("ourWork") or {}).get("image") if CONTENT else None
+        if ow_img:
+            u = html.escape(str(ow_img), quote=True)
+            text = text.replace(
+                "</head>",
+                '<style>.hero{background-image:linear-gradient(rgba(18,19,14,.72),'
+                f'rgba(18,19,14,.82)),url("{u}")!important;background-size:cover;'
+                'background-position:center}</style>\n</head>',
+                1,
+            )
 
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).

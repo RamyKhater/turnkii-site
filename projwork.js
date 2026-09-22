@@ -43,6 +43,12 @@
     + ".pw-credit img{height:22px;width:auto;max-width:110px;object-fit:contain;display:block}"
     + ".pw-credit .pw-cn{font-size:13px;font-weight:700;color:#12130E}"
     + ".pw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px}"
+    // carousel: one horizontal row, ~5 visible per line, scroll sideways for more
+    + ".pw-grid.pw-carousel{display:flex;grid-template-columns:none;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}"
+    + ".pw-grid.pw-carousel .pw-item{flex:0 0 calc((100% - 4*12px)/5);scroll-snap-align:start}"
+    + ".pw-grid.pw-carousel::-webkit-scrollbar{height:8px}.pw-grid.pw-carousel::-webkit-scrollbar-thumb{background:#CFCabc;border-radius:999px}"
+    + "@media(max-width:1000px){.pw-grid.pw-carousel .pw-item{flex-basis:calc((100% - 3*12px)/3.2)}}"
+    + "@media(max-width:640px){.pw-grid.pw-carousel .pw-item{flex-basis:calc((100% - 12px)/1.35)}}"
     + ".pw-item{position:relative;padding:0;margin:0;border:1px solid #E4E0D5;border-radius:16px;overflow:hidden;background:#EFEBE1;cursor:zoom-in;display:block;width:100%;text-align:left}"
     + ".pw-item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .35s ease}"
     + ".pw-item:hover img{transform:scale(1.04)}.pw-item:focus-visible{outline:2px solid #4E5A16;outline-offset:2px}"
@@ -123,7 +129,7 @@
         var cap = im.caption ? '<span class="pw-cap">' + esc(im.caption) + "</span>" : "";
         return '<button type="button" class="pw-item" data-i="' + im._i + '" aria-label="Zoom ' + esc(im.caption || s) + '"><img src="' + esc(im.image) + '" alt="' + esc(im.caption || "") + '" loading="lazy" /><span class="pw-z" aria-hidden="true">⤢</span>' + cap + "</button>";
       }).join("");
-      return '<section class="pw-svc" id="pw-' + slug(s) + '"><div class="pw-head"><div><div class="pw-eb">Service</div><h3>' + esc(s) + "</h3></div>" + (cs ? '<div class="pw-credits">' + cs + "</div>" : "") + '</div><div class="pw-grid">' + grid + "</div></section>";
+      return '<section class="pw-svc" id="pw-' + slug(s) + '"><div class="pw-head"><div><div class="pw-eb">Service</div><h3>' + esc(s) + "</h3></div>" + (cs ? '<div class="pw-credits">' + cs + "</div>" : "") + '</div><div class="pw-grid' + (window.TURNKII_PROJWORK_CAROUSEL ? " pw-carousel" : "") + '">' + grid + "</div></section>";
     }).join("");
   }
   // one delegated handler (survives re-renders without stacking listeners)
