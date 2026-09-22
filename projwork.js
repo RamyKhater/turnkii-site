@@ -44,11 +44,18 @@
     + ".pw-credit .pw-cn{font-size:13px;font-weight:700;color:#12130E}"
     + ".pw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px}"
     // carousel: one horizontal row, ~5 visible per line, scroll sideways for more
-    + ".pw-grid.pw-carousel{display:flex;grid-template-columns:none;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}"
+    + ".pw-grid.pw-carousel{display:flex;grid-template-columns:none;gap:12px;overflow-x:auto;padding:2px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;-ms-overflow-style:none}"
+    + ".pw-grid.pw-carousel::-webkit-scrollbar{display:none}"
     + ".pw-grid.pw-carousel .pw-item{flex:0 0 calc((100% - 4*12px)/5);scroll-snap-align:start}"
-    + ".pw-grid.pw-carousel::-webkit-scrollbar{height:8px}.pw-grid.pw-carousel::-webkit-scrollbar-thumb{background:#CFCabc;border-radius:999px}"
     + "@media(max-width:1000px){.pw-grid.pw-carousel .pw-item{flex-basis:calc((100% - 3*12px)/3.2)}}"
     + "@media(max-width:640px){.pw-grid.pw-carousel .pw-item{flex-basis:calc((100% - 12px)/1.35)}}"
+    // arrow controls (like the viewer's prev/next), shown only when scrollable
+    + ".pw-cwrap{position:relative}"
+    + ".pw-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:44px;height:44px;border:0;border-radius:999px;background:rgba(18,19,14,.72);color:#fff;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.22);transition:opacity .18s,background .18s}"
+    + ".pw-arrow:hover{background:rgba(18,19,14,.92)}"
+    + ".pw-aprev{left:-8px}.pw-anext{right:-8px}"
+    + ".pw-arrow.pw-hide{opacity:0;pointer-events:none}"
+    + "@media(max-width:640px){.pw-arrow{width:38px;height:38px;font-size:22px}.pw-aprev{left:2px}.pw-anext{right:2px}}"
     + ".pw-item{position:relative;padding:0;margin:0;border:1px solid #E4E0D5;border-radius:16px;overflow:hidden;background:#EFEBE1;cursor:zoom-in;display:block;width:100%;text-align:left}"
     + ".pw-item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .35s ease}"
     + ".pw-item:hover img{transform:scale(1.04)}.pw-item:focus-visible{outline:2px solid #4E5A16;outline-offset:2px}"
@@ -112,7 +119,12 @@
     var slots = document.querySelectorAll("[data-projwork-slot]");
     var filledAny = false;
     for (var i = 0; i < slots.length; i++) { if (!slots[i].firstChild) { renderInto(slots[i]); filledAny = true; } }
-    if (filledAny) { var fb = document.getElementById("work-fallback"); if (fb) fb.style.display = "none"; }
+    if (filledAny) {
+      var fb = document.getElementById("work-fallback"); if (fb) fb.style.display = "none";
+      // set initial arrow state once images/layout settle
+      requestAnimationFrame(refreshCarousels);
+      setTimeout(refreshCarousels, 400);
+    }
   }
 
   function renderInto(slot) {
@@ -129,11 +141,43 @@
         var cap = im.caption ? '<span class="pw-cap">' + esc(im.caption) + "</span>" : "";
         return '<button type="button" class="pw-item" data-i="' + im._i + '" aria-label="Zoom ' + esc(im.caption || s) + '"><img src="' + esc(im.image) + '" alt="' + esc(im.caption || "") + '" loading="lazy" /><span class="pw-z" aria-hidden="true">⤢</span>' + cap + "</button>";
       }).join("");
-      return '<section class="pw-svc" id="pw-' + slug(s) + '"><div class="pw-head"><div><div class="pw-eb">Service</div><h3>' + esc(s) + "</h3></div>" + (cs ? '<div class="pw-credits">' + cs + "</div>" : "") + '</div><div class="pw-grid' + (window.TURNKII_PROJWORK_CAROUSEL ? " pw-carousel" : "") + '">' + grid + "</div></section>";
+      var head = '<div class="pw-head"><div><div class="pw-eb">Service</div><h3>' + esc(s) + "</h3></div>" + (cs ? '<div class="pw-credits">' + cs + "</div>" : "") + "</div>";
+      var body = window.TURNKII_PROJWORK_CAROUSEL
+        ? '<div class="pw-cwrap">'
+            + '<button class="pw-arrow pw-aprev pw-hide" type="button" data-dir="-1" aria-label="Scroll left">‹</button>'
+            + '<div class="pw-grid pw-carousel">' + grid + "</div>"
+            + '<button class="pw-arrow pw-anext" type="button" data-dir="1" aria-label="Scroll right">›</button>'
+          + "</div>"
+        : '<div class="pw-grid">' + grid + "</div>";
+      return '<section class="pw-svc" id="pw-' + slug(s) + '">' + head + body + "</section>";
     }).join("");
   }
   // one delegated handler (survives re-renders without stacking listeners)
   document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest(".pw-item"); if (b && b.closest("[data-projwork-slot]")) openAt(Number(b.getAttribute("data-i"))); });
+
+  // ── carousel arrow controls (homepage) ────────────────────────────────────
+  // Click prev/next to scroll ~one screen; arrows hide at each end / when the row
+  // fits without scrolling. Delegated + capture-scroll so re-renders never leave
+  // stale listeners.
+  function updateArrows(g) {
+    var wrap = g.closest ? g.closest(".pw-cwrap") : g.parentNode;
+    if (!wrap) return;
+    var prev = wrap.querySelector(".pw-aprev"), next = wrap.querySelector(".pw-anext");
+    var max = g.scrollWidth - g.clientWidth - 2, scrollable = g.scrollWidth > g.clientWidth + 4;
+    if (prev) prev.classList.toggle("pw-hide", !scrollable || g.scrollLeft <= 2);
+    if (next) next.classList.toggle("pw-hide", !scrollable || g.scrollLeft >= max);
+  }
+  function refreshCarousels() { var gs = document.querySelectorAll(".pw-grid.pw-carousel"), i; for (i = 0; i < gs.length; i++) updateArrows(gs[i]); }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".pw-arrow"); if (!b) return;
+    var wrap = b.closest(".pw-cwrap"); if (!wrap) return;
+    var g = wrap.querySelector(".pw-grid"); if (!g) return;
+    var dir = Number(b.getAttribute("data-dir")) || 1;
+    g.scrollBy({ left: dir * Math.max(240, g.clientWidth * 0.85), behavior: "smooth" });
+  });
+  document.addEventListener("scroll", function (e) { var g = e.target; if (g && g.classList && g.classList.contains && g.classList.contains("pw-carousel")) updateArrows(g); }, true);
+  window.addEventListener("resize", refreshCarousels);
+  window.addEventListener("load", refreshCarousels);
 
   // ── deep-zoom viewer ──────────────────────────────────────────────────────
   var stage, vimg, scale = 1, tx = 0, ty = 0, MIN = 1, MAX = 6;
