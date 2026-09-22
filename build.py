@@ -527,6 +527,13 @@ PAGES = {
         "Projects & bulk units — Turnkii",
         "Finishing and furnishing at project scale for developers, investors and portfolios — whole buildings and multi-unit handovers under one contract, with volume pricing and staged delivery.",
     ),
+    # ── Our recent work — a dedicated, indexed project-showcase page hosting the
+    #    grouped gallery + deep-zoom viewer + per-image rating (feeds the hero).
+    "Turnkii Recent Work.dc.html": (
+        "our-work.html",
+        "Our recent work — Turnkii",
+        "Real Turnkii projects photographed at handover, grouped by service — finishing, furnishing, kitchens, HVAC and more. Zoom into any shot and rate the work.",
+    ),
     # ── Facility management (customer-facing, indexed) + internal admin consoles.
     "Turnkii Facility.dc.html": (
         "facility.html",
@@ -1079,14 +1086,22 @@ def build_page(src_name):
     if slug not in NOINDEX_PAGES:
         text = text.replace("</body>", whatsapp_widget() + consent_banner() + "\n</body>", 1)
 
-    # homepage: overall client-rating badge (fills the hero [data-rating-slot]).
-    if slug == "index.html" and RATING_URL:
+    # overall client-rating badge (fills [data-rating-slot]) — the homepage hero
+    # and the dedicated Our-recent-work page.
+    if slug in ("index.html", "our-work.html") and RATING_URL:
         text = text.replace("</body>", HOME_RATING_SCRIPT + "\n</body>", 1)
 
-    # homepage: "our recent work" gallery — fills [data-projwork-slot] from the
-    # featured project showcases, with a deep-zoom viewer (projwork.js).
-    if slug == "index.html" and PJ_FEATURED_URL:
+    # "our recent work" gallery — fills [data-projwork-slot] from the featured
+    # project showcases, with a deep-zoom viewer + per-image rating (projwork.js).
+    # On the homepage section and the dedicated page.
+    if slug in ("index.html", "our-work.html") and PJ_FEATURED_URL:
         text = text.replace("</body>", '<script defer src="/projwork.js"></script>\n</body>', 1)
+
+    # site-wide: a header-nav + footer link to the dedicated /our-work page
+    # (repoints any existing "recent work" link, else inserts one). Skips the
+    # noindex consoles and the page itself.
+    if slug not in NOINDEX_PAGES and slug != "our-work.html":
+        text = text.replace("</body>", '<script defer src="/worklink.js"></script>\n</body>', 1)
 
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).
@@ -1278,6 +1293,9 @@ def main():
     # projwork.js — the public "our recent work" homepage gallery + deep-zoom viewer.
     if os.path.exists(os.path.join(ROOT, "projwork.js")):
         shutil.copy(os.path.join(ROOT, "projwork.js"), os.path.join(DIST, "projwork.js"))
+    # worklink.js — injects the site-wide header/footer link to the /our-work page.
+    if os.path.exists(os.path.join(ROOT, "worklink.js")):
+        shutil.copy(os.path.join(ROOT, "worklink.js"), os.path.join(DIST, "worklink.js"))
     # doc-page.js — the paged-document (print-to-PDF) runtime the hidden /sow
     # Scope of Work page loads; ship it so the customer document paginates + prints.
     if os.path.exists(os.path.join(ROOT, "doc-page.js")):
