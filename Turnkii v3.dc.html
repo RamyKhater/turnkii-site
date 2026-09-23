@@ -1056,24 +1056,6 @@
     </div>
   </section>
 
-  <section id="faq" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5;">
-    <div style="max-width: 1000px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);">
-      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 32px;">Questions we get before the first visit</h2>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
-          <div style="background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 16px; overflow: hidden;">
-            <button onClick="{{ f.onToggle }}" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 17px; font-weight: 600; color: #12130E;">
-              <span>{{ f.q }}</span>
-              <span style="font-size: 22px; color: #A3BE2A; line-height: 1; flex: 0 0 auto;">{{ f.icon }}</span>
-            </button>
-            <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
-              <div style="padding: 0 22px 22px; font-size: 15.5px; line-height: 1.65; color: #5E5F52; max-width: 66ch;">{{ f.a }}</div>
-            </sc-if>
-          </div>
-        </sc-for>
-      </div>
-    </div>
-  </section>
 
   <sc-if value="{{ preOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position: fixed; inset: 0; z-index: 96; background: rgba(18,19,14,0.66); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto;">
@@ -1200,7 +1182,7 @@
         <a data-nav="care" href="Turnkii Care.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Care &amp; maintenance</a>
         <a data-nav="refer" href="Turnkii Refer.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Refer &amp; earn</a>
         <a data-nav="projects" href="Turnkii Projects.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">Projects &amp; bulk</a>
-        <a href="#faq" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">FAQ</a>
+        <a href="Turnkii FAQ.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">FAQ</a>
         <a data-track="cta_brief" href="#brief" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Start a brief</a>
       </nav>
       <div style="display: flex; gap: clamp(28px, 5vw, 64px); flex-wrap: wrap; justify-content: space-between;">

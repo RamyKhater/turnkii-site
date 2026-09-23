@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="vendor/fonts.css" />
+<style>
+  :root{
+    --ink:#12130E;--cream:#F6F3EC;--paper:#FFFFFF;--sand:#EFEBE1;--line:#E4E0D5;
+    --lime:#D6F23C;--olive:#4E5A16;--sub:#5B5B4E;--muted:#8A8A79;
+    --serif:'Instrument Serif',Georgia,serif;--sans:Manrope,system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+
+  header{background:var(--ink);color:var(--cream);position:sticky;top:0;z-index:50}
+  .hrow{display:flex;align-items:center;gap:16px;padding:14px 0;position:relative;max-width:1200px;margin:0 auto;padding-left:clamp(16px,4vw,40px);padding-right:clamp(16px,4vw,40px)}
+  .brand{display:inline-flex;align-items:center}
+  .brand img{height:24px;width:auto;display:block}
+  header nav{display:flex;align-items:center;gap:clamp(10px,1.2vw,20px);flex-wrap:wrap;flex:1 1 auto;justify-content:flex-end}
+  header nav a{color:rgba(246,243,236,.74);font-size:14px;font-weight:600}
+  header nav a:hover{color:var(--lime)}
+  header nav a.cta{background:var(--lime);color:var(--ink);border-radius:999px;padding:12px 20px;font-weight:700}
+  .menu-toggle{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0,0,0,0)}
+  .burger{display:none;margin-left:auto;width:44px;height:40px;flex-direction:column;justify-content:center;gap:5px;
+    padding:0 10px;border:1px solid rgba(246,243,236,.24);border-radius:11px;background:transparent;cursor:pointer}
+  .burger span{display:block;width:20px;height:2px;background:var(--cream);border-radius:2px;transition:transform .25s,opacity .2s}
+  @media (max-width:760px){
+    header nav{position:absolute;top:100%;left:0;right:0;z-index:60;display:none;flex-direction:column;align-items:stretch;
+      gap:0;background:var(--ink);padding:6px clamp(16px,4vw,40px) 14px;border-top:1px solid rgba(246,243,236,.09);box-shadow:0 22px 46px rgba(0,0,0,.45)}
+    header:has(.menu-toggle:checked) nav{display:flex}
+    header nav a{padding:13px 2px;border-bottom:1px solid rgba(246,243,236,.08)}
+    header nav a.cta{margin-top:10px;text-align:center;border-bottom:0}
+    .burger{display:inline-flex}
+    header:has(.menu-toggle:checked) .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    header:has(.menu-toggle:checked) .burger span:nth-child(2){opacity:0}
+    header:has(.menu-toggle:checked) .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  }
+
+  .hero{background:var(--ink);color:var(--cream);padding:clamp(34px,6vw,68px) 0 clamp(30px,5vw,56px)}
+  .eb{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--lime)}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6vw,58px);line-height:1.03;margin:12px 0 0;max-width:18ch}
+  .hero p{font-size:clamp(15px,2vw,18px);color:rgba(246,243,236,.82);margin:16px 0 0;max-width:60ch}
+
+  .faqs{padding:clamp(32px,5vw,64px) 0 clamp(20px,3vw,32px)}
+  details{background:var(--paper);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+  summary{list-style:none;cursor:pointer;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    font-size:17px;font-weight:600;color:var(--ink)}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:22px;color:var(--olive);line-height:1;flex:0 0 auto}
+  details[open] summary::after{content:"–"}
+  details .a{padding:0 22px 22px;font-size:15.5px;line-height:1.65;color:var(--sub);max-width:66ch}
+
+  .cta-band{padding:clamp(28px,4vw,52px) 0 clamp(44px,7vw,84px)}
+  .cta-card{background:var(--ink);color:var(--cream);border-radius:22px;padding:clamp(26px,4vw,44px);display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:space-between;gap:20px}
+  .cta-card h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3.4vw,36px);line-height:1.05;margin:0;max-width:20ch}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--lime);color:var(--ink);border-radius:999px;padding:15px 26px;font-size:15px;font-weight:700}
+
+  footer{background:var(--ink);color:rgba(246,243,236,.72)}
+  .frow{display:flex;flex-wrap:wrap;gap:16px 26px;align-items:center;padding:32px 0;max-width:1200px;margin:0 auto;padding-left:clamp(16px,4vw,40px);padding-right:clamp(16px,4vw,40px)}
+  .frow .brand{margin-right:auto}.frow .brand img{height:22px}
+  footer a{color:rgba(246,243,236,.72);font-size:14px;font-weight:600}
+  footer a:hover{color:var(--lime)}
+  .fnote{border-top:1px solid rgba(246,243,236,.12);padding:16px 0;font-size:12.5px;color:rgba(246,243,236,.5);max-width:1200px;margin:0 auto;padding-left:clamp(16px,4vw,40px);padding-right:clamp(16px,4vw,40px)}
+  @media (max-width:640px){.frow{flex-direction:column;align-items:flex-start;gap:12px}.frow .brand{margin-right:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <a class="brand" href="/"><img src="assets/turnkii-logo.png" alt="Turnkii" /></a>
+    <input class="menu-toggle" type="checkbox" id="faqnav" aria-label="Menu" />
+    <label class="burger" for="faqnav" aria-hidden="true"><span></span><span></span><span></span></label>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/#packages">Packages</a>
+      <a href="/#about">How it works</a>
+      <a class="cta" href="/#brief" data-track="cta_faq_nav_brief">Start your project</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eb">FAQ</div>
+    <h1>Questions we get before the first visit</h1>
+    <p>The short answers to what most owners ask before booking a survey — how Turnkii works, how pricing and payments are structured, and what happens on site. Still unsure? Start a brief and a real person calls within a working day.</p>
+  </div>
+</section>
+
+<section class="faqs">
+  <div class="wrap">
+    <details open>
+      <summary>What exactly is Turnkii?</summary>
+      <div class="a">Turnkii is a turnkey property delivery platform. The work is executed by our vetted network of contractors, workshops and suppliers, which we manage end to end — scoping, pricing, procurement, programme, quality control and snagging — so the owner deals with us instead of chasing several trades. Around that we add the financial and technology layer: payment plans, milestone-gated payments, live progress tracking and after-handover care.</div>
+    </details>
+    <details>
+      <summary>How is pricing structured?</summary>
+      <div class="a">Finishing is quoted per square metre against a fixed scope; furniture and FF&amp;E are quoted per unit against the style and package you chose. Ranges are shared on the site visit, once we have measured.</div>
+    </details>
+    <details>
+      <summary>Can we keep our own contractor for part of the scope?</summary>
+      <div class="a">Yes. Many clients keep an existing MEP or joinery supplier. We coordinate them inside our programme and stay accountable for the sequence.</div>
+    </details>
+    <details>
+      <summary>What happens on the site visit?</summary>
+      <div class="a">A 45-minute survey: measurements, MEP condition, photographs and a walk through your chosen style. You get a scope document and cost range within three working days.</div>
+    </details>
+    <details>
+      <summary>How do milestone payments get approved?</summary>
+      <div class="a">Each milestone is posted to your account as photos and a video walk-through. You accept, reject with a reason, or ask for another shot. Once every item is accepted you sign off in one tap — and no sign-off means no payment and no handover visit.</div>
+    </details>
+    <details>
+      <summary>Do you handle furniture for short-stay units differently?</summary>
+      <div class="a">Yes — commercial-grade fabrics, sealed surfaces, replaceable soft goods and a spare-part list so a damaged item is swapped, not re-specified.</div>
+    </details>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <div class="cta-card">
+      <h2>Didn't find your answer?</h2>
+      <a class="btn" href="/#brief" data-track="cta_faq_brief">Start your brief →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="frow">
+    <a class="brand" href="/"><img src="assets/turnkii-logo.png" alt="Turnkii" /></a>
+    <a href="/">Home</a>
+    <a href="/#packages">Packages</a>
+    <a href="/privacy.html">Privacy policy</a>
+    <a href="/terms.html">Terms &amp; conditions</a>
+  </div>
+  <div class="fnote">© Turnkii — turnkey home finishing, furniture &amp; handover.</div>
+</footer>
+</body>
+</html>

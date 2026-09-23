@@ -527,6 +527,13 @@ PAGES = {
         "Projects & bulk units — Turnkii",
         "Finishing and furnishing at project scale for developers, investors and portfolios — whole buildings and multi-unit handovers under one contract, with volume pricing and staged delivery.",
     ),
+    # ── FAQ — dedicated page (moved off the homepage); the footer FAQ link lands
+    #    here. Carries the FAQPage structured data.
+    "Turnkii FAQ.dc.html": (
+        "faq.html",
+        "FAQ — Turnkii",
+        "Answers to what owners ask before booking a Turnkii survey — how it works, how pricing and milestone payments are structured, and what happens on the site visit.",
+    ),
     # ── Our recent work — a dedicated, indexed project-showcase page hosting the
     #    grouped gallery + deep-zoom viewer + per-image rating (feeds the hero).
     "Turnkii Recent Work.dc.html": (
@@ -746,7 +753,7 @@ def structured_data(slug, title, desc, ar=False):
             {"@type": "ListItem", "position": 1, "name": "Home", "item": base + "/"},
             {"@type": "ListItem", "position": 2, "name": crumb_name, "item": page_url},
         ]})
-    if slug == "index.html":
+    if slug == "faq.html":
         graph.append({"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
             for q, a in FAQ_QA]})
