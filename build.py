@@ -671,6 +671,9 @@ BIZ_DESC = ("Turnkii delivers turnkey home finishing, furniture, kitchens, HVAC,
 BIZ_SERVICES = ["Home finishing", "Furniture & FF&E", "Kitchens", "HVAC", "Shutters",
                 "Outdoor works", "Facility management"]
 BIZ_AREAS = ["Cairo", "New Cairo", "Sheikh Zayed", "Maadi", "North Coast"]
+# Official social/profile URLs — sameAs links help search + AI engines resolve the
+# brand to one entity.
+BIZ_SAMEAS = ["https://www.instagram.com/turnkii.app/"]
 # Kept in sync with the FAQS array in the homepage template.
 FAQ_QA = [
     ("What exactly is Turnkii?",
@@ -712,6 +715,8 @@ def structured_data(slug, title, desc, ar=False):
         "logo": logo, "image": f"{base}/og-image.png", "description": BIZ_DESC,
         "areaServed": {"@type": "Country", "name": "Egypt"},
     }
+    if BIZ_SAMEAS:
+        org["sameAs"] = BIZ_SAMEAS
     if tel:
         org["contactPoint"] = {"@type": "ContactPoint", "telephone": tel,
                                "contactType": "customer service", "areaServed": "EG",
@@ -732,6 +737,8 @@ def structured_data(slug, title, desc, ar=False):
     }
     if tel:
         business["telephone"] = tel
+    if BIZ_SAMEAS:
+        business["sameAs"] = BIZ_SAMEAS
     graph = [org, website, business]
     if slug != "index.html":
         crumb_name = re.split(r"\s[—|]\s", title)[0].strip() or title
@@ -1267,6 +1274,7 @@ def write_static():
         name = re.split(r"\s[—|]\s", ttl)[0].strip()
         llms_pages.append(f"- [{name}]({loc}): {dsc}")
     tel_line = f"\n- Contact: WhatsApp +{WHATSAPP}" if WHATSAPP else ""
+    social_line = f"\n- Instagram: {BIZ_SAMEAS[0]}" if BIZ_SAMEAS else ""
     open(os.path.join(DIST, "llms.txt"), "w", encoding="utf-8").write(
         "# Turnkii\n\n"
         f"> {BIZ_DESC}\n\n"
@@ -1277,7 +1285,7 @@ def write_static():
         "ranges shared after a 45-minute site visit, with a scope document in three working days.\n"
         "- Payments: milestone-gated, released only after photo/video sign-off; financing over 12–60 months, "
         "rent-backed plans and a plan-ahead saver.\n"
-        f"- Languages: English and Arabic.{tel_line}\n\n"
+        f"- Languages: English and Arabic.{tel_line}{social_line}\n\n"
         "## Pages\n" + "\n".join(llms_pages) + "\n")
     # sitemap
     urls = []
