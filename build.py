@@ -661,6 +661,93 @@ def rewrite_links(text):
     return text
 
 
+# ── Structured data (JSON-LD) — for rich results (SEO) and citeability by AI
+#    answer engines (GEO). A site-wide Organization + WebSite + LocalBusiness graph
+#    (with geographic + service signals), a per-page breadcrumb, and the FAQ on the
+#    homepage. Injected on indexed English pages only.
+BIZ_DESC = ("Turnkii delivers turnkey home finishing, furniture, kitchens, HVAC, shutters and "
+            "outdoor works under one contract in Cairo and the North Coast, Egypt — one programme, "
+            "one team, milestone payments and a photographed handover.")
+BIZ_SERVICES = ["Home finishing", "Furniture & FF&E", "Kitchens", "HVAC", "Shutters",
+                "Outdoor works", "Facility management"]
+BIZ_AREAS = ["Cairo", "New Cairo", "Sheikh Zayed", "Maadi", "North Coast"]
+# Kept in sync with the FAQS array in the homepage template.
+FAQ_QA = [
+    ("What exactly is Turnkii?",
+     "Turnkii is a turnkey property delivery platform. The work is executed by our vetted network of "
+     "contractors, workshops and suppliers, which we manage end to end — scoping, pricing, procurement, "
+     "programme, quality control and snagging — so the owner deals with us instead of chasing several "
+     "trades. Around that we add the financial and technology layer: payment plans, milestone-gated "
+     "payments, live progress tracking and after-handover care."),
+    ("How is pricing structured?",
+     "Finishing is quoted per square metre against a fixed scope; furniture and FF&E are quoted per unit "
+     "against the style and package you chose. Ranges are shared on the site visit, once we have measured."),
+    ("Can we keep our own contractor for part of the scope?",
+     "Yes. Many clients keep an existing MEP or joinery supplier. We coordinate them inside our programme "
+     "and stay accountable for the sequence."),
+    ("What happens on the site visit?",
+     "A 45-minute survey: measurements, MEP condition, photographs and a walk through your chosen style. "
+     "You get a scope document and cost range within three working days."),
+    ("How do milestone payments get approved?",
+     "Each milestone is posted to your account as photos and a video walk-through. You accept, reject with "
+     "a reason, or ask for another shot. Once every item is accepted you sign off in one tap — and no "
+     "sign-off means no payment and no handover visit."),
+    ("Do you handle furniture for short-stay units differently?",
+     "Yes — commercial-grade fabrics, sealed surfaces, replaceable soft goods and a spare-part list so a "
+     "damaged item is swapped, not re-specified."),
+]
+
+
+def structured_data(slug, title, desc, ar=False):
+    """JSON-LD graph for the page. Indexed English pages only."""
+    if ar or slug in NOINDEX_PAGES or slug in VARIANT_PAGES:
+        return ""
+    base = SITE_ORIGIN
+    org_id, web_id, biz_id = base + "/#organization", base + "/#website", base + "/#business"
+    logo = f"{base}/icon-512.png"
+    page_url = base + "/" + ("" if slug == "index.html" else slug)
+    tel = "+" + WHATSAPP if WHATSAPP else None
+    org = {
+        "@type": "Organization", "@id": org_id, "name": "Turnkii", "url": base + "/",
+        "logo": logo, "image": f"{base}/og-image.png", "description": BIZ_DESC,
+        "areaServed": {"@type": "Country", "name": "Egypt"},
+    }
+    if tel:
+        org["contactPoint"] = {"@type": "ContactPoint", "telephone": tel,
+                               "contactType": "customer service", "areaServed": "EG",
+                               "availableLanguage": ["en", "ar"]}
+    website = {"@type": "WebSite", "@id": web_id, "name": "Turnkii", "url": base + "/",
+               "publisher": {"@id": org_id}, "inLanguage": "en"}
+    business = {
+        "@type": ["LocalBusiness", "HomeAndConstructionBusiness", "GeneralContractor"],
+        "@id": biz_id, "name": "Turnkii", "url": base + "/", "logo": logo,
+        "image": f"{base}/og-image.png", "description": BIZ_DESC, "priceRange": "$$$",
+        "parentOrganization": {"@id": org_id},
+        "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressRegion": "Cairo"},
+        "areaServed": [{"@type": "Country", "name": "Egypt"}] + BIZ_AREAS,
+        "knowsLanguage": ["en", "ar"],
+        "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": s,
+                        "provider": {"@id": org_id}, "areaServed": {"@type": "Country", "name": "Egypt"}}}
+                       for s in BIZ_SERVICES],
+    }
+    if tel:
+        business["telephone"] = tel
+    graph = [org, website, business]
+    if slug != "index.html":
+        crumb_name = re.split(r"\s[—|]\s", title)[0].strip() or title
+        graph.append({"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": base + "/"},
+            {"@type": "ListItem", "position": 2, "name": crumb_name, "item": page_url},
+        ]})
+    if slug == "index.html":
+        graph.append({"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}
+            for q, a in FAQ_QA]})
+    doc = {"@context": "https://schema.org", "@graph": graph}
+    return ('\n<script type="application/ld+json">'
+            + json.dumps(doc, ensure_ascii=False, separators=(",", ":")) + "</script>")
+
+
 def meta_block(slug, title, desc, ar=False):
     base = f"{SITE_ORIGIN}/" + ("ar/" if ar else "")
     url = base + ("" if slug == "index.html" else slug)
@@ -715,7 +802,7 @@ def meta_block(slug, title, desc, ar=False):
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
-    ) + sections_style() + analytics_head()
+    ) + sections_style() + analytics_head() + structured_data(slug, title, desc, ar)
 
 
 # Container elements that wrap several verticals: tagged data-vertical-all="a,b"
@@ -1165,9 +1252,33 @@ def patch_support():
 
 
 def write_static():
-    # robots
+    # robots — allow all crawlers, including AI answer-engine bots (GEO), and point
+    # them at the sitemap + the llms.txt summary.
     open(os.path.join(DIST, "robots.txt"), "w").write(
-        "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE_ORIGIN)
+        "User-agent: *\nAllow: /\n"
+        f"Sitemap: {SITE_ORIGIN}/sitemap.xml\n")
+    # llms.txt — a concise, curated brief for AI answer engines (GEO). Generated
+    # from the indexed pages so new pages appear automatically.
+    llms_pages = []
+    for _src, (slug, ttl, dsc) in PAGES.items():
+        if slug in VARIANT_PAGES or slug in NOINDEX_PAGES:
+            continue
+        loc = SITE_ORIGIN + "/" + ("" if slug == "index.html" else slug[:-5] if slug.endswith(".html") else slug)
+        name = re.split(r"\s[—|]\s", ttl)[0].strip()
+        llms_pages.append(f"- [{name}]({loc}): {dsc}")
+    tel_line = f"\n- Contact: WhatsApp +{WHATSAPP}" if WHATSAPP else ""
+    open(os.path.join(DIST, "llms.txt"), "w", encoding="utf-8").write(
+        "# Turnkii\n\n"
+        f"> {BIZ_DESC}\n\n"
+        "## Key facts\n"
+        f"- Service area: {', '.join(BIZ_AREAS)} — Egypt.\n"
+        f"- Services: {', '.join(BIZ_SERVICES)}.\n"
+        "- Pricing: finishing quoted per square metre against a fixed scope; furniture and FF&E per unit; "
+        "ranges shared after a 45-minute site visit, with a scope document in three working days.\n"
+        "- Payments: milestone-gated, released only after photo/video sign-off; financing over 12–60 months, "
+        "rent-backed plans and a plan-ahead saver.\n"
+        f"- Languages: English and Arabic.{tel_line}\n\n"
+        "## Pages\n" + "\n".join(llms_pages) + "\n")
     # sitemap
     urls = []
     for src, (slug, *_rest) in PAGES.items():

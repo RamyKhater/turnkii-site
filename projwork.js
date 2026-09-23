@@ -24,7 +24,7 @@
       body: JSON.stringify({ index: im.index, value: val, voter: voterId() }),
     })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (res) { if (res && res.rating) { im.rating = res.rating; try { localStorage.setItem(voteKey(im), String(val)); } catch (e) {} if (view[idx] === im) paintRate(im); } })
+      .then(function (res) { if (res && res.rating) { im.rating = res.rating; try { localStorage.setItem(voteKey(im), String(val)); } catch (e) {} if (view[idx] === im) paintRate(im); try { if (window.tkTrack) window.tkTrack("rate_work", { value: val, service: im.category || "", page: location.pathname }); } catch (e) {} } })
       .catch(function () {});
   }
 
@@ -216,7 +216,8 @@
         : '<span class="pw-ravg" style="color:rgba(246,243,236,.55)">Be the first to rate</span>');
     box.innerHTML = '<span class="pw-rl">Rate this work</span><span class="pw-stars">' + stars + "</span>" + meta;
   }
-  function openAt(i) { ensureV(); idx = i; lastFocus = document.activeElement; paint(); V.hidden = false; requestAnimationFrame(function () { V.classList.add("pw-open"); }); document.body.classList.add("pw-lock"); q(".pw-close").focus(); }
+  function openAt(i) { ensureV(); idx = i; lastFocus = document.activeElement; paint(); V.hidden = false; requestAnimationFrame(function () { V.classList.add("pw-open"); }); document.body.classList.add("pw-lock"); q(".pw-close").focus();
+    try { var im = view[i] || {}; if (window.tkTrack) window.tkTrack("view_work_image", { service: im.category || "", page: location.pathname }); } catch (e) {} }
   function closeV() { V.classList.remove("pw-open"); document.body.classList.remove("pw-lock"); setTimeout(function () { V.hidden = true; vimg.src = ""; }, 200); if (lastFocus && lastFocus.focus) lastFocus.focus(); }
   function go(d) { idx = (idx + d + view.length) % view.length; paint(); }
   function wireViewer() {
