@@ -8,7 +8,16 @@
  *  - and the "My account" link moved to the end of the nav. */
 (function () {
   var WORK = "/our-work", WORK_LABEL = "Our recent work";
-  var BOOK = "/book", BOOK_LABEL = "Book a meeting";
+  var BOOK_LABEL = "Book a meeting";
+  // Context-aware booking link: on a service page, prefill the meeting type +
+  // service so the booking is tagged with where it came from.
+  function BOOK() {
+    var p = location.pathname;
+    if (/\/care(\.html)?$/.test(p)) return "/book?svc=" + encodeURIComponent("Care & maintenance");
+    if (/\/facility(\.html)?$/.test(p)) return "/book?type=site&svc=" + encodeURIComponent("Facility management");
+    if (/\/projects(\.html)?$/.test(p)) return "/book?svc=" + encodeURIComponent("Projects & bulk");
+    return "/book";
+  }
 
   function txt(el) { return (el.textContent || "").trim().toLowerCase(); }
   function navEl() { return document.querySelector("header .tk-nav") || document.querySelector("header nav") || document.querySelector(".tk-nav"); }
@@ -30,9 +39,9 @@
   function ensureBookNav() {
     var nav = navEl(); if (!nav) return;
     var links = nav.querySelectorAll("a"), i;
-    for (i = 0; i < links.length; i++) if (txt(links[i]) === "book a meeting") { links[i].setAttribute("href", BOOK); return; }
+    for (i = 0; i < links.length; i++) if (txt(links[i]) === "book a meeting") { links[i].setAttribute("href", BOOK()); return; }
     if (nav.querySelector('a[data-worklink="booknav"]')) return;
-    var cta = firstCta(nav), a = mkLink(BOOK, BOOK_LABEL, "booknav", plainNavStyle(nav));
+    var cta = firstCta(nav), a = mkLink(BOOK(), BOOK_LABEL, "booknav", plainNavStyle(nav));
     if (cta) nav.insertBefore(a, cta); else nav.appendChild(a);
   }
 
@@ -56,7 +65,7 @@
     var wrap = document.createElement("div");
     wrap.setAttribute("data-worklink", "tybookwrap");
     wrap.setAttribute("style", "margin:22px 0;");
-    var b = mkLink(BOOK, "Book your survey now →", "tybook",
+    var b = mkLink(BOOK(), "Book your survey now →", "tybook",
       "display:inline-flex;align-items:center;gap:8px;background:#D6F23C;color:#12130E;font-weight:700;font-size:15px;padding:14px 24px;border-radius:999px;");
     wrap.appendChild(b);
     h.insertAdjacentElement("afterend", wrap);
@@ -74,7 +83,7 @@
     try {
       ensureWorkNav(); ensureBookNav();
       footerLink("footer", WORK, WORK_LABEL, /recent work/);
-      footerLink("bookfooter", BOOK, BOOK_LABEL, /book a meeting/);
+      footerLink("bookfooter", BOOK(), BOOK_LABEL, /book a meeting/);
       ensureThankYouBook(); ensureAccountLast();
     } catch (e) {}
   }

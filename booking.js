@@ -47,6 +47,14 @@
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
   var data = null, sel = { date: null, time: null, type: null }, busy = false;
+  // Prefill from query params so entry points can preset the meeting type, the
+  // service context, and known contact details (e.g. /book?type=site&svc=Facility).
+  var Q = new URLSearchParams(location.search);
+  var pre = {
+    type: Q.get("type"), svc: (Q.get("svc") || "").slice(0, 60),
+    name: (Q.get("name") || "").slice(0, 120), phone: (Q.get("phone") || "").slice(0, 40),
+    email: (Q.get("email") || "").slice(0, 160), location: (Q.get("location") || "").slice(0, 200),
+  };
   mount.classList.add("bk");
   mount.innerHTML = '<div class="bk-empty">Loading available times…</div>';
 
@@ -55,6 +63,7 @@
     .then(function (d) {
       if (!d) { mount.innerHTML = '<div class="bk-err">Couldn’t load available times. Please try again.</div>'; return; }
       data = d; sel.type = (d.types && d.types[0]) || "online";
+      if (pre.type && d.types && d.types.indexOf(pre.type) > -1) sel.type = pre.type;
       if (d.days && d.days[0]) sel.date = d.days[0].date;
       render();
     })
@@ -87,10 +96,10 @@
       '<div class="bk-h">Pick a time <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">· ' + esc(data.tz ? data.tz.replace("_", " ") : "local") + " time</span></div>" +
       '<div class="bk-times">' + timeHtml + "</div>" +
       '<form class="bk-form" novalidate>' +
-        '<div class="full"><label>Full name<input name="name" required maxlength="120" /></label></div>' +
-        '<div><label>Phone<input name="phone" required maxlength="40" inputmode="tel" /></label></div>' +
-        '<div><label>Email<input name="email" type="email" maxlength="160" /></label></div>' +
-        (onsite ? '<div class="full"><label>Property address / location<input name="location" maxlength="200" /></label></div>' : "") +
+        '<div class="full"><label>Full name<input name="name" required maxlength="120" value="' + esc(pre.name) + '" /></label></div>' +
+        '<div><label>Phone<input name="phone" required maxlength="40" inputmode="tel" value="' + esc(pre.phone) + '" /></label></div>' +
+        '<div><label>Email<input name="email" type="email" maxlength="160" value="' + esc(pre.email) + '" /></label></div>' +
+        (onsite ? '<div class="full"><label>Property address / location<input name="location" maxlength="200" value="' + esc(pre.location) + '" /></label></div>' : "") +
         '<div class="full"><label>Anything we should know? <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">(optional)</span><textarea name="message" rows="2" maxlength="2000"></textarea></label></div>' +
         '<div class="bk-cta"><button type="submit" class="bk-btn">Confirm booking →</button><div class="bk-note">You’ll get a confirmation email with a calendar invite' + (sel.type === "online" ? " and your meeting link." : ".") + '</div><div class="bk-errwrap"></div></div>' +
       "</form>";
@@ -119,6 +128,7 @@
       date: sel.date, time: sel.time, type: sel.type,
       location: String(fd.get("location") || "").trim() || undefined,
       message: String(fd.get("message") || "").trim() || undefined,
+      services: pre.svc ? [pre.svc] : undefined,
       utmSource: attrib.utm_source, utmMedium: attrib.utm_medium, utmCampaign: attrib.utm_campaign,
       gclid: attrib.gclid, fbclid: attrib.fbclid,
     };
