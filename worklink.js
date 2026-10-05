@@ -81,7 +81,7 @@
 
   function run() {
     try {
-      ensureWorkNav(); ensureBookNav();
+      ensureWorkNav();
       footerLink("footer", WORK, WORK_LABEL, /recent work/);
       footerLink("bookfooter", BOOK(), BOOK_LABEL, /book a meeting/);
       ensureThankYouBook(); ensureAccountLast();

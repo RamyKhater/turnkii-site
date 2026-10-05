@@ -85,6 +85,10 @@ BOOKING_URL = os.environ.get("TURNKII_BOOKING_URL", "").strip() or (
 BOOKING_AVAILABILITY_URL = os.environ.get("TURNKII_BOOKING_AVAILABILITY_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/booking/availability") if INTAKE_URL else ""
 )
+# Tokened reschedule/cancel endpoint the /manage-booking page reads + writes.
+BOOKING_MANAGE_URL = os.environ.get("TURNKII_BOOKING_MANAGE_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/booking/manage") if INTAKE_URL else ""
+)
 # Homepage: fetch the overall client rating and fill any [data-rating-slot]. Shown
 # only past a small threshold, and re-filled via MutationObserver so it survives
 # the design-canvas re-renders. Injected on the home page only.
@@ -131,7 +135,7 @@ VARIANT_PAGES = {"b.html", "brief.html"}
 
 # Internal admin consoles: reachable by URL, but kept out of the index and the
 # sitemap. Unlike VARIANT_PAGES they carry no experiment tag.
-NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html", "sow.html", "pj.html"}
+NOINDEX_PAGES = {"pricing-admin.html", "progress-admin.html", "thank-you.html", "p.html", "w.html", "sow.html", "pj.html", "manage-booking.html"}
 
 
 # ── Analytics / marketing tags. All optional — each vendor activates only when
@@ -537,6 +541,11 @@ PAGES = {
     ),
     # ── Book a meeting — dedicated slot-picker page (fed by the admin's
     #    availability API); books online meetings (with a link) or on-site surveys.
+    "Turnkii Manage Booking.dc.html": (
+        "manage-booking.html",
+        "Manage your booking — Turnkii",
+        "Reschedule or cancel your Turnkii meeting.",
+    ),
     "Turnkii Book.dc.html": (
         "book.html",
         "Book a meeting — Turnkii",
@@ -832,6 +841,8 @@ def meta_block(slug, title, desc, ar=False):
         f'\n<script>window.TURNKII_BOOKING_URL="{BOOKING_URL}";</script>' if BOOKING_URL else ""
     ) + (
         f'\n<script>window.TURNKII_BOOKING_AVAILABILITY_URL="{BOOKING_AVAILABILITY_URL}";</script>' if BOOKING_AVAILABILITY_URL else ""
+    ) + (
+        f'\n<script>window.TURNKII_BOOKING_MANAGE_URL="{BOOKING_MANAGE_URL}";</script>' if BOOKING_MANAGE_URL else ""
     ) + REF_CAPTURE + (
         f"\n<script>window.TURNKII_CONTENT={json.dumps(CONTENT, ensure_ascii=False)};</script>{TK_HELPER}"
         if CONTENT else ""
@@ -1246,6 +1257,10 @@ def build_page(src_name):
     if slug == "book.html" and BOOKING_AVAILABILITY_URL:
         text = text.replace("</body>", '<script defer src="/booking.js"></script>\n</body>', 1)
 
+    # /manage-booking: reschedule/cancel widget.
+    if slug == "manage-booking.html" and BOOKING_MANAGE_URL:
+        text = text.replace("</body>", '<script defer src="/managebooking.js"></script>\n</body>', 1)
+
     # admin copy overrides — applied last so they hit both the live template and
     # the injected prerender snapshot (footer, headings, body… all overridable).
     if COPY_OVERRIDES:
@@ -1467,6 +1482,9 @@ def main():
     # booking.js — the "Book a meeting" slot-picker widget on /book.
     if os.path.exists(os.path.join(ROOT, "booking.js")):
         shutil.copy(os.path.join(ROOT, "booking.js"), os.path.join(DIST, "booking.js"))
+    # managebooking.js — the /manage-booking reschedule/cancel widget.
+    if os.path.exists(os.path.join(ROOT, "managebooking.js")):
+        shutil.copy(os.path.join(ROOT, "managebooking.js"), os.path.join(DIST, "managebooking.js"))
     # doc-page.js — the paged-document (print-to-PDF) runtime the hidden /sow
     # Scope of Work page loads; ship it so the customer document paginates + prints.
     if os.path.exists(os.path.join(ROOT, "doc-page.js")):
