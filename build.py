@@ -1223,7 +1223,9 @@ def build_page(src_name):
     # site-wide: a header-nav + footer link to the dedicated /our-work page
     # (repoints any existing "recent work" link, else inserts one). Skips the
     # noindex consoles and the page itself.
-    if slug not in NOINDEX_PAGES and slug != "our-work.html":
+    # worklink.js runs on indexed public pages, plus the thank-you page (so the
+    # post-brief "Book your survey" CTA appears there even though it's noindex).
+    if (slug not in NOINDEX_PAGES or slug == "thank-you.html") and slug != "our-work.html":
         text = text.replace("</body>", '<script defer src="/worklink.js"></script>\n</body>', 1)
 
     # /our-work: admin-set hero background photo (content block "ourWork.image").
