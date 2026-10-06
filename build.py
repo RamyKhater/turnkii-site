@@ -484,7 +484,7 @@ def bake_hero(text):
 
 # source page -> (slug, title, description)
 PAGES = {
-    "Turnkii v3.dc.html": (
+    "Turnkii v5.dc.html": (
         "index.html",
         "Turnkii — Turnkey home finishing, furniture & handover",
         "Finishing, furniture, kitchens, HVAC, shutters and outdoor delivered under one contract in Cairo and the North Coast — one programme, one team, photographed handover.",
@@ -1214,8 +1214,12 @@ def build_page(src_name):
 
     # floating WhatsApp click-to-chat button + cookie-consent banner on public
     # pages (not the internal admin consoles baked into the site).
+    # The v5 homepage ships its own mobile sticky estimate bar as its primary
+    # bottom CTA, so the site-wide floating WhatsApp button is skipped there (it
+    # would overlap that bar); the cookie-consent banner still shows everywhere.
     if slug not in NOINDEX_PAGES:
-        text = text.replace("</body>", whatsapp_widget() + consent_banner() + "\n</body>", 1)
+        wa = whatsapp_widget() if slug != "index.html" else ""
+        text = text.replace("</body>", wa + consent_banner() + "\n</body>", 1)
 
     # overall client-rating badge (fills [data-rating-slot]) — the homepage hero
     # and the dedicated Our-recent-work page.
@@ -1236,7 +1240,9 @@ def build_page(src_name):
     # noindex consoles and the page itself.
     # worklink.js runs on indexed public pages, plus the thank-you page (so the
     # post-brief "Book your survey" CTA appears there even though it's noindex).
-    if (slug not in NOINDEX_PAGES or slug == "thank-you.html") and slug != "our-work.html":
+    # index.html (v5 homepage) ships its own nav + footer and its own brief, so the
+    # site-wide work link / "book a meeting" injection is skipped there.
+    if (slug not in NOINDEX_PAGES or slug == "thank-you.html") and slug not in ("our-work.html", "index.html"):
         text = text.replace("</body>", '<script defer src="/worklink.js"></script>\n</body>', 1)
 
     # /our-work: admin-set hero background photo (content block "ourWork.image").

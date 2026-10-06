@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="pricing.js"></script>
+<script src="image-slot.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #F4F2EC; font-family: Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #12130E; }
+  * { box-sizing: border-box; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: inherit; }
+  input, select, textarea, button { font-family: inherit; }
+  ::selection { background: #D6F23C; color: #12130E; }
+  input[type=range] { accent-color: #D6F23C; }
+</style>
+</helmet>
+
+<div id="top" style="background: #F4F2EC; overflow-x: hidden; padding-bottom: {{ pagePad }};">
+
+  <header style="position: sticky; top: 0; z-index: 70; background: rgba(244,242,236,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid #E6E3DA;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 12px clamp(16px, 3vw, 40px); display: flex; align-items: center; gap: 20px;">
+      <a href="#top" style="display: flex; align-items: center; flex: 0 0 auto; background: #12130E; border-radius: 999px; padding: 9px 15px;"><img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 16px; width: auto; display: block;" /></a>
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+        <nav style="display: flex; align-items: center; gap: 2px; flex: 1 1 auto; justify-content: center;">
+          <a href="#how" style="color: #55564B; font-size: 14.5px; font-weight: 500; padding: 8px 13px; border-radius: 999px;" style-hover="color: #12130E; background: #EAE7DE;">How it works</a>
+          <a href="#pricing" style="color: #55564B; font-size: 14.5px; font-weight: 500; padding: 8px 13px; border-radius: 999px;" style-hover="color: #12130E; background: #EAE7DE;">Pricing</a>
+          <a href="#proof" style="color: #55564B; font-size: 14.5px; font-weight: 500; padding: 8px 13px; border-radius: 999px;" style-hover="color: #12130E; background: #EAE7DE;">Projects</a>
+          <a href="#styles" style="color: #55564B; font-size: 14.5px; font-weight: 500; padding: 8px 13px; border-radius: 999px;" style-hover="color: #12130E; background: #EAE7DE;">Styles</a>
+          <a href="Turnkii Marketplace.dc.html" style="color: #55564B; font-size: 14.5px; font-weight: 500; padding: 8px 13px; border-radius: 999px;" style-hover="color: #12130E; background: #EAE7DE;">Shop</a>
+        </nav>
+        <a href="Turnkii Account.dc.html#account" style="flex: 0 0 auto; color: #12130E; font-size: 14.5px; font-weight: 600; padding: 10px 12px;" style-hover="color: #55564B;">Sign in</a>
+      </sc-if>
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+        <span style="flex: 1 1 auto;"></span>
+      </sc-if>
+      <button type="button" onClick="{{ openBrief }}" style="flex: 0 0 auto; cursor: pointer; border: none; background: #12130E; color: #FFFFFF; font-size: 14.5px; font-weight: 600; padding: 11px 18px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px;" style-hover="background: #2B2C24;">Get estimate <span style="color: #D6F23C;">→</span></button>
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+        <button type="button" aria-label="Menu" onClick="{{ toggleMenu }}" style="flex: 0 0 auto; cursor: pointer; width: 44px; height: 44px; border-radius: 999px; border: 1px solid #DAD6CB; background: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#12130E" stroke-width="2" stroke-linecap="round"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg>
+        </button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <nav style="display: flex; flex-direction: column; padding: 4px 16px 16px; border-top: 1px solid #E6E3DA; background: #F4F2EC;">
+        <a href="#how" onClick="{{ closeMenu }}" style="font-size: 17px; font-weight: 600; padding: 14px 4px; border-bottom: 1px solid #E6E3DA;">How it works</a>
+        <a href="#pricing" onClick="{{ closeMenu }}" style="font-size: 17px; font-weight: 600; padding: 14px 4px; border-bottom: 1px solid #E6E3DA;">Pricing</a>
+        <a href="#proof" onClick="{{ closeMenu }}" style="font-size: 17px; font-weight: 600; padding: 14px 4px; border-bottom: 1px solid #E6E3DA;">Projects</a>
+        <a href="#styles" onClick="{{ closeMenu }}" style="font-size: 17px; font-weight: 600; padding: 14px 4px; border-bottom: 1px solid #E6E3DA;">Styles</a>
+        <a href="Turnkii Marketplace.dc.html" style="font-size: 17px; font-weight: 600; padding: 14px 4px; border-bottom: 1px solid #E6E3DA;">Shop furniture</a>
+        <a href="Turnkii Account.dc.html#account" style="font-size: 17px; font-weight: 700; padding: 14px 4px;">Sign in</a>
+      </nav>
+    </sc-if>
+  </header>
+
+  <section style="max-width: 1240px; margin: 0 auto; padding: clamp(36px, 6vw, 88px) clamp(16px, 3vw, 40px) clamp(40px, 5vw, 72px); display: flex; gap: clamp(32px, 5vw, 80px); flex-wrap: wrap; align-items: center;">
+    <div style="flex: 1 1 480px; min-width: 0;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 999px; padding: 6px 13px 6px 8px; font-size: 13.5px; font-weight: 500; color: #3A3B32;">
+        <span style="width: 18px; height: 18px; border-radius: 99px; background: #D6F23C; display: flex; align-items: center; justify-content: center;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#12130E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        {{ heroKicker }}
+      </div>
+      <h1 style="font-size: clamp(40px, 5.4vw, 70px); line-height: 1.0; letter-spacing: -0.045em; font-weight: 700; margin: 22px 0 0; max-width: 13ch; text-wrap: balance;">{{ heroTitle }}</h1>
+      <p style="font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: #55564B; margin: 22px 0 0; max-width: 46ch; text-wrap: pretty;">Turnkii designs, finishes and furnishes your unit for a fixed price. You follow every week on video and pay only when you approve the work.</p>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 28px;">
+        <sc-for list="{{ heroChecks }}" as="hc" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500;">
+            <span style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; background: #12130E; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D6F23C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+            {{ hc }}
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; margin-top: 30px; flex-wrap: wrap;">
+        <span style="display: flex; gap: 2px;">
+          <sc-for list="{{ stars }}" as="st" hint-placeholder-count="5">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#12130E"><path d="M12 2.8l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 17l-5.8 3.3 1.4-6.4-4.9-4.4 6.5-.7z"></path></svg>
+          </sc-for>
+        </span>
+        <span style="font-size: 14.5px; font-weight: 600;">4.9 / 5</span>
+        <span style="font-size: 14.5px; color: #55564B;">from 120+ owners, most of them abroad</span>
+      </div>
+    </div>
+
+    <div style="flex: 1 1 400px; min-width: 0; max-width: 500px; margin: 0 auto;">
+      <div style="background: #12130E; color: #FFFFFF; border-radius: 28px; padding: clamp(22px, 2.6vw, 30px); box-shadow: 0 40px 80px -40px rgba(18,19,14,0.55);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+          <span style="font-size: 18px; font-weight: 600; letter-spacing: -0.02em;">What will it cost?</span>
+          <span style="font-family: 'Geist Mono', monospace; font-size: 11.5px; color: rgba(255,255,255,0.6);">LIVE RATES · 2026</span>
+        </div>
+        <div style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66); margin-top: 20px;">What do you need?</div>
+        <div style="display: flex; gap: 4px; margin-top: 9px; background: rgba(255,255,255,0.08); padding: 4px; border-radius: 14px;">
+          <sc-for list="{{ quickScopes }}" as="q" hint-placeholder-count="3">
+            <button type="button" onClick="{{ q.onPick }}" style="flex: 1 1 0; min-width: 0; cursor: pointer; border: none; border-radius: 11px; padding: 12px 6px; font-size: 14px; font-weight: 600; background: {{ q.bg }}; color: {{ q.fg }}; min-height: 44px;">{{ q.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 22px;">
+          <label for="tk-area" style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66);">Unit size</label>
+          <span style="font-family: 'Geist Mono', monospace; font-size: 15px; font-weight: 500;">{{ quickArea }} m²</span>
+        </div>
+        <input id="tk-area" type="range" min="60" max="450" step="5" value="{{ quickArea }}" onInput="{{ onQuickArea }}" style="width: 100%; margin: 10px 0 0; height: 28px;" />
+        <div style="margin-top: 18px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12);">
+          <div style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66);">Estimated total</div>
+          <div style="font-size: clamp(34px, 4vw, 46px); font-weight: 700; letter-spacing: -0.045em; line-height: 1; color: #D6F23C; margin-top: 8px;">{{ quickRange }}</div>
+          <div style="font-size: 14px; color: rgba(255,255,255,0.72); margin-top: 10px;">{{ quickMeta }}</div>
+        </div>
+        <button type="button" onClick="{{ openBrief }}" style="width: 100%; margin-top: 22px; cursor: pointer; border: none; background: #D6F23C; color: #12130E; border-radius: 16px; padding: 17px 20px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="background: #E4FF5C;">Get my detailed estimate <span style="font-size: 18px;">→</span></button>
+        <div style="display: flex; justify-content: center; gap: 8px 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: rgba(255,255,255,0.6);">
+          <span>2 minutes</span><span>·</span><span>No site visit</span><span>·</span><span>No obligation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showPartners }}" hint-placeholder-val="{{ true }}">
+    <section style="background: #FFFFFF; border-top: 1px solid #E6E3DA; border-bottom: 1px solid #E6E3DA;">
+      <div style="max-width: 1240px; margin: 0 auto; padding: 22px clamp(16px, 3vw, 40px); display: flex; gap: 14px 28px; align-items: center; flex-wrap: wrap; justify-content: space-between;">
+        <span style="font-size: 14px; font-weight: 500; color: #55564B;">Approved contractor in compounds by</span>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <image-slot id="partner-1" shape="rounded" radius="8" placeholder="Logo" style="width: 132px; height: 44px; display: block;"></image-slot>
+          <image-slot id="partner-2" shape="rounded" radius="8" placeholder="Logo" style="width: 132px; height: 44px; display: block;"></image-slot>
+          <image-slot id="partner-3" shape="rounded" radius="8" placeholder="Logo" style="width: 132px; height: 44px; display: block;"></image-slot>
+          <image-slot id="partner-4" shape="rounded" radius="8" placeholder="Logo" style="width: 132px; height: 44px; display: block;"></image-slot>
+          <image-slot id="partner-5" shape="rounded" radius="8" placeholder="Logo" style="width: 132px; height: 44px; display: block;"></image-slot>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <section id="how" style="scroll-margin-top: 72px; max-width: 1240px; margin: 0 auto; padding: clamp(60px, 7vw, 104px) clamp(16px, 3vw, 40px);">
+    <div style="max-width: 640px;">
+      <div style="font-size: 14px; font-weight: 600; color: #55564B;">How it works</div>
+      <h2 style="font-size: clamp(32px, 4vw, 50px); line-height: 1.04; letter-spacing: -0.04em; font-weight: 700; margin: 12px 0 0; text-wrap: balance;">Four steps. All of them from your phone.</h2>
+      <p style="font-size: 17px; line-height: 1.6; color: #55564B; margin: 16px 0 0; max-width: 52ch;">Our vetted contractor network does the building. Turnkii prices it, manages it and answers for it.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; margin-top: clamp(32px, 4vw, 52px);">
+
+      <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 24px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="background: #F4F2EC; border-radius: 16px; height: 168px; display: flex; align-items: center; justify-content: center; padding: 16px;">
+          <div style="width: 100%; background: #FFFFFF; border-radius: 14px; padding: 14px; box-shadow: 0 10px 24px -16px rgba(18,19,14,0.35);">
+            <div style="font-size: 11.5px; font-weight: 500; color: #55564B;">Your estimate</div>
+            <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.04em; margin-top: 4px;">{{ quickRange }}</div>
+            <div style="height: 5px; border-radius: 99px; background: #EAE7DE; margin-top: 12px; overflow: hidden;"><div style="width: 72%; height: 100%; background: #12130E; border-radius: 99px;"></div></div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; color: #55564B; margin-top: 7px;">CONFIDENCE 72%</div>
+          </div>
+        </div>
+        <div style="padding: 0 8px;">
+          <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #55564B;">01</div>
+          <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.025em; margin-top: 6px;">Get a price</div>
+          <div style="font-size: 15px; line-height: 1.55; color: #55564B; margin-top: 6px;">Answer four questions. See a range from our live rate card instantly.</div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 24px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="background: #F4F2EC; border-radius: 16px; height: 168px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px;">
+          <img src="assets/style-warm.jpg" alt="Warm Modern" style="width: 31%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; display: block; outline: 2.5px solid #12130E; outline-offset: 2px;" />
+          <img src="assets/style-coastal.jpg" alt="Coastal" style="width: 31%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; display: block;" />
+          <img src="assets/style-neoclassic.png" alt="Neoclassic" style="width: 31%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; display: block;" />
+        </div>
+        <div style="padding: 0 8px;">
+          <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #55564B;">02</div>
+          <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.025em; margin-top: 6px;">Choose a style</div>
+          <div style="font-size: 15px; line-height: 1.55; color: #55564B; margin-top: 6px;">Five priced looks. Preview any of them in a photo of your own room.</div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 24px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="background: #F4F2EC; border-radius: 16px; height: 168px; position: relative; overflow: hidden;">
+          <img src="assets/style-eclectic.jpg" alt="Weekly site video" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+          <span style="position: absolute; left: 10px; right: 10px; bottom: 10px; background: rgba(255,255,255,0.94); border-radius: 12px; padding: 9px 10px; display: flex; align-items: center; gap: 9px;">
+            <span style="flex: 0 0 auto; width: 26px; height: 26px; border-radius: 99px; background: #12130E; display: flex; align-items: center; justify-content: center;"><svg width="10" height="10" viewBox="0 0 24 24" fill="#D6F23C"><path d="M7 4l13 8-13 8z"></path></svg></span>
+            <span style="flex: 1 1 auto; min-width: 0; font-size: 12.5px; font-weight: 600;">Week 7 · Kitchen installed</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 600;">68%</span>
+          </span>
+        </div>
+        <div style="padding: 0 8px;">
+          <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #55564B;">03</div>
+          <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.025em; margin-top: 6px;">Watch it built</div>
+          <div style="font-size: 15px; line-height: 1.55; color: #55564B; margin-top: 6px;">Photos and a video walk-through in the app every Thursday.</div>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 24px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 18px;">
+        <div style="background: #F4F2EC; border-radius: 16px; height: 168px; display: flex; align-items: center; justify-content: center; padding: 16px;">
+          <div style="width: 100%; background: #FFFFFF; border-radius: 14px; padding: 14px; box-shadow: 0 10px 24px -16px rgba(18,19,14,0.35);">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+              <span style="font-size: 13px; font-weight: 600;">Milestone 3</span>
+              <span style="font-family: 'Geist Mono', monospace; font-size: 10.5px; font-weight: 600; background: #F1FAC4; padding: 4px 8px; border-radius: 999px;">22/22 OK</span>
+            </div>
+            <div style="margin-top: 12px; background: #12130E; color: #FFFFFF; border-radius: 10px; padding: 11px; text-align: center; font-size: 13px; font-weight: 600;">Sign off &amp; release payment</div>
+          </div>
+        </div>
+        <div style="padding: 0 8px;">
+          <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #55564B;">04</div>
+          <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.025em; margin-top: 6px;">Approve, then pay</div>
+          <div style="font-size: 15px; line-height: 1.55; color: #55564B; margin-top: 6px;">Nothing is paid until you sign off. From anywhere, by transfer.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 22px; display: flex; align-items: center; gap: 14px 20px; flex-wrap: wrap;">
+      <button type="button" onClick="{{ openBrief }}" style="cursor: pointer; border: none; background: #12130E; color: #FFFFFF; border-radius: 999px; padding: 15px 22px; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px;" style-hover="background: #2B2C24;">Start step one <span style="color: #D6F23C;">→</span></button>
+      <span style="font-size: 14.5px; color: #55564B;">Takes about two minutes.</span>
+    </div>
+  </section>
+
+  <section id="pricing" style="scroll-margin-top: 72px; background: #FFFFFF; border-top: 1px solid #E6E3DA; border-bottom: 1px solid #E6E3DA;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: clamp(60px, 7vw, 104px) clamp(16px, 3vw, 40px);">
+      <div style="display: flex; gap: 16px 48px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+        <div style="min-width: 0; flex: 1 1 420px;">
+          <div style="font-size: 14px; font-weight: 600; color: #55564B;">Pricing</div>
+          <h2 style="font-size: clamp(32px, 4vw, 50px); line-height: 1.04; letter-spacing: -0.04em; font-weight: 700; margin: 12px 0 0; max-width: 18ch; text-wrap: balance;">Clear prices, before anyone visits.</h2>
+        </div>
+        <p style="flex: 1 1 320px; min-width: 0; font-size: 16px; line-height: 1.6; color: #55564B; margin: 0; max-width: 42ch;">Shown for a {{ quickArea }} m² unit, finishing plus furniture. Fixed once we survey.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 14px; margin-top: clamp(30px, 3.6vw, 48px); align-items: stretch;">
+        <sc-for list="{{ packages }}" as="pk" hint-placeholder-count="3">
+          <div style="border-radius: 24px; padding: 26px; background: {{ pk.bg }}; color: {{ pk.fg }}; border: 1px solid {{ pk.bc }}; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">{{ pk.name }}</span>
+              <span style="font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: {{ pk.tagBg }}; color: {{ pk.tagFg }};">{{ pk.tag }}</span>
+            </div>
+            <div>
+              <div style="font-size: 36px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; color: {{ pk.priceColor }};">{{ pk.total }}</div>
+              <div style="font-size: 14px; margin-top: 9px; color: {{ pk.sub }};">{{ pk.rate }} · or {{ pk.monthly }}/month</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 1px solid {{ pk.line }};">
+              <sc-for list="{{ pk.items }}" as="it" hint-placeholder-count="3">
+                <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ pk.tick }}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto; margin-top: 2px;"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+                  <span>{{ it }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ pk.onPick }}" style="margin-top: auto; cursor: pointer; border: {{ pk.btnBorder }}; border-radius: 14px; padding: 15px 18px; font-size: 15px; font-weight: 700; background: {{ pk.btnBg }}; color: {{ pk.btnFg }};">Get {{ pk.name }} estimate</button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 10px 24px; flex-wrap: wrap; margin-top: 24px;">
+        <sc-for list="{{ payNotes }}" as="pn" hint-placeholder-count="4">
+          <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 500; color: #3A3B32;">
+            <span style="width: 6px; height: 6px; border-radius: 99px; background: #12130E;"></span>{{ pn }}
+          </span>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" style="scroll-margin-top: 72px; max-width: 1240px; margin: 0 auto; padding: clamp(60px, 7vw, 104px) clamp(16px, 3vw, 40px);">
+    <div style="font-size: 14px; font-weight: 600; color: #55564B;">Projects</div>
+    <h2 style="font-size: clamp(32px, 4vw, 50px); line-height: 1.04; letter-spacing: -0.04em; font-weight: 700; margin: 12px 0 0; max-width: 20ch; text-wrap: balance;">Handed over to owners who weren't there.</h2>
+
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: clamp(30px, 3.6vw, 48px); align-items: stretch;">
+      <div style="flex: 1.5 1 480px; min-width: 0; border-radius: 24px; overflow: hidden; position: relative; aspect-ratio: 4 / 3; background: #2B2C24;">
+        <img src="{{ project.after }}" alt="After" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;" />
+        <div style="position: absolute; inset: 0; clip-path: inset(0 {{ clipRight }} 0 0); background: #3A3B33;">
+          <image-slot id="{{ project.slot }}" shape="rect" placeholder="Before photo" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;"></image-slot>
+        </div>
+        <div style="position: absolute; top: 0; bottom: 0; left: {{ split }}; width: 2px; background: #FFFFFF; transform: translateX(-1px); pointer-events: none;">
+          <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; border-radius: 99px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#12130E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6"></path><path d="M15 6l6 6-6 6"></path></svg></span>
+        </div>
+        <span style="position: absolute; left: 14px; top: 14px; background: #12130E; color: #FFFFFF; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; pointer-events: none;">Before</span>
+        <span style="position: absolute; right: 14px; top: 14px; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; pointer-events: none;">After</span>
+        <input type="range" min="0" max="100" value="{{ splitNum }}" onInput="{{ onSplit }}" aria-label="Compare before and after" style="position: absolute; left: 14px; right: 14px; bottom: 14px; width: calc(100% - 28px); height: 32px; margin: 0; cursor: ew-resize; z-index: 3;" />
+      </div>
+
+      <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{ projects }}" as="pj" hint-placeholder-count="3">
+          <button type="button" onClick="{{ pj.onPick }}" style="cursor: pointer; text-align: left; border: 1.5px solid {{ pj.bc }}; background: {{ pj.bg }}; color: #12130E; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 5px;">
+            <span style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px; font-weight: 500; color: #55564B;"><span>{{ pj.loc }}</span><span>{{ pj.weeks }}</span></span>
+            <span style="font-size: 16.5px; font-weight: 700; letter-spacing: -0.02em;">{{ pj.title }}</span>
+            <span style="font-size: 14px; color: #55564B;">{{ pj.owner }}</span>
+          </button>
+        </sc-for>
+        <div style="margin-top: auto; background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 18px; padding: 20px;">
+          <div style="display: flex; gap: 2px;">
+            <sc-for list="{{ stars }}" as="st" hint-placeholder-count="5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#12130E"><path d="M12 2.8l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 17l-5.8 3.3 1.4-6.4-4.9-4.4 6.5-.7z"></path></svg>
+            </sc-for>
+          </div>
+          <div style="font-size: 16px; line-height: 1.55; margin-top: 12px;">“{{ project.quote }}”</div>
+          <div style="font-size: 14px; font-weight: 600; color: #55564B; margin-top: 12px;">{{ project.who }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="styles" style="scroll-margin-top: 72px; background: #FFFFFF; border-top: 1px solid #E6E3DA; border-bottom: 1px solid #E6E3DA;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: clamp(60px, 7vw, 100px) clamp(16px, 3vw, 40px);">
+      <div style="display: flex; gap: 16px 40px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+        <div style="min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600; color: #55564B;">Styles</div>
+          <h2 style="font-size: clamp(32px, 4vw, 50px); line-height: 1.04; letter-spacing: -0.04em; font-weight: 700; margin: 12px 0 0; max-width: 16ch;">Five looks, every one priced.</h2>
+        </div>
+        <a href="Turnkii Visualiser.dc.html" style="display: inline-flex; align-items: center; gap: 10px; border: 1.5px solid #12130E; border-radius: 999px; padding: 12px 18px; font-size: 14.5px; font-weight: 600;" style-hover="background: #12130E; color: #FFFFFF;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.4z"></path></svg>
+          Try a style in your room
+        </a>
+      </div>
+      <div style="display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 12px; overflow-x: auto; margin: clamp(28px, 3.4vw, 44px) calc(-1 * clamp(16px, 3vw, 40px)) 0; padding: 0 clamp(16px, 3vw, 40px) 8px; scroll-snap-type: x mandatory;">
+        <sc-for list="{{ styleCards }}" as="sc" hint-placeholder-count="5">
+          <a href="{{ sc.href }}" style="scroll-snap-align: start; display: block; border-radius: 20px; overflow: hidden; background: #F4F2EC; border: 1.5px solid transparent;" style-hover="border-color: #12130E;">
+            <img src="{{ sc.img }}" alt="{{ sc.name }}" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block;" />
+            <div style="padding: 14px 16px 16px;">
+              <div style="font-size: 17px; font-weight: 700; letter-spacing: -0.02em;">{{ sc.name }}</div>
+              <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; font-size: 13.5px; color: #55564B;"><span>{{ sc.line }}</span><span style="font-family: 'Geist Mono', monospace; color: #12130E; flex: 0 0 auto;">{{ sc.rate }}</span></div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" style="scroll-margin-top: 72px; max-width: 880px; margin: 0 auto; padding: clamp(60px, 7vw, 100px) clamp(16px, 3vw, 40px);">
+    <h2 style="font-size: clamp(30px, 3.6vw, 44px); line-height: 1.04; letter-spacing: -0.04em; font-weight: 700; margin: 0 0 26px;">Questions owners ask</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 16px; overflow: hidden;">
+          <button type="button" onClick="{{ f.onToggle }}" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 16.5px; font-weight: 600; color: #12130E; min-height: 58px;">
+            <span>{{ f.q }}</span>
+            <span style="flex: 0 0 auto; width: 28px; height: 28px; border-radius: 99px; background: {{ f.iconBg }}; color: {{ f.iconFg }}; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600;">{{ f.icon }}</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 0 20px 20px; font-size: 15.5px; line-height: 1.65; color: #55564B; max-width: 64ch;">{{ f.a }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background: #12130E; color: #FFFFFF;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px); display: flex; gap: 28px 56px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+      <div style="flex: 1 1 460px; min-width: 0;">
+        <h2 style="font-size: clamp(34px, 4.6vw, 58px); line-height: 1.0; letter-spacing: -0.045em; font-weight: 700; margin: 0; max-width: 16ch; text-wrap: balance;">Know your number <span style="color: #D6F23C;">before you fly.</span></h2>
+        <p style="font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.72); margin: 16px 0 0; max-width: 44ch;">A detailed estimate and a video call in your time zone. Two minutes, no obligation.</p>
+      </div>
+      <div style="flex: 0 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+        <button type="button" onClick="{{ openBrief }}" style="cursor: pointer; border: none; background: #D6F23C; color: #12130E; border-radius: 16px; padding: 18px 22px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="background: #E4FF5C;">Get my estimate <span style="font-size: 18px;">→</span></button>
+        <a href="https://wa.me/201221188000" style="display: flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid rgba(255,255,255,0.24); border-radius: 16px; padding: 16px 22px; font-size: 15px; font-weight: 600;" style-hover="border-color: #FFFFFF;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1112 20a8 8 0 01-4.2-1.2z"></path></svg>
+          WhatsApp 0122 118 8000
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background: #12130E; color: #FFFFFF; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 40px clamp(16px, 3vw, 40px) 28px;">
+      <div style="display: flex; gap: 32px 56px; flex-wrap: wrap; justify-content: space-between;">
+        <div style="flex: 1 1 240px; min-width: 0;">
+          <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 20px; width: auto; display: block;" />
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.62); margin: 14px 0 0; max-width: 32ch;">Property finishing and furnishing in Egypt, managed end to end.</p>
+        </div>
+        <div style="display: flex; gap: 32px 56px; flex-wrap: wrap;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5);">Product</div>
+            <a href="#how" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">How it works</a>
+            <a href="Turnkii Visualiser.dc.html" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">AI visualiser</a>
+            <a href="Turnkii Inspirations.dc.html#board" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">Inspiration</a>
+            <a href="Turnkii Marketplace.dc.html" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">Shop</a>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5);">Owners</div>
+            <a href="Turnkii Account.dc.html#account" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">My account</a>
+            <a href="#pricing" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">Pricing &amp; payment</a>
+            <a href="Turnkii Facility.dc.html" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">Facility management</a>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5);">Contact</div>
+            <a href="mailto:info@turnkii.app" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">info@turnkii.app</a>
+            <a href="https://wa.me/201221188000" style="font-size: 14.5px; color: rgba(255,255,255,0.82);" style-hover="color: #D6F23C;">WhatsApp 0122 118 8000</a>
+            <span style="font-size: 14.5px; color: rgba(255,255,255,0.55);">New Cairo · Sheikh Zayed · North Coast</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; color: rgba(255,255,255,0.5);">© 2026 Turnkii</div>
+    </div>
+  </footer>
+
+  <sc-if value="{{ showBar }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 65; background: #12130E; color: #FFFFFF; border-radius: 20px; padding: 10px 10px 10px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 16px 40px -12px rgba(0,0,0,0.5);">
+      <span style="flex: 1 1 auto; min-width: 0;">
+        <span style="display: block; font-size: 12px; color: rgba(255,255,255,0.62);">{{ quickArea }} m² · {{ quickScopeLabel }}</span>
+        <span style="display: block; font-size: 16px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; color: #D6F23C; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ quickRange }}</span>
+      </span>
+      <button type="button" onClick="{{ openBrief }}" style="flex: 0 0 auto; cursor: pointer; border: none; background: #D6F23C; color: #12130E; border-radius: 14px; padding: 14px 18px; font-size: 15px; font-weight: 700;">Get estimate</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 90; background: rgba(18,19,14,0.55); backdrop-filter: blur(6px); display: flex; align-items: {{ sheetAlign }}; justify-content: center; padding: {{ sheetPad }};" onClick="{{ onBackdrop }}">
+      <div onClick="{{ stop }}" style="width: 100%; max-width: 620px; max-height: {{ sheetMaxH }}; background: #F4F2EC; border-radius: {{ sheetRadius }}; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.55);">
+        <div style="background: #12130E; color: #FFFFFF; padding: 16px 20px 18px; flex: 0 0 auto;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <span style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66);">{{ sheetStepLabel }}</span>
+            <button type="button" aria-label="Close" onClick="{{ closeBrief }}" style="cursor: pointer; width: 36px; height: 36px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14"></path><path d="M19 5L5 19"></path></svg></button>
+          </div>
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
+            <span style="min-width: 0;">
+              <span style="display: block; font-size: clamp(28px, 4vw, 34px); font-weight: 700; letter-spacing: -0.045em; line-height: 1; color: #D6F23C;">{{ briefRange }}</span>
+              <span style="display: block; font-size: 13.5px; color: rgba(255,255,255,0.7); margin-top: 8px;">{{ briefMeta }}</span>
+            </span>
+            <span style="flex: 0 0 auto; text-align: right;">
+              <span style="display: block; font-size: 12px; color: rgba(255,255,255,0.6);">Accuracy</span>
+              <span style="display: block; font-family: 'Geist Mono', monospace; font-size: 16px; font-weight: 600; margin-top: 3px;">{{ briefConf }}%</span>
+            </span>
+          </div>
+          <div style="display: flex; gap: 4px; margin-top: 14px;">
+            <sc-for list="{{ stepBars }}" as="b" hint-placeholder-count="4">
+              <span style="flex: 1 1 0; height: 4px; border-radius: 99px; background: {{ b.bg }};"></span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex: 1 1 auto; overflow-y: auto; padding: 22px 20px;">
+          <sc-if value="{{ s0 }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 22px;">
+              <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em;">Tell us about the property</div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #55564B;">Type</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                  <sc-for list="{{ ptypeChoices }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; border: 1.5px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 12px; padding: 12px 15px; font-size: 14.5px; font-weight: 600; min-height: 46px;">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #55564B;">Location</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                  <sc-for list="{{ locChoices }}" as="c" hint-placeholder-count="5">
+                    <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; border: 1.5px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 12px; padding: 12px 15px; font-size: 14.5px; font-weight: 600; min-height: 46px;">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                  <span style="font-size: 13.5px; font-weight: 600; color: #55564B;">Size per unit</span>
+                  <span style="font-family: 'Geist Mono', monospace; font-size: 16px; font-weight: 500;">{{ bArea }} m²</span>
+                </div>
+                <input type="range" min="40" max="600" step="5" value="{{ bArea }}" onInput="{{ onBArea }}" style="width: 100%; height: 30px; margin-top: 8px;" />
+              </div>
+              <sc-if value="{{ multi }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                  <span style="font-size: 13.5px; font-weight: 600; color: #55564B;">Number of units</span>
+                  <span style="display: flex; align-items: center; gap: 6px;">
+                    <button type="button" onClick="{{ unitsDown }}" style="cursor: pointer; width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DAD6CB; background: #FFFFFF; font-size: 20px; font-weight: 600;">−</button>
+                    <span style="font-family: 'Geist Mono', monospace; font-size: 17px; font-weight: 500; min-width: 36px; text-align: center;">{{ bUnits }}</span>
+                    <button type="button" onClick="{{ unitsUp }}" style="cursor: pointer; width: 44px; height: 44px; border-radius: 12px; border: 1px solid #DAD6CB; background: #FFFFFF; font-size: 20px; font-weight: 600;">+</button>
+                  </span>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s1 }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+              <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em;">What should we take on?</div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 8px;">
+                <sc-for list="{{ serviceChoices }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; text-align: left; border: 1.5px solid {{ c.bc }}; background: #FFFFFF; color: #12130E; border-radius: 14px; padding: 14px 15px; display: flex; gap: 12px; align-items: flex-start; min-height: 64px;">
+                    <span style="flex: 0 0 auto; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid #12130E; background: {{ c.box }}; display: flex; align-items: center; justify-content: center; margin-top: 1px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{ c.tick }}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+                    <span style="min-width: 0;">
+                      <span style="display: block; font-size: 15px; font-weight: 700;">{{ c.label }}</span>
+                      <span style="display: block; font-size: 13.5px; color: #55564B; margin-top: 3px; line-height: 1.4;">{{ c.sub }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 22px;">
+              <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em;">Pick a look and a level</div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px;">
+                <sc-for list="{{ styleChoices }}" as="c" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; padding: 0; text-align: left; border: 2px solid {{ c.bc }}; background: #FFFFFF; border-radius: 14px; overflow: hidden;">
+                    <img src="{{ c.img }}" alt="{{ c.name }}" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;" />
+                    <span style="display: block; padding: 8px 9px 10px; font-size: 13px; font-weight: 700; color: #12130E;">{{ c.name }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #55564B;">Furniture level</div>
+                <div style="display: flex; gap: 4px; margin-top: 10px; background: #E6E3DA; padding: 4px; border-radius: 14px;">
+                  <sc-for list="{{ pkgChoices }}" as="c" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ c.onPick }}" style="flex: 1 1 0; min-width: 0; cursor: pointer; border: none; border-radius: 11px; padding: 12px 6px; font-size: 14px; font-weight: 600; background: {{ c.bg }}; color: #12130E; box-shadow: {{ c.shadow }}; min-height: 46px;">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #55564B;">When are the keys ready?</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                  <sc-for list="{{ timeChoices }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="cursor: pointer; border: 1.5px solid {{ c.bc }}; background: {{ c.bg }}; color: {{ c.fg }}; border-radius: 12px; padding: 12px 15px; font-size: 14px; font-weight: 600; min-height: 46px;">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em;">Where should we send it?</div>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 13.5px; font-weight: 600; color: #55564B;">Your name</span>
+                <input type="text" value="{{ bName }}" onInput="{{ onBName }}" placeholder="Full name" style="background: #FFFFFF; border: 1.5px solid #DAD6CB; border-radius: 12px; padding: 14px; font-size: 16px; outline: none; color: #12130E;" style-focus="border-color: #12130E;" />
+              </label>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 13.5px; font-weight: 600; color: #55564B;">WhatsApp number</span>
+                <div style="display: flex; gap: 8px;">
+                  <select value="{{ bCode }}" onChange="{{ onBCode }}" aria-label="Country code" style="flex: 0 0 auto; background: #FFFFFF; border: 1.5px solid #DAD6CB; border-radius: 12px; padding: 0 10px; font-size: 15px; font-weight: 600; color: #12130E; min-height: 50px;">
+                    <option value="+20">EG +20</option>
+                    <option value="+971">AE +971</option>
+                    <option value="+966">SA +966</option>
+                    <option value="+974">QA +974</option>
+                    <option value="+965">KW +965</option>
+                    <option value="+44">UK +44</option>
+                    <option value="+49">DE +49</option>
+                    <option value="+1">US +1</option>
+                  </select>
+                  <input type="tel" value="{{ bPhone }}" onInput="{{ onBPhone }}" placeholder="Mobile number" style="flex: 1 1 auto; min-width: 0; background: #FFFFFF; border: 1.5px solid #DAD6CB; border-radius: 12px; padding: 14px; font-size: 16px; outline: none; color: #12130E;" style-focus="border-color: #12130E;" />
+                </div>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 13.5px; font-weight: 600; color: #55564B;">Email <span style="font-weight: 400;">(optional)</span></span>
+                <input type="email" value="{{ bEmail }}" onInput="{{ onBEmail }}" placeholder="For the PDF estimate" style="background: #FFFFFF; border: 1.5px solid #DAD6CB; border-radius: 12px; padding: 14px; font-size: 16px; outline: none; color: #12130E;" style-focus="border-color: #12130E;" />
+              </label>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 600; color: #55564B;">How should we walk you through it?</div>
+                <div style="display: flex; gap: 4px; margin-top: 10px; background: #E6E3DA; padding: 4px; border-radius: 14px;">
+                  <sc-for list="{{ contactChoices }}" as="c" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ c.onPick }}" style="flex: 1 1 0; min-width: 0; cursor: pointer; border: none; border-radius: 11px; padding: 12px 6px; font-size: 14px; font-weight: 600; background: {{ c.bg }}; color: #12130E; box-shadow: {{ c.shadow }}; min-height: 46px;">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center; font-size: 13.5px; color: #55564B;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto;"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 018 0v3"></path></svg>
+                Used only for your estimate. No spam, no sharing.
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ sDone }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+              <span style="width: 52px; height: 52px; border-radius: 16px; background: #D6F23C; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12130E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+              <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.1;">Thanks, {{ firstName }}. Estimate {{ ref }} is on its way.</div>
+              <p style="font-size: 15.5px; line-height: 1.6; color: #55564B; margin: 0;">A project lead will contact {{ phoneFull }} by {{ contactLabel }} within one working day to book a call in your time zone.</p>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ nextSteps }}" as="ns" hint-placeholder-count="3">
+                  <div style="display: flex; gap: 12px; align-items: center; background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 14px; padding: 14px;">
+                    <span style="flex: 0 0 auto; font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 600; width: 28px; height: 28px; border-radius: 99px; background: #12130E; color: #D6F23C; display: flex; align-items: center; justify-content: center;">{{ ns.n }}</span>
+                    <span style="font-size: 14.5px; font-weight: 500;">{{ ns.t }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showErr }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 16px; font-size: 14px; font-weight: 600; color: #A33A1F;">{{ errText }}</div>
+          </sc-if>
+        </div>
+
+        <div style="flex: 0 0 auto; border-top: 1px solid #E6E3DA; background: #FFFFFF; padding: 12px 16px; display: flex; gap: 8px; align-items: center;">
+          <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ back }}" style="cursor: pointer; border: 1px solid #DAD6CB; background: #FFFFFF; color: #12130E; border-radius: 14px; padding: 15px 18px; font-size: 15px; font-weight: 600;">Back</button>
+          </sc-if>
+          <sc-if value="{{ sDone }}" hint-placeholder-val="{{ false }}">
+            <a href="Turnkii Account.dc.html#account" style="flex: 1 1 auto; text-align: center; background: #12130E; color: #FFFFFF; border-radius: 14px; padding: 16px 18px; font-size: 15.5px; font-weight: 700;">Open my Turnkii account</a>
+          </sc-if>
+          <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ next }}" style="flex: 1 1 auto; cursor: pointer; border: none; background: #12130E; color: #FFFFFF; border-radius: 14px; padding: 16px 18px; font-size: 15.5px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 10px;">{{ nextLabel }} <span style="color: #D6F23C;">→</span></button>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroAudience&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Abroad&quot;, &quot;Local&quot;], &quot;default&quot;: &quot;Abroad&quot;, &quot;tsType&quot;: &quot;'Abroad' | 'Local'&quot;, &quot;section&quot;: &quot;Messaging&quot;}, &quot;showPartners&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Proof&quot;}, &quot;mobileBar&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Mobile&quot;}}">
+const STYLES = [
+  { id: 'warm', name: 'Warm Modern', line: 'Oak, linen, plaster', img: 'assets/style-warm.jpg' },
+  { id: 'neoclassic', name: 'Neoclassic', line: 'Marble, mouldings', img: 'assets/style-neoclassic.png' },
+  { id: 'majlis', name: 'Modern Majlis', line: 'Low seating, wood', img: 'assets/style-majlis.jpg' },
+  { id: 'eclectic', name: 'Eclectic', line: 'Colour and pattern', img: 'assets/style-eclectic.jpg' },
+  { id: 'coastal', name: 'Coastal', line: 'Lime wash, rattan', img: 'assets/style-coastal.jpg' }
+];
+const QUICK = [
+  { id: 'full', label: 'Finish + furnish', services: ['finishing', 'furnishing'] },
+  { id: 'finishing', label: 'Finishing', services: ['finishing'] },
+  { id: 'furnish', label: 'Furniture', services: ['furnishing'] }
+];
+const SERVICES = [
+  { id: 'finishing', label: 'Finishing', sub: 'Shell to sealed, snagged, paint-ready' },
+  { id: 'furnishing', label: 'Furnishing', sub: 'Layout, sourcing, one delivery' },
+  { id: 'kitchen', label: 'Kitchen', sub: 'Cabinetry, stone, appliances' },
+  { id: 'hvac', label: 'Air conditioning', sub: 'Sized, zoned, concealed' },
+  { id: 'shutters', label: 'Shutters & blinds', sub: 'Motorised or manual' },
+  { id: 'outdoor', label: 'Outdoor', sub: 'Shade, decking, salt-rated' }
+];
+const PTYPES = ['Apartment', 'Villa / townhouse', 'Multiple units', 'Short-stay rental'];
+const LOCS = ['New Cairo', 'Sheikh Zayed', 'October', 'North Coast', 'Other'];
+const TIMES = ['Keys in hand', 'Within 3 months', '3–6 months', 'Planning ahead'];
+const PKGS = [
+  { id: 'essential', label: 'Essential', tag: 'Rental ready', items: ['Full finishing to spec', 'Living, dining and bedrooms furnished', 'Durable, easy-clean materials'] },
+  { id: 'signature', label: 'Signature', tag: 'Most chosen', items: ['Everything in Essential', 'Custom joinery for TV and storage', 'Styling pass and handover photos'] },
+  { id: 'bespoke', label: 'Bespoke', tag: 'Made to order', items: ['Furniture drawn and made for you', 'Lighting design and scenes', 'Dedicated on-site project manager'] }
+];
+const CONTACTS = ['WhatsApp', 'Video call', 'Email'];
+const PROJECTS = [
+  { loc: 'New Cairo', weeks: '11 weeks', title: '3-bed apartment, finish + furnish', owner: 'Owner in Dubai · never visited site', after: 'assets/style-warm.jpg', slot: 'before-newcairo', quote: 'I approved every milestone from my office in Dubai. The first time I walked in was to collect the keys.', who: 'Karim A. · Dubai' },
+  { loc: 'North Coast', weeks: '9 weeks', title: 'Chalet, coastal package', owner: 'Owner in London · two video calls', after: 'assets/style-coastal.jpg', slot: 'before-coast', quote: 'The weekly videos were better than being there. It was rented out the week after handover.', who: 'Sara M. · London' },
+  { loc: 'Sheikh Zayed', weeks: '13 weeks', title: 'Townhouse, neoclassic living', owner: 'Owner in Riyadh · four milestones signed', after: 'assets/style-neoclassic.png', slot: 'before-zayed', quote: 'One number to call, one price, and nothing was paid until I had seen it.', who: 'Omar H. · Riyadh' }
+];
+const FAQS = [
+  { q: 'Do I need to be in Egypt?', a: 'No. Most of our owners live abroad. The survey is done by our team on a live video call, every milestone is reviewed in the app, and payments go by international transfer once you sign off.' },
+  { q: 'What exactly is Turnkii?', a: 'A managed platform for finishing and furnishing property. Our vetted network of contractors and suppliers does the work; Turnkii scopes, prices, procures, runs the programme and answers for quality, with payment plans and tracking built in.' },
+  { q: 'How firm is the estimate?', a: 'The online range comes from our live rate card. After the survey it becomes a fixed price for the agreed scope. Any change you ask for is re-priced in the app before it happens.' },
+  { q: 'How do payments work?', a: 'Four milestone payments, or bank instalments up to 60 months. Each milestone is released only after you accept the photos and video and sign off digitally.' },
+  { q: 'What if something is wrong?', a: 'Reject the item with a reason or ask for a re-shoot. It goes back to the site team and the milestone stays open. After handover you have 12 months of workmanship cover.' }
+];
+
+class Component extends DCLogic {
+  state = {
+    w: 1200, menuOpen: false,
+    qScope: 'full', qArea: 160,
+    proj: 0, split: 70, faq: 0,
+    open: false, step: 0, err: false, sent: false, ref: '', sending: false, submitErr: '',
+    ptype: 'Apartment', loc: '', area: 160, units: 1, services: ['finishing', 'furnishing'],
+    style: 'warm', pkg: 'signature', time: '', name: '', code: '+971', phone: '', email: '', contact: 'WhatsApp'
+  };
+
+  componentDidMount() {
+    this._r = () => this.setState({ w: window.innerWidth });
+    this._r();
+    window.addEventListener('resize', this._r);
+    this._p = () => this.forceUpdate();
+    window.addEventListener('turnkii-pricing-ready', this._p);
+    window.addEventListener('turnkii-pricing-changed', this._p);
+    if ((location.hash || '') === '#brief') this.openBrief();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._r);
+    window.removeEventListener('turnkii-pricing-ready', this._p);
+    window.removeEventListener('turnkii-pricing-changed', this._p);
+    document.body.style.overflow = '';
+  }
+
+  openBrief(extra) {
+    const q = QUICK.find(x => x.id === this.state.qScope);
+    this.setState(Object.assign({ open: true, step: 0, err: false, menuOpen: false, area: this.state.qArea, services: q.services.slice() }, extra || {}));
+    document.body.style.overflow = 'hidden';
+  }
+  closeBrief() { this.setState({ open: false }); document.body.style.overflow = ''; }
+
+  valid(step) {
+    const s = this.state;
+    if (step === 0) return !!(s.ptype && s.loc);
+    if (step === 1) return s.services.length > 0;
+    if (step === 2) return !!(s.style && s.pkg && s.time);
+    if (step === 3) return !!(s.name.trim() && s.phone.replace(/\D/g, '').length >= 7);
+    return true;
+  }
+
+  submit() {
+    const s = this.state;
+    if (s.sending) return;
+    this.setState({ sending: true, submitErr: '', err: false });
+    const P = window.TurnkiiPricing;
+    const est = P ? P.estimate({ services: s.services, area: s.area, units: s.ptype === 'Multiple units' ? s.units : 1, style: s.style, pkg: s.services.includes('furnishing') ? s.pkg : 'none', ptype: s.ptype, answered: 8, answerTotal: 8 }) : null;
+    const svcLabels = s.services.map(id => (SERVICES.find(x => x.id === id) || {}).label || id);
+    const notes = [];
+    if (s.services.includes('furnishing')) { const pk = PKGS.find(x => x.id === s.pkg); if (pk) notes.push('Furniture: ' + pk.label); }
+    if (s.time) notes.push('Timing: ' + s.time);
+    if (s.contact) notes.push('Prefers ' + s.contact);
+    if (est && est.ready) notes.push('Estimate ' + P.range(est.lo, est.hi));
+    const message = notes.join(' · ');
+    const at = (window.tkAttrib && window.tkAttrib()) || {};
+    const payload = {
+      contactName: s.name.trim(),
+      phone: (s.code + ' ' + s.phone).trim(),
+      email: s.email.trim() || undefined,
+      propertyType: s.ptype || undefined,
+      area: Number(s.area) || undefined,
+      units: s.ptype === 'Multiple units' ? s.units : undefined,
+      location: s.loc || undefined,
+      services: svcLabels,
+      style: s.style || undefined,
+      kind: 'brief',
+      channel: 'Website',
+      referrer: document.referrer || undefined,
+      utmSource: at.utm_source || undefined, utmMedium: at.utm_medium || undefined,
+      utmCampaign: at.utm_campaign || undefined, utmTerm: at.utm_term || undefined,
+      utmContent: at.utm_content || undefined, gclid: at.gclid || undefined, fbclid: at.fbclid || undefined,
+      message: message || undefined
+    };
+    const done = (ref) => {
+      try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', type: 'brief', style: s.style || '', services: svcLabels.join(',') }); } catch (e) {}
+      this.setState({ sent: true, ref: ref || ('TK-' + String(Date.now()).slice(-6)), step: 4, err: false, sending: false, submitErr: '' });
+    };
+    const url = window.TURNKII_INTAKE_URL;
+    if (!url) { done(''); return; }
+    fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(r => r.json().then(j => ({ ok: r.ok, j })).catch(() => ({ ok: r.ok, j: null })))
+      .then(res => {
+        if (res.ok && res.j && res.j.ok) { done(res.j.ref); }
+        else { this.setState({ sending: false, submitErr: 'Something went wrong. Please try again, or WhatsApp us on +20 100 000 0000.' }); }
+      })
+      .catch(() => this.setState({ sending: false, submitErr: 'Network error — please try again, or WhatsApp us.' }));
+  }
+
+  seg(on) { return { bg: on ? '#FFFFFF' : 'transparent', shadow: on ? '0 1px 3px rgba(18,19,14,0.16)' : 'none' }; }
+  chip(on) { return { bc: on ? '#12130E' : '#DAD6CB', bg: on ? '#12130E' : '#FFFFFF', fg: on ? '#FFFFFF' : '#12130E' }; }
+
+  renderVals() {
+    const s = this.state;
+    const P = window.TurnkiiPricing;
+    const mobile = s.w < 820;
+    const audience = this.props.heroAudience ?? 'Abroad';
+    const q = QUICK.find(x => x.id === s.qScope);
+    const qEst = P ? P.estimate({ services: q.services, area: s.qArea, units: 1, style: 'warm', pkg: 'signature', ptype: 'Apartment', answered: 2, answerTotal: 8 }) : null;
+    const answered = [s.ptype, s.loc, s.area, s.services.length, s.style, s.pkg, s.time, s.name && s.phone].filter(Boolean).length;
+    const bEst = P ? P.estimate({ services: s.services, area: s.area, units: s.ptype === 'Multiple units' ? s.units : 1, style: s.style, pkg: s.services.includes('furnishing') ? s.pkg : 'none', ptype: s.ptype, answered, answerTotal: 8 }) : null;
+    const rate = (P && P.rates()) || null;
+    const step = s.step;
+
+    const packages = PKGS.map((p, i) => {
+      const e = P ? P.estimate({ services: ['finishing', 'furnishing'], area: s.qArea, units: 1, style: 'warm', pkg: p.id, ptype: 'Apartment', answered: 8, answerTotal: 8 }) : null;
+      const f = i === 1;
+      return {
+        name: p.label, tag: p.tag, items: p.items,
+        total: e ? P.money(e.total) : '—',
+        rate: e ? 'EGP ' + Math.round(e.rate).toLocaleString('en-US') + ' per m²' : '',
+        monthly: e ? P.money(e.monthly) : '',
+        bg: f ? '#12130E' : '#FFFFFF', fg: f ? '#FFFFFF' : '#12130E', bc: f ? '#12130E' : '#E6E3DA',
+        sub: f ? 'rgba(255,255,255,0.7)' : '#55564B', line: f ? 'rgba(255,255,255,0.14)' : '#E6E3DA',
+        priceColor: f ? '#D6F23C' : '#12130E', tick: f ? '#D6F23C' : '#12130E',
+        tagBg: f ? '#D6F23C' : '#F4F2EC', tagFg: '#12130E',
+        btnBg: f ? '#D6F23C' : '#FFFFFF', btnFg: '#12130E', btnBorder: f ? 'none' : '1.5px solid #12130E',
+        onPick: () => this.openBrief({ pkg: p.id, style: 'warm', services: ['finishing', 'furnishing'] })
+      };
+    });
+
+    return {
+      mobile, desktop: !mobile, menuOpen: mobile && s.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      showPartners: this.props.showPartners ?? true,
+      showBar: mobile && !s.open && (this.props.mobileBar ?? true),
+      pagePad: mobile ? '92px' : '0px',
+      heroKicker: audience === 'Abroad' ? 'For owners living abroad' : 'Managed finishing in Egypt',
+      heroTitle: audience === 'Abroad' ? 'Finish your home in Egypt without flying back.' : 'From bare shell to keys, without the chasing.',
+      heroChecks: ['Fixed price after a free survey', 'Weekly video updates in the app', 'Pay only for work you approve'],
+      stars: [1, 2, 3, 4, 5],
+      openBrief: () => this.openBrief(),
+
+      quickScopes: QUICK.map(x => ({ label: x.label, bg: s.qScope === x.id ? '#FFFFFF' : 'transparent', fg: s.qScope === x.id ? '#12130E' : 'rgba(255,255,255,0.8)', onPick: () => this.setState({ qScope: x.id }) })),
+      quickScopeLabel: q.label,
+      quickArea: s.qArea,
+      onQuickArea: e => this.setState({ qArea: Number(e.target.value) }),
+      quickRange: qEst && qEst.ready ? P.range(qEst.lo, qEst.hi) : 'EGP —',
+      quickMeta: qEst && qEst.ready ? 'or from ' + P.money(qEst.monthly) + '/month · about ' + qEst.weeks + ' weeks' : 'Loading rates…',
+
+      packages,
+      payNotes: ['4 interest-free milestone payments', 'Bank instalments up to 60 months', 'Pay by international transfer', '12-month workmanship cover'],
+
+      projects: PROJECTS.map((p, i) => {
+        const on = s.proj === i;
+        return { loc: p.loc, weeks: p.weeks, title: p.title, owner: p.owner, bc: on ? '#12130E' : '#E6E3DA', bg: on ? '#FFFFFF' : 'transparent', onPick: () => this.setState({ proj: i, split: 70 }) };
+      }),
+      project: PROJECTS[s.proj],
+      split: s.split + '%', splitNum: s.split, clipRight: (100 - s.split) + '%',
+      onSplit: e => this.setState({ split: Number(e.target.value) }),
+
+      styleCards: STYLES.map(x => ({ name: x.name, line: x.line, img: x.img, href: 'Turnkii Style.dc.html#' + x.id, rate: rate ? (rate.styleRate[x.id] / 1000).toFixed(1) + 'k/m²' : '' })),
+
+      faqs: FAQS.map((f, i) => ({ q: f.q, a: f.a, open: s.faq === i, icon: s.faq === i ? '−' : '+', iconBg: s.faq === i ? '#12130E' : '#F4F2EC', iconFg: s.faq === i ? '#D6F23C' : '#12130E', onToggle: () => this.setState({ faq: s.faq === i ? -1 : i }) })),
+
+      sheetOpen: s.open,
+      sheetAlign: mobile ? 'flex-end' : 'center',
+      sheetPad: mobile ? '0' : '24px',
+      sheetMaxH: mobile ? '94vh' : 'min(820px, 92vh)',
+      sheetRadius: mobile ? '24px 24px 0 0' : '26px',
+      onBackdrop: () => this.closeBrief(),
+      stop: e => e.stopPropagation(),
+      closeBrief: () => this.closeBrief(),
+      sheetStepLabel: s.sent ? 'Estimate requested' : 'Step ' + (step + 1) + ' of 4',
+      briefRange: bEst && bEst.ready ? P.range(bEst.lo, bEst.hi) : 'EGP —',
+      briefMeta: bEst && bEst.ready ? 'or from ' + P.money(bEst.monthly) + '/month · about ' + bEst.weeks + ' weeks' : '',
+      briefConf: bEst ? bEst.confidence : 0,
+      stepBars: [0, 1, 2, 3].map(i => ({ bg: i <= step ? '#D6F23C' : 'rgba(255,255,255,0.16)' })),
+      s0: step === 0, s1: step === 1, s2: step === 2, s3: step === 3, sDone: s.sent,
+      notDone: !s.sent, canBack: !s.sent && step > 0,
+      back: () => this.setState({ step: Math.max(0, step - 1), err: false }),
+      next: () => {
+        if (s.sending) return;
+        if (!this.valid(step)) { this.setState({ err: true }); return; }
+        if (step === 3) this.submit(); else this.setState({ step: step + 1, err: false });
+      },
+      nextLabel: s.sending ? 'Sending…' : (step === 3 ? 'Send my estimate' : 'Continue'),
+      showErr: (s.err && !this.valid(step)) || !!s.submitErr,
+      errText: s.submitErr || (['Pick a property type and a location.', 'Choose at least one service.', 'Pick a style, a furniture level and a timing.', 'Add your name and a WhatsApp number.'][step] || ''),
+
+      ptypeChoices: PTYPES.map(x => Object.assign({ label: x, onPick: () => this.setState({ ptype: x }) }, this.chip(s.ptype === x))),
+      locChoices: LOCS.map(x => Object.assign({ label: x, onPick: () => this.setState({ loc: x }) }, this.chip(s.loc === x))),
+      bArea: s.area, onBArea: e => this.setState({ area: Number(e.target.value) }),
+      multi: s.ptype === 'Multiple units', bUnits: s.units,
+      unitsDown: () => this.setState({ units: Math.max(2, s.units - 1) }),
+      unitsUp: () => this.setState({ units: Math.min(200, Math.max(2, s.units) + 1) }),
+      serviceChoices: SERVICES.map(x => {
+        const on = s.services.includes(x.id);
+        return { label: x.label, sub: x.sub, bc: on ? '#12130E' : '#DAD6CB', box: on ? '#D6F23C' : '#FFFFFF', tick: on ? '#12130E' : 'transparent', onPick: () => this.setState({ services: on ? s.services.filter(v => v !== x.id) : s.services.concat([x.id]) }) };
+      }),
+      styleChoices: STYLES.map(x => ({ name: x.name, img: x.img, bc: s.style === x.id ? '#12130E' : 'transparent', onPick: () => this.setState({ style: x.id }) })),
+      pkgChoices: PKGS.map(x => Object.assign({ label: x.label, onPick: () => this.setState({ pkg: x.id }) }, this.seg(s.pkg === x.id))),
+      timeChoices: TIMES.map(x => Object.assign({ label: x, onPick: () => this.setState({ time: x }) }, this.chip(s.time === x))),
+      bName: s.name, onBName: e => this.setState({ name: e.target.value }),
+      bCode: s.code, onBCode: e => this.setState({ code: e.target.value }),
+      bPhone: s.phone, onBPhone: e => this.setState({ phone: e.target.value }),
+      bEmail: s.email, onBEmail: e => this.setState({ email: e.target.value }),
+      contactChoices: CONTACTS.map(x => Object.assign({ label: x, onPick: () => this.setState({ contact: x }) }, this.seg(s.contact === x))),
+
+      ref: s.ref, firstName: (s.name.trim().split(' ')[0]) || 'there',
+      phoneFull: s.code + ' ' + s.phone, contactLabel: s.contact === 'Email' ? 'email' : s.contact,
+      nextSteps: [
+        { n: '1', t: '20-minute video call to confirm scope' },
+        { n: '2', t: 'Free survey on site, streamed to you live' },
+        { n: '3', t: 'Fixed price and programme in your account' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
