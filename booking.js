@@ -43,7 +43,10 @@
     + ".bk-ok h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:30px;margin:0 0 6px}"
     + ".bk-ok p{color:var(--sub);font-size:15px;margin:6px auto;max-width:48ch;line-height:1.6}"
     + ".bk-ok a.join{display:inline-flex;margin-top:12px;background:var(--ink);color:var(--lime);border-radius:999px;padding:13px 24px;font-weight:800;font-size:15px}"
-    + "@media(max-width:560px){.bk-form{grid-template-columns:1fr}}";
+    + "@media(max-width:560px){.bk-form{grid-template-columns:1fr}.bk-btn{width:100%;justify-content:center;padding:16px 24px}"
+    + ".bk-seg{display:flex;width:100%}.bk-seg button{flex:1;text-align:center}"
+    + ".bk-day{min-width:62px}.bk-times{grid-template-columns:repeat(3,1fr)}.bk-t{padding:13px 4px}"
+    + ".bk-cta{position:sticky;bottom:0;background:#fff;padding-top:12px;margin-top:4px;box-shadow:0 -10px 16px -8px rgba(18,19,14,.12)}}";
   var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
   var data = null, sel = { date: null, time: null, type: null }, busy = false;

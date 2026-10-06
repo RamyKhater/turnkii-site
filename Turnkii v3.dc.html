@@ -167,158 +167,6 @@
     </div>
   </section>
 
-  <section id="care" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
-    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);" data-comment-anchor="f1ba327456-div">
-      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
-        <div>
-          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">After handover</div>
-          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Already living in it?</h2>
-        </div>
-        <p style="font-size: 15px; color: #5E5F52; margin: 0; max-width: 34ch; line-height: 1.6;">No brief needed — pick a service, a day, and we confirm the visit by WhatsApp.</p>
-      </div>
-
-      <sc-if value="{{ careOpen }}" hint-placeholder-val="{{ true }}">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin-top: 34px;">
-          <sc-for list="{{ careTiles }}" as="c" hint-placeholder-count="2">
-            <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}" style-hover="border-color: #12130E;">
-              <span style="display: flex; align-items: center; gap: 14px;">
-                <span style="width: 44px; height: 44px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: {{ c.iconBg }}; color: {{ c.iconFg }};">
-                  <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ c.icon }}"></path></svg>
-                </span>
-                <span style="flex: 1 1 auto; min-width: 0;">
-                  <span style="display: block; font-size: 20px; font-weight: 600; letter-spacing: -0.015em;">{{ c.title }}</span>
-                  <span style="display: block; font-size: 14px; color: #5E5F52; line-height: 1.45; margin-top: 3px;">{{ c.blurb }}</span>
-                </span>
-                <span style="flex: 0 0 auto; text-align: right;">
-                  <span style="display: block; font-size: 14.5px; font-weight: 700;">{{ c.price }}</span>
-                  <span style="display: block; font-size: 11.5px; color: #8A8A79; margin-top: 2px;">{{ c.priceNote }}</span>
-                </span>
-              </span>
-            </button>
-          </sc-for>
-        </div>
-
-        <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top: 14px; border: 1px solid #D3CEC0; border-radius: 22px; background: #FFFFFF; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 22px;">
-            <sc-if value="{{ careIsCleaning }}" hint-placeholder-val="{{ true }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What to clean</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How many rooms</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            </sc-if>
-            <sc-if value="{{ careIsMaint }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Which service</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careCategories }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            <sc-if value="{{ careSubShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What's needed</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careSubs }}" as="c" hint-placeholder-count="4">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            <sc-if value="{{ careUnitsShow }}" hint-placeholder-val="{{ false }}">
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careUnitsLabel }}</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ careUnits }}" as="c" hint-placeholder-count="6">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-            </sc-if>
-            </sc-if>
-
-            <div>
-              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How often</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                <sc-for list="{{ carePlans }}" as="c" hint-placeholder-count="2">
-                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                </sc-for>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 22px; flex-wrap: wrap;">
-              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Visit day</div>
-                <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #F6F3EC; padding: 14px 16px;">
-                  <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
-                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
-                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
-                  </div>
-                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
-                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
-                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
-                    </sc-for>
-                  </div>
-                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
-                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
-                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                    </sc-for>
-                  </div>
-                </div>
-              </div>
-              <div style="flex: 1 1 240px; min-width: 200px;">
-                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Arrival window</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-                  <sc-for list="{{ careSlots }}" as="c" hint-placeholder-count="4">
-                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
-                  </sc-for>
-                </div>
-              </div>
-            </div>
-
-            <div style="border-top: 1px solid #E4E0D5; padding-top: 20px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
-              <div style="flex: 1 1 260px; min-width: 220px;">
-                <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">{{ carePrice }}</div>
-                <div style="font-size: 13px; color: #8A8A79; margin-top: 5px; line-height: 1.45;">{{ carePriceNote }}</div>
-              </div>
-              <input value="{{ carePhone }}" onInput="{{ onCarePhone }}" placeholder="Mobile number" style="flex: 1 1 200px; min-width: 180px; border: 1px solid #E4E0D5; border-radius: 999px; background: #F6F3EC; padding: 15px 20px; font-size: 15px; color: #12130E; outline: none;" style-focus="border-color: #12130E;" />
-              <button type="button" onClick="{{ onCareSubmit }}" style="{{ careCtaStyle }}">{{ careCtaLabel }}</button>
-            </div>
-          </div>
-        </sc-if>
-      </sc-if>
-
-      <sc-if value="{{ careDone }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top: 34px; border: 1px solid #12130E; border-radius: 22px; background: #12130E; color: #F6F3EC; padding: clamp(24px, 3vw, 34px); display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
-          <div style="flex: 1 1 320px; min-width: 260px;">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 6px 13px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Visit requested</div>
-            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(26px, 3vw, 38px); line-height: 1.06; margin-top: 16px;">{{ careDoneTitle }}</div>
-            <div style="font-size: 15px; color: rgba(246,243,236,0.66); line-height: 1.55; margin-top: 10px; max-width: 52ch;">{{ careDoneBody }}</div>
-          </div>
-          <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="Turnkii Account.dc.html" style="background: #D6F23C; color: #12130E; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700;">Track in my account</a>
-            <button type="button" onClick="{{ onCareReset }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;">Book another</button>
-          </div>
-        </div>
-      </sc-if>
-    </div>
-  </section>
-
   <section id="why" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
     <div style="max-width: 1280px; margin: 0 auto; padding: clamp(50px, 6vw, 90px) clamp(16px, 3vw, 40px);">
       <div style="display: flex; gap: 20px 48px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
@@ -393,189 +241,6 @@
           </div>
         </div>
       </sc-for>
-    </div>
-  </section>
-
-  <section data-vertical="styles" id="styles" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
-    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 100px) clamp(16px, 3vw, 40px);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
-        <div>
-          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Ready design styles</div>
-          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Five signed-off directions</h2>
-        </div>
-        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; max-width: 40ch; margin: 0;">Each style is a costed kit — finishes, joinery, lighting and furniture already specified. Pick one to skip four weeks of design.</p>
-      </div>
-      <div style="margin-top: 26px; display: flex; gap: 14px 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; border: 1px solid #E4E0D5; border-radius: 14px; background: #F6F3EC; padding: 16px 20px;">
-        <div style="font-size: 14.5px; color: #5E5F52; line-height: 1.5; max-width: 66ch;">Just exploring? Every style is already costed — browse freely, no account or obligation.</div>
-        <a data-vertical="styles" href="Turnkii Style.dc.html" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #12130E; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px;" style-hover="background: #12130E; color: #F6F3EC;">See how a style works →</a>
-      </div>
-      <div id="styles-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); margin-top: 20px;">
-        <sc-for list="{{ styleCards }}" as="st" hint-placeholder-count="5">
-          <div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 2px solid {{ st.bc }}; display: flex; flex-direction: column;" style-hover="border-color: #12130E;">
-            <div style="aspect-ratio: 4 / 3.2; overflow: hidden; position: relative;">
-              <div role="img" aria-label="{{ st.name }}" style="{{ st.imgStyle }}"></div>
-              <sc-if value="{{ st.on }}" hint-placeholder-val="{{ false }}">
-                <div style="position: absolute; top: 12px; right: 12px; background: #D6F23C; color: #12130E; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px;">In your brief</div>
-              </sc-if>
-            </div>
-            <div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto;">
-              <h3 style="font-size: 18px; font-weight: 600; margin: 0; line-height: 1.3;">{{ st.name }}</h3>
-              <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #5E5F52;">{{ st.blurb }}</p>
-              <div style="font-size: 12px; color: #8A8A79; letter-spacing: 0.02em;">{{ st.palette }}</div>
-              <div style="margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                <button onClick="{{ st.onPick }}" style="background: {{ st.btnBg }}; color: {{ st.btnFg }}; border: 1px solid #12130E; border-radius: 999px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #12130E; color: #F6F3EC;">{{ st.btnLabel }}</button>
-                <a href="{{ st.href }}" style="font-size: 12.5px; font-weight: 700; color: #6C7A20; padding: 6px 2px;" style-hover="color: #12130E;">Materials &amp; furniture →</a>
-                <button onClick="{{ st.onShare }}" aria-label="Share this style" title="Share" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 13px; font-size: 12.5px; font-weight: 700; color: #12130E; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E; background: #F1F6DC;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share</button>
-              </div>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-      <div style="margin-top: 30px; display: flex; gap: 14px 16px; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center;">
-        <a href="Turnkii Quiz.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #12130E; color: #F6F3EC; font-size: 14.5px; font-weight: 700; padding: 14px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">✨ Not sure which one fits? Take the 60-second style quiz →</a>
-        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #C9C4B4; color: #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="border-color: #12130E; background: #F1F6DC;">Or see a style in your own room →</a>
-      </div>
-    </div>
-  </section>
-
-  <section data-vertical-all="inspiration,ai_studio" style="background: #12130E; color: #F6F3EC; border-bottom: 1px solid rgba(246,243,236,0.12);">
-    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(40px, 5vw, 72px) clamp(16px, 3vw, 40px);">
-      <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
-        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 4vw, 50px); line-height: 1.03; letter-spacing: -0.02em; margin: 0; max-width: 20ch;">Not sure yet? Two ways to decide.</h2>
-        <p style="font-size: 15px; line-height: 1.6; color: rgba(246,243,236,0.55); max-width: 34ch; margin: 0;">Both feed the brief automatically — whatever you save or preview arrives with your request.</p>
-      </div>
-      <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); margin-top: 30px;">
-        <a data-vertical="inspiration" href="Turnkii Inspirations.dc.html#board" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
-          <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
-            <img src="assets/style-eclectic.jpg" alt="Inspiration board" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,14,0) 40%, rgba(18,19,14,0.85) 100%);"></div>
-            <div style="position: absolute; left: 16px; top: 16px; background: rgba(18,19,14,0.72); backdrop-filter: blur(6px); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 7px 12px; border-radius: 999px;">Step 1 · Browse</div>
-          </div>
-          <div style="padding: 20px;">
-            <div style="font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.02em;">Save the rooms you like</div>
-            <div style="font-size: 14.5px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px; max-width: 44ch;">Twelve delivered rooms, filterable and already costed. Your board picks the style in the brief for you.</div>
-            <div style="font-size: 13.5px; font-weight: 700; color: #D6F23C; margin-top: 14px;">Open the inspiration board →</div>
-          </div>
-        </a>
-        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
-          <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
-            <img src="assets/style-warm.jpg" alt="Preview studio" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
-            <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,19,14,0.72) 0%, rgba(18,19,14,0) 46%, rgba(18,19,14,0) 100%);"></div>
-            <div style="position: absolute; inset: 0; left: 46%; border-left: 2px solid #D6F23C;"></div>
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,14,0) 40%, rgba(18,19,14,0.85) 100%);"></div>
-            <div style="position: absolute; left: 16px; top: 16px; background: rgba(214,242,60,0.92); color: #12130E; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 7px 12px; border-radius: 999px;">Step 2 · Preview</div>
-          </div>
-          <div style="padding: 20px;">
-            <div style="font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.02em;">See it in your own space</div>
-            <div style="font-size: 14.5px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px; max-width: 44ch;">Upload a photo of the room and slide between how it looks today and the style you chose.</div>
-            <div style="font-size: 13.5px; font-weight: 700; color: #D6F23C; margin-top: 14px;">Upload a photo →</div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section id="packages" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(64px, 8vw, 110px) clamp(16px, 3vw, 40px);">
-    <div style="text-align: center; max-width: 640px; margin: 0 auto;">
-      <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Furniture &amp; FF&amp;E packages</div>
-      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 12px;">Pick your level of fit-out</h2>
-      <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 0;">Rates are quoted per unit in EGP once we know area, style and unit count. Ranges shared on request during your call.</p>
-    </div>
-    <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 44px; align-items: stretch;">
-      <sc-for list="{{ packageCards }}" as="pk" hint-placeholder-count="3">
-        <div style="border: 1px solid {{ pk.bc }}; background: {{ pk.bg }}; color: {{ pk.fg }}; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; opacity: 0.6;">{{ pk.kicker }}</div>
-            <sc-if value="{{ pk.featured }}" hint-placeholder-val="{{ false }}">
-              <div style="background: #D6F23C; color: #12130E; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; letter-spacing: 0.04em;">Most specified</div>
-            </sc-if>
-          </div>
-          <h3 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 34px; margin: 0; line-height: 1.05;">{{ pk.name }}</h3>
-          <p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: 0.72;">{{ pk.blurb }}</p>
-          <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 6px;">
-            <sc-for list="{{ pk.items }}" as="it" hint-placeholder-count="4">
-              <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5;">
-                <span style="color: #A3BE2A; font-weight: 700;">/</span>
-                <span style="opacity: 0.85;">{{ it }}</span>
-              </div>
-            </sc-for>
-          </div>
-          <div style="margin-top: auto; padding-top: 18px; border-top: 1px solid {{ pk.rule }}; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-            <div style="font-size: 13px; opacity: 0.62;">Range on request</div>
-            <button onClick="{{ pk.onPick }}" style="background: {{ pk.btnBg }}; color: {{ pk.btnFg }}; border: none; border-radius: 999px; padding: 11px 18px; font-size: 13px; font-weight: 700; cursor: pointer;" style-hover="background: #D6F23C; color: #12130E;">{{ pk.btnLabel }}</button>
-          </div>
-        </div>
-      </sc-for>
-    </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 28px;">
-      <button onClick="{{ onOptOut }}" style="{{ optOutStyle }}" style-hover="background: #12130E; border-color: #12130E; color: #D6F23C;">{{ optOutLabel }}</button>
-      <span style="font-size: 13.5px; color: #8A8A79;">Keeping your own pieces? Exclude them later and we retain 5%.</span>
-    </div>
-  </section>
-
-  <section id="how" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5;">
-    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(46px, 5.5vw, 78px) clamp(16px, 3vw, 40px) clamp(40px, 5vw, 66px); display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start;">
-
-      <div style="flex: 1 1 320px; min-width: 280px;">
-        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">What happens next</div>
-        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.8vw, 48px); line-height: 1.03; letter-spacing: -0.02em; margin: 14px 0 0;">Nine weeks from brief to keys.</h2>
-        <p style="font-size: 15.5px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 34ch;">You send it once. We measure, price and build — you approve at each milestone.</p>
-        <a data-track="cta_brief" href="#brief" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; background: #12130E; color: #F6F3EC; font-size: 15px; font-weight: 700; padding: 15px 24px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Start the brief below ↓</a>
-      </div>
-
-      <div style="flex: 1 1 420px; min-width: 300px; display: flex; flex-direction: column;">
-        <div style="display: flex; gap: 16px;">
-          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
-            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">1</span>
-            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
-          </div>
-          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
-            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
-              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Send the brief</span>
-              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 0</span>
-            </div>
-            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">Scope, style, survey slot. Ninety seconds.</div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px;">
-          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
-            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">2</span>
-            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
-          </div>
-          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
-            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
-              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Free survey</span>
-              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 1</span>
-            </div>
-            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">45 minutes on site: measure, MEP, photos.</div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px;">
-          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
-            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">3</span>
-            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
-          </div>
-          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
-            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
-              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Fixed price and plan</span>
-              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 4</span>
-            </div>
-            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">Written quantities, price locked, payment approved.</div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 16px;">
-          <div style="flex: 0 0 32px; display: flex; justify-content: center;">
-            <span style="width: 32px; height: 32px; border-radius: 999px; background: #12130E; color: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">4</span>
-          </div>
-          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 0;">
-            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
-              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Keys and photographs</span>
-              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Week 9</span>
-            </div>
-            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">You sign off each milestone before it is invoiced.</div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1003,6 +668,341 @@
     </div>
   </section>
 
+
+  <section data-vertical="styles" id="styles" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 100px) clamp(16px, 3vw, 40px);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Ready design styles</div>
+          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Five signed-off directions</h2>
+        </div>
+        <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; max-width: 40ch; margin: 0;">Each style is a costed kit — finishes, joinery, lighting and furniture already specified. Pick one to skip four weeks of design.</p>
+      </div>
+      <div style="margin-top: 26px; display: flex; gap: 14px 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; border: 1px solid #E4E0D5; border-radius: 14px; background: #F6F3EC; padding: 16px 20px;">
+        <div style="font-size: 14.5px; color: #5E5F52; line-height: 1.5; max-width: 66ch;">Just exploring? Every style is already costed — browse freely, no account or obligation.</div>
+        <a data-vertical="styles" href="Turnkii Style.dc.html" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #12130E; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px;" style-hover="background: #12130E; color: #F6F3EC;">See how a style works →</a>
+      </div>
+      <div id="styles-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); margin-top: 20px;">
+        <sc-for list="{{ styleCards }}" as="st" hint-placeholder-count="5">
+          <div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 2px solid {{ st.bc }}; display: flex; flex-direction: column;" style-hover="border-color: #12130E;">
+            <div style="aspect-ratio: 4 / 3.2; overflow: hidden; position: relative;">
+              <div role="img" aria-label="{{ st.name }}" style="{{ st.imgStyle }}"></div>
+              <sc-if value="{{ st.on }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; top: 12px; right: 12px; background: #D6F23C; color: #12130E; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px;">In your brief</div>
+              </sc-if>
+            </div>
+            <div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1 1 auto;">
+              <h3 style="font-size: 18px; font-weight: 600; margin: 0; line-height: 1.3;">{{ st.name }}</h3>
+              <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #5E5F52;">{{ st.blurb }}</p>
+              <div style="font-size: 12px; color: #8A8A79; letter-spacing: 0.02em;">{{ st.palette }}</div>
+              <div style="margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <button onClick="{{ st.onPick }}" style="background: {{ st.btnBg }}; color: {{ st.btnFg }}; border: 1px solid #12130E; border-radius: 999px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #12130E; color: #F6F3EC;">{{ st.btnLabel }}</button>
+                <a href="{{ st.href }}" style="font-size: 12.5px; font-weight: 700; color: #6C7A20; padding: 6px 2px;" style-hover="color: #12130E;">Materials &amp; furniture →</a>
+                <button onClick="{{ st.onShare }}" aria-label="Share this style" title="Share" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 13px; font-size: 12.5px; font-weight: 700; color: #12130E; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E; background: #F1F6DC;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: 30px; display: flex; gap: 14px 16px; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center;">
+        <a href="Turnkii Quiz.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: #12130E; color: #F6F3EC; font-size: 14.5px; font-weight: 700; padding: 14px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">✨ Not sure which one fits? Take the 60-second style quiz →</a>
+        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid #C9C4B4; color: #12130E; font-size: 14px; font-weight: 700; padding: 13px 20px; border-radius: 999px;" style-hover="border-color: #12130E; background: #F1F6DC;">Or see a style in your own room →</a>
+      </div>
+    </div>
+  </section>
+
+  <section data-vertical-all="inspiration,ai_studio" style="background: #12130E; color: #F6F3EC; border-bottom: 1px solid rgba(246,243,236,0.12);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(40px, 5vw, 72px) clamp(16px, 3vw, 40px);">
+      <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 4vw, 50px); line-height: 1.03; letter-spacing: -0.02em; margin: 0; max-width: 20ch;">Not sure yet? Two ways to decide.</h2>
+        <p style="font-size: 15px; line-height: 1.6; color: rgba(246,243,236,0.55); max-width: 34ch; margin: 0;">Both feed the brief automatically — whatever you save or preview arrives with your request.</p>
+      </div>
+      <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); margin-top: 30px;">
+        <a data-vertical="inspiration" href="Turnkii Inspirations.dc.html#board" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
+          <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
+            <img src="assets/style-eclectic.jpg" alt="Inspiration board" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,14,0) 40%, rgba(18,19,14,0.85) 100%);"></div>
+            <div style="position: absolute; left: 16px; top: 16px; background: rgba(18,19,14,0.72); backdrop-filter: blur(6px); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 7px 12px; border-radius: 999px;">Step 1 · Browse</div>
+          </div>
+          <div style="padding: 20px;">
+            <div style="font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.02em;">Save the rooms you like</div>
+            <div style="font-size: 14.5px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px; max-width: 44ch;">Twelve delivered rooms, filterable and already costed. Your board picks the style in the brief for you.</div>
+            <div style="font-size: 13.5px; font-weight: 700; color: #D6F23C; margin-top: 14px;">Open the inspiration board →</div>
+          </div>
+        </a>
+        <a data-vertical="ai_studio" href="Turnkii Visualiser.dc.html" style="display: block; border-radius: 20px; overflow: hidden; background: #1A1C15; border: 1px solid rgba(246,243,236,0.14); color: #F6F3EC;" style-hover="border-color: #D6F23C;">
+          <div style="position: relative; aspect-ratio: 21 / 9; overflow: hidden;">
+            <img src="assets/style-warm.jpg" alt="Preview studio" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,19,14,0.72) 0%, rgba(18,19,14,0) 46%, rgba(18,19,14,0) 100%);"></div>
+            <div style="position: absolute; inset: 0; left: 46%; border-left: 2px solid #D6F23C;"></div>
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,19,14,0) 40%, rgba(18,19,14,0.85) 100%);"></div>
+            <div style="position: absolute; left: 16px; top: 16px; background: rgba(214,242,60,0.92); color: #12130E; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; padding: 7px 12px; border-radius: 999px;">Step 2 · Preview</div>
+          </div>
+          <div style="padding: 20px;">
+            <div style="font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.02em;">See it in your own space</div>
+            <div style="font-size: 14.5px; color: rgba(246,243,236,0.6); line-height: 1.5; margin-top: 8px; max-width: 44ch;">Upload a photo of the room and slide between how it looks today and the style you chose.</div>
+            <div style="font-size: 13.5px; font-weight: 700; color: #D6F23C; margin-top: 14px;">Upload a photo →</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="packages" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(64px, 8vw, 110px) clamp(16px, 3vw, 40px);">
+    <div style="text-align: center; max-width: 640px; margin: 0 auto;">
+      <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">Furniture &amp; FF&amp;E packages</div>
+      <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 12px;">Pick your level of fit-out</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: #5E5F52; margin: 0;">Rates are quoted per unit in EGP once we know area, style and unit count. Ranges shared on request during your call.</p>
+    </div>
+    <div style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-top: 44px; align-items: stretch;">
+      <sc-for list="{{ packageCards }}" as="pk" hint-placeholder-count="3">
+        <div style="border: 1px solid {{ pk.bc }}; background: {{ pk.bg }}; color: {{ pk.fg }}; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; opacity: 0.6;">{{ pk.kicker }}</div>
+            <sc-if value="{{ pk.featured }}" hint-placeholder-val="{{ false }}">
+              <div style="background: #D6F23C; color: #12130E; font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; letter-spacing: 0.04em;">Most specified</div>
+            </sc-if>
+          </div>
+          <h3 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 34px; margin: 0; line-height: 1.05;">{{ pk.name }}</h3>
+          <p style="margin: 0; font-size: 15px; line-height: 1.6; opacity: 0.72;">{{ pk.blurb }}</p>
+          <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 6px;">
+            <sc-for list="{{ pk.items }}" as="it" hint-placeholder-count="4">
+              <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5;">
+                <span style="color: #A3BE2A; font-weight: 700;">/</span>
+                <span style="opacity: 0.85;">{{ it }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top: auto; padding-top: 18px; border-top: 1px solid {{ pk.rule }}; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div style="font-size: 13px; opacity: 0.62;">Range on request</div>
+            <button onClick="{{ pk.onPick }}" style="background: {{ pk.btnBg }}; color: {{ pk.btnFg }}; border: none; border-radius: 999px; padding: 11px 18px; font-size: 13px; font-weight: 700; cursor: pointer;" style-hover="background: #D6F23C; color: #12130E;">{{ pk.btnLabel }}</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 28px;">
+      <button onClick="{{ onOptOut }}" style="{{ optOutStyle }}" style-hover="background: #12130E; border-color: #12130E; color: #D6F23C;">{{ optOutLabel }}</button>
+      <span style="font-size: 13.5px; color: #8A8A79;">Keeping your own pieces? Exclude them later and we retain 5%.</span>
+    </div>
+  </section>
+
+  <section id="how" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(46px, 5.5vw, 78px) clamp(16px, 3vw, 40px) clamp(40px, 5vw, 66px); display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start;">
+
+      <div style="flex: 1 1 320px; min-width: 280px;">
+        <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">What happens next</div>
+        <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.8vw, 48px); line-height: 1.03; letter-spacing: -0.02em; margin: 14px 0 0;">Nine weeks from brief to keys.</h2>
+        <p style="font-size: 15.5px; line-height: 1.6; color: #5E5F52; margin: 14px 0 0; max-width: 34ch;">You send it once. We measure, price and build — you approve at each milestone.</p>
+        <a data-track="cta_brief" href="#brief" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; background: #12130E; color: #F6F3EC; font-size: 15px; font-weight: 700; padding: 15px 24px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Start the brief below ↓</a>
+      </div>
+
+      <div style="flex: 1 1 420px; min-width: 300px; display: flex; flex-direction: column;">
+        <div style="display: flex; gap: 16px;">
+          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
+            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">1</span>
+            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
+            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
+              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Send the brief</span>
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 0</span>
+            </div>
+            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">Scope, style, survey slot. Ninety seconds.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
+            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">2</span>
+            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
+            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
+              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Free survey</span>
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 1</span>
+            </div>
+            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">45 minutes on site: measure, MEP, photos.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div style="flex: 0 0 32px; display: flex; flex-direction: column; align-items: center;">
+            <span style="width: 32px; height: 32px; border-radius: 999px; background: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">3</span>
+            <span style="flex: 1 1 auto; width: 2px; background: #D9D4C4;"></span>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 22px;">
+            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
+              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Fixed price and plan</span>
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Day 4</span>
+            </div>
+            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">Written quantities, price locked, payment approved.</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div style="flex: 0 0 32px; display: flex; justify-content: center;">
+            <span style="width: 32px; height: 32px; border-radius: 999px; background: #12130E; color: #D6F23C; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">4</span>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; padding: 4px 0 0;">
+            <div style="display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;">
+              <span style="font-size: 17.5px; font-weight: 600; letter-spacing: -0.01em;">Keys and photographs</span>
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Week 9</span>
+            </div>
+            <div style="font-size: 14.5px; line-height: 1.5; color: #5E5F52; margin-top: 4px;">You sign off each milestone before it is invoiced.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="care" style="scroll-margin-top: 104px; background: #EFEBE1; border-top: 1px solid #E4E0D5; border-bottom: 1px solid #E4E0D5;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) clamp(16px, 3vw, 40px);" data-comment-anchor="f1ba327456-div">
+      <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; justify-content: space-between;">
+        <div>
+          <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8A8A79; font-weight: 700;">After handover</div>
+          <h2 style="font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(32px, 4.2vw, 54px); line-height: 1.02; letter-spacing: -0.02em; margin: 14px 0 0;">Already living in it?</h2>
+        </div>
+        <p style="font-size: 15px; color: #5E5F52; margin: 0; max-width: 34ch; line-height: 1.6;">No brief needed — pick a service, a day, and we confirm the visit by WhatsApp.</p>
+      </div>
+
+      <sc-if value="{{ careOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin-top: 34px;">
+          <sc-for list="{{ careTiles }}" as="c" hint-placeholder-count="2">
+            <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}" style-hover="border-color: #12130E;">
+              <span style="display: flex; align-items: center; gap: 14px;">
+                <span style="width: 44px; height: 44px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; background: {{ c.iconBg }}; color: {{ c.iconFg }};">
+                  <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ c.icon }}"></path></svg>
+                </span>
+                <span style="flex: 1 1 auto; min-width: 0;">
+                  <span style="display: block; font-size: 20px; font-weight: 600; letter-spacing: -0.015em;">{{ c.title }}</span>
+                  <span style="display: block; font-size: 14px; color: #5E5F52; line-height: 1.45; margin-top: 3px;">{{ c.blurb }}</span>
+                </span>
+                <span style="flex: 0 0 auto; text-align: right;">
+                  <span style="display: block; font-size: 14.5px; font-weight: 700;">{{ c.price }}</span>
+                  <span style="display: block; font-size: 11.5px; color: #8A8A79; margin-top: 2px;">{{ c.priceNote }}</span>
+                </span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ careChosen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 14px; border: 1px solid #D3CEC0; border-radius: 22px; background: #FFFFFF; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 22px;">
+            <sc-if value="{{ careIsCleaning }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What to clean</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careScopes }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ careRoomsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How many rooms</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careRooms }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
+            <sc-if value="{{ careIsMaint }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Which service</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careCategories }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ careSubShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">What's needed</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careSubs }}" as="c" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ careUnitsShow }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">{{ careUnitsLabel }}</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ careUnits }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+            </sc-if>
+
+            <div>
+              <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">How often</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                <sc-for list="{{ carePlans }}" as="c" hint-placeholder-count="2">
+                  <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 22px; flex-wrap: wrap;">
+              <div style="flex: 1 1 300px; min-width: 260px; max-width: 380px;">
+                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Visit day</div>
+                <div style="margin-top: 12px; border: 1px solid #E4E0D5; border-radius: 18px; background: #F6F3EC; padding: 14px 16px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <button type="button" onClick="{{ calPrev }}" style="{{ calPrevStyle }}" aria-label="Previous month">‹</button>
+                    <div style="font-size: 14.5px; font-weight: 700;">{{ calTitle }}</div>
+                    <button type="button" onClick="{{ calNext }}" style="{{ calNextStyle }}" aria-label="Next month">›</button>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 14px;">
+                    <sc-for list="{{ calWeekdays }}" as="w" hint-placeholder-count="7">
+                      <div style="text-align: center; font-size: 10.5px; font-weight: 700; color: #A5A292; padding: 2px 0;">{{ w }}</div>
+                    </sc-for>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 4px;">
+                    <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                      <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1 1 240px; min-width: 200px;">
+                <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: #5E5F52;">Arrival window</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+                  <sc-for list="{{ careSlots }}" as="c" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ c.onPick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid #E4E0D5; padding-top: 20px; display: flex; gap: 18px; flex-wrap: wrap; align-items: center;">
+              <div style="flex: 1 1 260px; min-width: 220px;">
+                <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1;">{{ carePrice }}</div>
+                <div style="font-size: 13px; color: #8A8A79; margin-top: 5px; line-height: 1.45;">{{ carePriceNote }}</div>
+              </div>
+              <input value="{{ carePhone }}" onInput="{{ onCarePhone }}" placeholder="Mobile number" style="flex: 1 1 200px; min-width: 180px; border: 1px solid #E4E0D5; border-radius: 999px; background: #F6F3EC; padding: 15px 20px; font-size: 15px; color: #12130E; outline: none;" style-focus="border-color: #12130E;" />
+              <button type="button" onClick="{{ onCareSubmit }}" style="{{ careCtaStyle }}">{{ careCtaLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ careDone }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 34px; border: 1px solid #12130E; border-radius: 22px; background: #12130E; color: #F6F3EC; padding: clamp(24px, 3vw, 34px); display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <div style="flex: 1 1 320px; min-width: 260px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 6px 13px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Visit requested</div>
+            <div style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(26px, 3vw, 38px); line-height: 1.06; margin-top: 16px;">{{ careDoneTitle }}</div>
+            <div style="font-size: 15px; color: rgba(246,243,236,0.66); line-height: 1.55; margin-top: 10px; max-width: 52ch;">{{ careDoneBody }}</div>
+          </div>
+          <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="Turnkii Account.dc.html" style="background: #D6F23C; color: #12130E; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700;">Track in my account</a>
+            <button type="button" onClick="{{ onCareReset }}" style="background: transparent; border: 1px solid rgba(246,243,236,0.3); color: #F6F3EC; border-radius: 999px; padding: 15px 24px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;">Book another</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
 
   <section id="about" style="scroll-margin-top: 104px; max-width: 1280px; margin: 0 auto; padding: clamp(64px, 8vw, 110px) clamp(16px, 3vw, 40px);">
     <div style="display: flex; gap: clamp(28px, 5vw, 72px); flex-wrap: wrap; align-items: flex-start;">
