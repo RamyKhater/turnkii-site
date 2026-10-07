@@ -606,7 +606,7 @@ PAGES = {
         "Turnkii — Turnkey home finishing, furniture & handover",
         "Finishing, furniture, kitchens, HVAC and outdoor under one contract. Build a costed brief in two minutes — a real person reviews it and calls within a working day.",
     ),
-    "Turnkii Brief.dc.html": (
+    "Turnkii v8 Brief.dc.html": (
         "brief.html",
         "Your brief — Turnkii",
         "Review and send your brief. No payment now — a real person reviews it and calls within a working day.",
