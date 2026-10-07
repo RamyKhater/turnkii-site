@@ -93,11 +93,9 @@
           <span style="font-size: 18px; font-weight: 600; letter-spacing: -0.02em;">Live estimate</span>
           <span style="font-family: 'Geist Mono', monospace; font-size: 11.5px; color: rgba(255,255,255,0.6);">LIVE RATES · 2026</span>
         </div>
-        <div style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66); margin-top: 20px;">What do you need?</div>
-        <div style="display: flex; gap: 4px; margin-top: 9px; background: rgba(255,255,255,0.08); padding: 4px; border-radius: 14px;">
-          <sc-for list="{{ quickScopes }}" as="q" hint-placeholder-count="3">
-            <button type="button" onClick="{{ q.onPick }}" style="flex: 1 1 0; min-width: 0; cursor: pointer; border: none; border-radius: 11px; padding: 12px 6px; font-size: 14px; font-weight: 600; background: {{ q.bg }}; color: {{ q.fg }}; min-height: 44px;">{{ q.label }}</button>
-          </sc-for>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 20px;">
+          <span style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66);">Scope</span>
+          <a href="#services" style="font-size: 13.5px; font-weight: 600; text-align: right; color: #FFFFFF; border-bottom: 1px solid rgba(214,242,60,0.5);">{{ pickedSummary }}</a>
         </div>
         <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 22px;">
           <label for="tk-area" style="font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.66);">Unit size</label>
@@ -139,11 +137,12 @@
             <span style="font-size: 14.5px; line-height: 1.5; color: {{ t.sub2 }};">{{ t.sub }}</span>
           </button>
         </sc-for>
-        <div style="border-radius: 20px; padding: 20px; min-height: 168px; background: #D6F23C; color: #12130E; display: flex; flex-direction: column; gap: 8px;">
-          <span style="font-size: 13px; font-weight: 600;">Your brief</span>
-          <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.025em;">{{ pickedTitle }}</span>
-          <span style="font-size: 14px; line-height: 1.5; color: #3A3B32;">{{ pickedLine }}</span>
-          <button type="button" onClick="{{ startPicked }}" style="margin-top: auto; cursor: pointer; border: none; background: #12130E; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 10px;">Start the brief <span style="color: #D6F23C;">→</span></button>
+        <div style="border-radius: 20px; padding: 20px; min-height: 168px; background: #D6F23C; color: #12130E; display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 13px; font-weight: 600;">Your live estimate</span>
+          <span style="font-size: clamp(26px, 3vw, 32px); font-weight: 700; letter-spacing: -0.035em; line-height: 1;">{{ quickRange }}</span>
+          <span style="font-size: 13px; line-height: 1.45; color: #3A3B32;">{{ quickMeta }}</span>
+          <span style="font-size: 13px; line-height: 1.4; color: #3A3B32; margin-top: 2px;">{{ pickedSummary }}</span>
+          <button type="button" onClick="{{ startPicked }}" style="margin-top: auto; cursor: pointer; border: none; background: #12130E; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 10px;">Continue <span style="color: #D6F23C;">→</span></button>
         </div>
       </div>
     </div>
@@ -183,7 +182,7 @@
                 </div>
               </sc-for>
             </div>
-            <button type="button" onClick="{{ pk.onPick }}" style="margin-top: auto; cursor: pointer; border: {{ pk.btnBorder }}; border-radius: 14px; padding: 15px 18px; font-size: 15px; font-weight: 700; background: {{ pk.btnBg }}; color: {{ pk.btnFg }};">Choose {{ pk.name }}</button>
+            <button type="button" onClick="{{ pk.onPick }}" style="margin-top: auto; cursor: pointer; border: {{ pk.btnBorder }}; border-radius: 14px; padding: 15px 18px; font-size: 15px; font-weight: 700; background: {{ pk.btnBg }}; color: {{ pk.btnFg }};">{{ pk.btnLabel }}</button>
           </div>
         </sc-for>
       </div>
@@ -313,7 +312,7 @@
       <div style="display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 14px; overflow-x: auto; margin: clamp(32px, 4vw, 52px) calc(-1 * clamp(16px, 3vw, 40px)) 0; padding: 0 clamp(16px, 3vw, 40px) 10px; scroll-snap-type: x mandatory;">
         <sc-for list="{{ styleCards }}" as="sc" hint-placeholder-count="5">
           <div style="scroll-snap-align: start; display: flex; flex-direction: column; gap: 12px;">
-            <a href="{{ sc.href }}" style="display: block; position: relative; border-radius: 22px; overflow: hidden; background: #F1F0EB;">
+            <a href="{{ sc.href }}" style="display: block; position: relative; border-radius: 22px; overflow: hidden; background: #F1F0EB; outline: {{ sc.ring }}; outline-offset: 2px;">
               <img src="{{ sc.img }}" alt="{{ sc.name }}" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block;" />
               <span style="position: absolute; right: 12px; top: 12px; background: rgba(255,255,255,0.94); border-radius: 999px; padding: 5px 11px; font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 600;">{{ sc.rate }}</span>
               <span style="position: absolute; left: 12px; bottom: 12px; display: flex; gap: 5px; background: rgba(255,255,255,0.94); border-radius: 999px; padding: 6px;">
@@ -326,7 +325,7 @@
               <div style="font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">{{ sc.name }}</div>
               <div style="font-size: 14px; color: #55564B; margin-top: 3px;">{{ sc.line }}</div>
             </div>
-            <button type="button" onClick="{{ sc.onUse }}" style="cursor: pointer; border: 1.5px solid #DAD6CB; background: #FFFFFF; color: #12130E; border-radius: 12px; padding: 12px 14px; font-size: 14.5px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;" style-hover="border-color: #12130E;">Use this style <span>→</span></button>
+            <button type="button" onClick="{{ sc.onUse }}" style="cursor: pointer; border: 1.5px solid #12130E; background: {{ sc.btnBg }}; color: {{ sc.btnFg }}; border-radius: 12px; padding: 12px 14px; font-size: 14.5px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;" style-hover="border-color: #12130E;">{{ sc.btnLabel }} <span>→</span></button>
           </div>
         </sc-for>
       </div>
@@ -659,7 +658,7 @@ class Component extends DCLogic {
   state = {
     w: 1200, menuOpen: false,
     qScope: 'full', qArea: 160,
-    proj: 0, picked: [], split: 70, faq: 0,
+    proj: 0, picked: ['finishing', 'furnishing'], split: 70, faq: 0,
     open: false, step: 0, err: false, sent: false, ref: '',
     ptype: 'Apartment', loc: '', area: 160, units: 1, services: ['finishing', 'furnishing'],
     style: 'warm', pkg: 'signature', time: '', name: '', code: '+971', phone: '', email: '', contact: 'WhatsApp',
@@ -687,9 +686,13 @@ class Component extends DCLogic {
   }
 
   openBrief(extra) {
-    const scope = (extra && extra.scope) || this.state.qScope || 'full';
-    const area = this.state.qArea || '';
-    try { window.location.href = 'brief.html?scope=' + encodeURIComponent(scope) + '&area=' + encodeURIComponent(area); } catch (e) {}
+    const s = this.state;
+    const area = s.qArea || '';
+    const services = (extra && extra.services) || s.picked || [];
+    const style = (extra && extra.style) || s.style || '';
+    const pkg = (extra && extra.pkg) || s.pkg || '';
+    const qs = 'area=' + encodeURIComponent(area) + '&services=' + encodeURIComponent(services.join(',')) + '&style=' + encodeURIComponent(style) + '&pkg=' + encodeURIComponent(pkg);
+    try { window.location.href = 'brief.html?' + qs; } catch (e) {}
   }
   closeBrief() { this.setState({ open: false }); }
 
@@ -721,8 +724,11 @@ class Component extends DCLogic {
     const P = window.TurnkiiPricing;
     const mobile = s.w < 820;
     const shade = ({ Light: 0.75, Balanced: 1, Strong: 1.2 })[this.props.heroShade ?? 'Balanced'] || 1;
-    const q = QUICK.find(x => x.id === s.qScope);
-    const qEst = P ? P.estimate({ services: q.services, area: s.qArea, units: 1, style: 'warm', pkg: 'signature', ptype: 'Apartment', answered: 2, answerTotal: 8 }) : null;
+    // One live estimate for the whole page: fed by the service grid (s.picked),
+    // the area slider (s.qArea), the chosen style (s.style) and package (s.pkg).
+    const hasFurn = s.picked.includes('furnishing') || s.picked.includes('ffe');
+    const qEst = P ? P.estimate({ services: s.picked, area: s.qArea, units: 1, style: s.style, pkg: hasFurn ? s.pkg : 'none', ptype: 'Apartment', answered: 2 + s.picked.length, answerTotal: 8 }) : null;
+    const scopeLabel = s.picked.length ? (s.picked.length === 1 ? '1 service' : s.picked.length + ' services') : 'Choose services';
     const answered = [s.ptype, s.loc, s.area, s.services.length, s.style, s.pkg, s.time, s.name && s.phone].filter(Boolean).length;
     const bEst = P ? P.estimate({ services: s.services, area: s.area, units: s.ptype === 'Multiple units' ? s.units : 1, style: s.style, pkg: s.services.includes('furnishing') ? s.pkg : 'none', ptype: s.ptype, answered, answerTotal: 8 }) : null;
     const rate = (P && P.rates()) || null;
@@ -736,8 +742,8 @@ class Component extends DCLogic {
     const egp = n => 'EGP ' + Math.round(n || 0).toLocaleString('en-US');
 
     const packages = PKGS.map((p, i) => {
-      const e = P ? P.estimate({ services: ['finishing', 'furnishing'], area: s.qArea, units: 1, style: 'warm', pkg: p.id, ptype: 'Apartment', answered: 8, answerTotal: 8 }) : null;
-      const f = i === 1;
+      const e = P ? P.estimate({ services: ['finishing', 'furnishing'], area: s.qArea, units: 1, style: s.style, pkg: p.id, ptype: 'Apartment', answered: 8, answerTotal: 8 }) : null;
+      const f = s.pkg === p.id;
       return {
         name: p.label, tag: p.tag, items: p.items,
         total: e ? P.money(e.total) : '—',
@@ -748,7 +754,8 @@ class Component extends DCLogic {
         priceColor: f ? '#D6F23C' : '#12130E', tick: f ? '#D6F23C' : '#12130E',
         tagBg: f ? '#D6F23C' : '#F1F0EB', tagFg: '#12130E',
         btnBg: f ? '#D6F23C' : '#FFFFFF', btnFg: '#12130E', btnBorder: f ? 'none' : '1.5px solid #12130E',
-        onPick: () => this.openBrief({ pkg: p.id, style: 'warm', services: ['finishing', 'furnishing'] })
+        btnLabel: f ? 'Selected ✓' : 'Choose ' + p.label,
+        onPick: () => { this.setState({ pkg: p.id }); }
       };
     });
 
@@ -824,7 +831,8 @@ class Component extends DCLogic {
       },
 
       quickScopes: QUICK.map(x => ({ label: x.label, bg: s.qScope === x.id ? '#FFFFFF' : 'transparent', fg: s.qScope === x.id ? '#12130E' : 'rgba(255,255,255,0.8)', onPick: () => this.setState({ qScope: x.id }) })),
-      quickScopeLabel: q.label,
+      quickScopeLabel: scopeLabel,
+      pickedSummary: s.picked.length ? SERVICES.filter(x => s.picked.includes(x.id)).map(x => x.label).join(' · ') : 'Pick services below',
       quickArea: s.qArea,
       onQuickArea: e => this.setState({ qArea: Number(e.target.value) }),
       quickRange: qEst && qEst.ready ? P.range(qEst.lo, qEst.hi) : 'EGP —',
@@ -859,7 +867,7 @@ class Component extends DCLogic {
       pickedLine: s.picked.length ? SERVICES.filter(x => s.picked.includes(x.id)).map(x => x.label).join(' · ') : 'Pick your services — they carry straight into the brief.',
       startPicked: () => this.openBrief(s.picked.length ? { services: s.picked.slice() } : null),
 
-      styleCards: STYLES.map(x => ({ sw: (SW[x.id] || []).map(c => ({ c })), onUse: () => this.openBrief({ style: x.id }), name: x.name, line: x.line, img: x.img, href: 'Turnkii Style.dc.html#' + x.id, rate: rate ? 'EGP ' + (rate.styleRate[x.id] / 1000).toFixed(1) + 'k/m²' : '' })),
+      styleCards: STYLES.map(x => ({ sel: s.style === x.id, sw: (SW[x.id] || []).map(c => ({ c })), onUse: () => this.setState({ style: x.id }), name: x.name, line: x.line, img: x.img, href: 'Turnkii Style.dc.html#' + x.id, rate: rate ? 'EGP ' + (rate.styleRate[x.id] / 1000).toFixed(1) + 'k/m²' : '', btnLabel: s.style === x.id ? 'Selected ✓' : 'Use this style', btnBg: s.style === x.id ? '#12130E' : '#FFFFFF', btnFg: s.style === x.id ? '#FFFFFF' : '#12130E', ring: s.style === x.id ? '2px solid #12130E' : '2px solid transparent' })),
 
       faqs: FAQS.map((f, i) => ({ q: f.q, a: f.a, open: s.faq === i, icon: s.faq === i ? '−' : '+', iconBg: s.faq === i ? '#12130E' : '#F1F0EB', iconFg: s.faq === i ? '#D6F23C' : '#12130E', onToggle: () => this.setState({ faq: s.faq === i ? -1 : i }) })),
 

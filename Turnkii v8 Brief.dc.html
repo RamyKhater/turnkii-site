@@ -444,11 +444,14 @@ class Component extends DCLogic {
     window.addEventListener('turnkii-pricing-changed', this._p);
     try {
       var sp = new URLSearchParams(location.search);
-      var scope = sp.get('scope'); var area = Number(sp.get('area'));
+      var area = Number(sp.get('area'));
+      var services = (sp.get('services') || '').split(',').filter(Boolean);
+      var style = sp.get('style'); var pkg = sp.get('pkg');
       var st = { open: true, step: 0 };
       if (area > 0) { st.area = area; st.qArea = area; }
-      var q = QUICK.find(function (x) { return x.id === scope; });
-      if (q) { st.qScope = scope; st.services = q.services.slice(); }
+      if (services.length) { st.services = services; st.picked = services.slice(); }
+      if (style) st.style = style;
+      if (pkg) st.pkg = pkg;
       this.setState(st);
     } catch (e) {}
   }
