@@ -1213,9 +1213,12 @@ def build_page(src_name):
         text = text.replace("<head>", '<head>\n<script>location.replace("/")</script>', 1)
 
     # floating WhatsApp click-to-chat button + cookie-consent banner on public
-    # pages (not the internal admin consoles baked into the site).
+    # pages (not the internal admin consoles baked into the site). The v8 variant
+    # (b.html) ships its own sticky estimate strip with a "Book a call" CTA along
+    # the bottom, so the floating FAB is skipped there to avoid overlapping it.
     if slug not in NOINDEX_PAGES:
-        text = text.replace("</body>", whatsapp_widget() + consent_banner() + "\n</body>", 1)
+        wa = whatsapp_widget() if slug != "b.html" else ""
+        text = text.replace("</body>", wa + consent_banner() + "\n</body>", 1)
 
     # overall client-rating badge (fills [data-rating-slot]) — the homepage hero
     # and the dedicated Our-recent-work page.
