@@ -601,7 +601,7 @@ PAGES = {
     #    trimmed brief checkout (brief.html). Noindexed and reached only via the
     #    50/50 split on the control homepage; the brief engine is injected on these
     #    two pages only (see build_page) so control/inner pages stay untouched.
-    "Turnkii B.dc.html": (
+    "Turnkii v8.dc.html": (
         "b.html",
         "Turnkii — Turnkey home finishing, furniture & handover",
         "Finishing, furniture, kitchens, HVAC and outdoor under one contract. Build a costed brief in two minutes — a real person reviews it and calls within a working day.",
