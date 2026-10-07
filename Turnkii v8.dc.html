@@ -187,8 +187,41 @@
   </section>
 
 
-  <!-- FINANCING STRIP — ported from the LIVE site (#financing module: finHeadline/plans/pre-approval). Added in the financing step. -->
-  <section id="financing" data-tk-financing-placeholder="1" style="scroll-margin-top: 72px;"><div style="max-width:1240px;margin:0 auto;padding:0 clamp(16px,3vw,40px) clamp(40px,5vw,64px);"><div style="border:1px dashed #D6D2C6;border-radius:26px;padding:28px;color:#8A8B7E;font-size:14px;">Financing strip (from live site) mounts here.</div></div></section>
+  <!-- FINANCING STRIP — ported from the live site (FIN engine; content via window.TURNKII_CONTENT.financing) -->
+  <section id="financing" style="scroll-margin-top: 72px;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px) clamp(64px, 8vw, 120px);">
+      <div style="background: #FFFFFF; border: 1px solid #E6E3DA; border-radius: 26px; overflow: hidden; box-shadow: 0 1px 2px rgba(18,19,14,0.04);">
+        <div style="padding: clamp(22px, 3vw, 36px); display: flex; gap: 20px 40px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+          <div style="flex: 1 1 360px; min-width: 0;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: #55564B;"><span style="width: 7px; height: 7px; border-radius: 99px; background: #12130E;"></span>Payment plans</div>
+            <div style="font-size: clamp(24px, 2.6vw, 34px); font-weight: 700; letter-spacing: -0.035em; margin-top: 12px; text-wrap: balance;">{{ finHeadline }}</div>
+            <div style="font-size: 15px; line-height: 1.6; color: #55564B; margin-top: 10px; max-width: 56ch;">{{ finBlurb }}</div>
+          </div>
+          <div style="flex: 0 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" onClick="{{ onOpenPre }}" style="cursor: pointer; border: 0; background: #12130E; color: #FFFFFF; font-weight: 700; font-size: 15px; padding: 15px 24px; border-radius: 999px;" style-hover="background: #2B2C24;">{{ preCta }}</button>
+            <button type="button" onClick="{{ toggleFin }}" style="cursor: pointer; background: transparent; color: #12130E; font-weight: 700; font-size: 15px; padding: 15px 20px; border-radius: 999px; border: 1px solid #E6E3DA;" style-hover="border-color: #12130E;">{{ finCta }}</button>
+          </div>
+        </div>
+        <sc-if value="{{ finOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="border-top: 1px solid #E6E3DA; padding: clamp(18px, 2.4vw, 28px); display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));">
+            <sc-for list="{{ finPlans }}" as="pl" hint-placeholder-count="4">
+              <div style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 16px; font-weight: 700;">{{ pl.name }}</div>
+                <div style="font-family: 'Geist Mono', monospace; font-size: 22px; letter-spacing: -0.02em; margin-top: 2px;">{{ pl.terms }}</div>
+                <div style="font-size: 13.5px; color: #55564B; line-height: 1.5; margin-top: 4px;">{{ pl.body }}</div>
+                <div style="font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; color: #6C7A20; margin-top: 8px;">{{ pl.fit }}</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 14px;">
+                  <button type="button" onClick="{{ pl.onSelect }}" style="flex: 1 1 auto; cursor: pointer; border: 0; border-radius: 999px; padding: 11px 14px; font-size: 13px; font-weight: 700; background: #12130E; color: #FFFFFF;" style-hover="background: #D6F23C; color: #12130E;">Choose plan</button>
+                  <button type="button" onClick="{{ pl.onCalc }}" style="flex: 0 0 auto; cursor: pointer; border: 1px solid #E6E3DA; background: transparent; color: #55564B; border-radius: 999px; padding: 11px 14px; font-size: 13px; font-weight: 700;" style-hover="border-color: #12130E; color: #12130E;">Calculate</button>
+                </div>
+              </div>
+            </sc-for>
+            <div style="grid-column: 1 / -1; font-size: 13.5px; color: #8A8B7E; max-width: 68ch;">Pre-approval takes two minutes and does not affect your credit file. Final terms are confirmed with your scope after the free site survey.</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
 
 
   <section id="included" style="scroll-margin-top: 72px;">
@@ -429,6 +462,58 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ preOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 96; background: rgba(18,19,14,0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto;">
+      <div onClick="{{ stop }}" style="max-width: 540px; width: 100%; background: #FFFFFF; color: #12130E; border: 1px solid #E6E3DA; border-radius: 24px; padding: clamp(22px, 3vw, 30px); box-shadow: 0 40px 100px -30px rgba(0,0,0,0.5);">
+        <sc-if value="{{ preForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display: flex; gap: 12px; align-items: flex-start; justify-content: space-between;">
+              <div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #55564B;"><span style="width: 7px; height: 7px; border-radius: 99px; background: #12130E;"></span>Financing</div>
+                <div style="font-size: clamp(24px, 3vw, 32px); line-height: 1.08; letter-spacing: -0.035em; font-weight: 700; margin-top: 10px;">Get pre-approved in two minutes</div>
+              </div>
+              <button type="button" onClick="{{ onClosePre }}" style="cursor: pointer; border: 1px solid #E6E3DA; background: transparent; border-radius: 999px; width: 36px; height: 36px; font-size: 15px; font-weight: 700; color: #55564B; flex: 0 0 auto;" style-hover="border-color: #12130E; color: #12130E;">✕</button>
+            </div>
+            <p style="font-size: 14.5px; line-height: 1.55; color: #55564B; margin: 12px 0 0;">A soft check only — no impact on your credit file. We come back with an indicative limit and the plans you qualify for.</p>
+            <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); margin-top: 20px;">
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;"><span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">Full name</span><input type="text" placeholder="As on your ID" onInput="{{ onPreName }}" style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" /></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;"><span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">Mobile</span><input type="tel" placeholder="+20 1xx xxx xxxx" onInput="{{ onPrePhone }}" style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" /></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;"><span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">{{ preEmailLabel }}</span><input type="email" placeholder="you@company.com" onInput="{{ onPreEmail }}" style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" /></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;"><span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">Monthly income, EGP</span><input type="number" placeholder="e.g. 120000" onInput="{{ onPreIncome }}" style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" /></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; min-width: 0;"><span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">Amount needed, EGP</span><input type="number" placeholder="e.g. 2000000" onInput="{{ onPreAmount }}" style="background: #FAFAF9; border: 1px solid #E6E3DA; border-radius: 12px; padding: 12px 14px; font-size: 15px; color: #12130E; outline: none; width: 100%;" style-focus="border-color: #12130E;" /></label>
+            </div>
+            <div style="margin-top: 16px;">
+              <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">Employment</div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+                <sc-for list="{{ preJobs }}" as="j" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ j.onPick }}" style="cursor: pointer; border: 1px solid {{ j.bc }}; background: {{ j.bg }}; color: {{ j.fg }}; border-radius: 999px; padding: 10px 15px; font-size: 13.5px; font-weight: 600;" style-hover="border-color: #12130E;">{{ j.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <button type="button" onClick="{{ onPreSubmit }}" style="width: 100%; margin-top: 20px; cursor: pointer; border: 0; border-radius: 14px; padding: 17px; font-size: 16px; font-weight: 700; background: {{ preBtnBg }}; color: {{ preBtnFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ preBtnLabel }}</button>
+            <div style="font-size: 12px; color: #8A8B7E; margin-top: 12px; line-height: 1.5;">{{ preHint }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ preDone }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: #D6F23C; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">Pre-approved, indicatively</div>
+            <div style="font-size: clamp(26px, 3.2vw, 36px); line-height: 1.08; letter-spacing: -0.035em; font-weight: 700; margin-top: 16px;">{{ preResultTitle }}</div>
+            <p style="font-size: 15px; line-height: 1.6; color: #55564B; margin: 12px 0 0;">{{ preResultBody }}</p>
+            <div style="display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); background: #E6E3DA; border: 1px solid #E6E3DA; border-radius: 14px; overflow: hidden; margin-top: 18px;">
+              <sc-for list="{{ preRows }}" as="r" hint-placeholder-count="3">
+                <div style="background: #FFFFFF; padding: 14px;"><div style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8A8B7E; font-weight: 700;">{{ r.k }}</div><div style="font-size: 15px; font-weight: 700; margin-top: 5px;">{{ r.v }}</div></div>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+              <button type="button" onClick="{{ openBrief }}" style="cursor: pointer; border: 0; background: #12130E; color: #FFFFFF; font-size: 14.5px; font-weight: 700; padding: 14px 22px; border-radius: 999px;" style-hover="background: #D6F23C; color: #12130E;">Continue to my brief</button>
+              <button type="button" onClick="{{ onClosePre }}" style="cursor: pointer; border: 1px solid #E6E3DA; background: transparent; color: #55564B; border-radius: 999px; padding: 14px 20px; font-size: 14px; font-weight: 600;" style-hover="border-color: #12130E; color: #12130E;">Close</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position: fixed; inset: 0; z-index: 90; background: rgba(18,19,14,0.55); backdrop-filter: blur(6px); display: flex; align-items: {{ sheetAlign }}; justify-content: center; padding: {{ sheetPad }};" onClick="{{ onBackdrop }}">
       <div onClick="{{ stop }}" style="width: 100%; max-width: 620px; max-height: {{ sheetMaxH }}; background: #FAFAF9; border-radius: {{ sheetRadius }}; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.55);">
@@ -620,6 +705,42 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;heroShade&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Light&quot;, &quot;Balanced&quot;, &quot;Strong&quot;], &quot;default&quot;: &quot;Balanced&quot;, &quot;tsType&quot;: &quot;'Light' | 'Balanced' | 'Strong'&quot;, &quot;section&quot;: &quot;Hero&quot;}, &quot;showPartners&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Proof&quot;}, &quot;mobileBar&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Mobile&quot;}}">
+// Financing plans + pre-approval sizing — ported verbatim from the live site.
+// Defaults mirror the admin's FINANCING_DEFAULTS; window.TURNKII_CONTENT.financing
+// overrides them so plans, rates and pre-approval stay managed from the panel.
+const FIN_DEFAULT = {
+  currency: 'EGP',
+  headline: 'Finish now, pay over 12 to 60 months.',
+  blurb: 'Milestone payments as standard, bank financing up to EGP 60M, rent-backed plans for portfolios, or save ahead at 5% off.',
+  plans: [
+    { key: 'milestone', name: 'Milestone', terms: '4 payments', body: 'Deposit, mid-works, pre-delivery and handover. No interest, no third party.', fit: 'Single unit', model: 'even', unit: 'milestones', minTerm: 4, maxTerm: 4, defaultTerm: 4, monthlyRate: 0, discountPct: 0, note: 'Interest free: deposit, mid-works, pre-delivery and handover.', published: true },
+    { key: 'bank', name: 'Bank instalments', terms: '12–60 months', body: 'Partner bank financing up to EGP 60M, approved alongside the survey.', fit: 'Owners & end users', model: 'amortized', unit: 'months', minTerm: 12, maxTerm: 60, defaultTerm: 24, monthlyRate: 0.0165, discountPct: 0, note: 'Illustrative bank rate, up to EGP {cap}, approved alongside the survey.', published: true },
+    { key: 'rent', name: 'Rent-backed', terms: '12–24 months', body: 'Repayment scheduled against rental income once units are listed and let.', fit: 'Investors, 3+ units', model: 'even', unit: 'months', minTerm: 12, maxTerm: 24, defaultTerm: 24, monthlyRate: 0, discountPct: 0, note: 'Repaid from rental income once the units are listed and let.', published: true },
+    { key: 'saver', name: 'Plan ahead', terms: '10–12 months', body: 'Save in equal interest-free instalments, then draw the full budget.', fit: 'Interest free · 5% off', model: 'saver', unit: 'months', minTerm: 10, maxTerm: 12, defaultTerm: 12, monthlyRate: 0, discountPct: 5, note: '5% discount applied — you pay on EGP {discounted} and draw the budget at the end.', published: true }
+  ],
+  preApproval: { incomeRatio: 0.35, termMonths: 48, maxLimit: 60000000, rounding: 50000 }
+};
+function finResolve() {
+  var over = null;
+  try { over = (window.TURNKII_CONTENT && window.TURNKII_CONTENT.financing) || null; } catch (e) {}
+  var base = JSON.parse(JSON.stringify(FIN_DEFAULT));
+  if (over) {
+    if (over.currency) base.currency = over.currency;
+    if (over.headline) base.headline = over.headline;
+    if (over.blurb) base.blurb = over.blurb;
+    if (over.preApproval) base.preApproval = Object.assign(base.preApproval, over.preApproval);
+    if (Array.isArray(over.plans)) base.plans = over.plans.map(function (p) { return Object.assign({}, FIN_DEFAULT.plans[0], p); });
+  }
+  return base;
+}
+const FIN = finResolve();
+function finBudget(v) {
+  var pa = FIN.preApproval, inc = Number(v) || 0;
+  if (inc <= 0) return 0;
+  return Math.min(pa.maxLimit, Math.round(inc * pa.incomeRatio * pa.termMonths / pa.rounding) * pa.rounding);
+}
+const FIN_PLANS = FIN.plans.filter(function (p) { return p.published; });
+
 const STYLES = [
   { id: 'warm', name: 'Warm Contemporary', line: 'Sand · Walnut · Olive', img: 'assets/style-warm.jpg' },
   { id: 'neoclassic', name: 'Neo-Classic Calm', line: 'Chalk · Sage · Brass', img: 'assets/style-neoclassic.png' },
@@ -706,7 +827,8 @@ class Component extends DCLogic {
     proj: 0, picked: [], split: 70, faq: 0,
     open: false, step: 0, err: false, sent: false, ref: '',
     ptype: 'Apartment', loc: '', area: 160, units: 1, services: ['finishing', 'furnishing'],
-    style: 'warm', pkg: 'signature', time: '', name: '', code: '+971', phone: '', email: '', contact: 'WhatsApp'
+    style: 'warm', pkg: 'signature', time: '', name: '', code: '+971', phone: '', email: '', contact: 'WhatsApp',
+    finOpen: false, preOpen: false, preApproved: false, preName: '', prePhone: '', preEmail: '', preIncome: '', preAmount: '', preJob: ''
   };
 
   componentDidMount() {
@@ -771,6 +893,13 @@ class Component extends DCLogic {
     const rate = (P && P.rates()) || null;
     const step = s.step;
 
+    // Financing pre-approval (ported from live site)
+    const preEmailReq = !!(window.tkEmailRequired && window.tkEmailRequired());
+    const preEmailOk = !preEmailReq || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.preEmail.trim());
+    const preOk = s.preName.trim().length > 1 && s.prePhone.trim().length > 7 && preEmailOk && Number(s.preIncome) > 0;
+    const preLimit = finBudget(s.preIncome);
+    const egp = n => 'EGP ' + Math.round(n || 0).toLocaleString('en-US');
+
     const packages = PKGS.map((p, i) => {
       const e = P ? P.estimate({ services: ['finishing', 'furnishing'], area: s.qArea, units: 1, style: 'warm', pkg: p.id, ptype: 'Apartment', answered: 8, answerTotal: 8 }) : null;
       const f = i === 1;
@@ -804,6 +933,60 @@ class Component extends DCLogic {
       heroStats: [{ n: '12', unit: 'wks', label: 'Shell to keys' }, { n: '5', unit: '', label: 'Costed styles' }, { n: '4', unit: '', label: 'Ways to pay' }, { n: '12', unit: 'mo', label: 'Cover after keys' }],
       stars: [1, 2, 3, 4, 5],
       openBrief: () => this.openBrief(),
+
+      // — Financing strip + pre-approval (ported from the live site) —
+      finHeadline: FIN.headline,
+      finBlurb: FIN.blurb,
+      finOpen: s.finOpen,
+      finCta: s.finOpen ? 'Hide plans' : 'See payment plans',
+      toggleFin: () => this.setState(st => ({ finOpen: !st.finOpen })),
+      finPlans: FIN_PLANS.map(p => ({
+        name: p.name, terms: p.terms, body: p.body, fit: p.fit,
+        onSelect: () => this.openBrief(),
+        onCalc: () => this.setState({ preOpen: true })
+      })),
+      preCta: s.preApproved ? 'Pre-approved ✓ view result' : 'Get pre-approved',
+      preOpen: s.preOpen,
+      preForm: s.preOpen && !s.preApproved,
+      preDone: s.preOpen && s.preApproved,
+      onOpenPre: () => this.setState({ preOpen: true }),
+      onClosePre: () => this.setState({ preOpen: false }),
+      onPreName: e => this.setState({ preName: e.target.value }),
+      onPrePhone: e => this.setState({ prePhone: e.target.value }),
+      onPreEmail: e => this.setState({ preEmail: e.target.value }),
+      onPreIncome: e => this.setState({ preIncome: e.target.value }),
+      onPreAmount: e => this.setState({ preAmount: e.target.value }),
+      preJobs: ['Salaried', 'Business owner', 'Self-employed', 'Expat income'].map(j => ({
+        name: j, bc: s.preJob === j ? '#12130E' : '#E6E3DA', bg: s.preJob === j ? '#12130E' : '#FFFFFF', fg: s.preJob === j ? '#FFFFFF' : '#55564B',
+        onPick: () => this.setState({ preJob: j })
+      })),
+      preEmailLabel: preEmailReq ? 'Email' : 'Email (optional)',
+      preBtnLabel: preOk ? 'Submit for pre-approval' : (preEmailReq ? 'Fill name, mobile, email and income' : 'Fill name, mobile and income'),
+      preBtnBg: preOk ? '#D6F23C' : '#12130E',
+      preBtnFg: preOk ? '#12130E' : '#FFFFFF',
+      preHint: 'Soft check only. We share your details with our partner bank solely to size the limit.',
+      preResultTitle: 'Indicatively up to ' + egp(preLimit),
+      preResultBody: 'Based on what you shared, this is the limit and plan you would likely qualify for. Final terms are confirmed with your scope after the free survey.',
+      preRows: [
+        { k: 'Indicative limit', v: egp(preLimit) },
+        { k: 'Suggested plan', v: 'Bank instalments' },
+        { k: 'Term', v: 'up to 60 months' }
+      ],
+      onPreSubmit: () => {
+        if (!preOk) return;
+        this.setState({ preApproved: true });
+        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'financing', employment: s.preJob || '', value: preLimit }); } catch (e) {}
+        const url = window.TURNKII_INTAKE_URL;
+        if (url) {
+          try {
+            fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+              contactName: s.preName.trim(), phone: s.prePhone.trim(), email: s.preEmail.trim() || undefined,
+              kind: 'financing', monthlyIncome: Number(s.preIncome) || undefined, financeAmount: Number(s.preAmount) || undefined,
+              employment: s.preJob || undefined, channel: 'Website', message: 'Pre-approval request · indicative limit ' + egp(preLimit)
+            }) }).catch(() => {});
+          } catch (e) {}
+        }
+      },
 
       quickScopes: QUICK.map(x => ({ label: x.label, bg: s.qScope === x.id ? '#FFFFFF' : 'transparent', fg: s.qScope === x.id ? '#12130E' : 'rgba(255,255,255,0.8)', onPick: () => this.setState({ qScope: x.id }) })),
       quickScopeLabel: q.label,
