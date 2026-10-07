@@ -16,8 +16,14 @@
 <script src="image-slot.js"></script>
 <style>
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: #FFFFFF; font-family: Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #12130E; }
+  :root { --bg: #FFFFFF; --band: #F3F3F1; --line: #E6E3DA; }
+  body { margin: 0; background: var(--bg); font-family: Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #12130E; }
   * { box-sizing: border-box; }
+  /* Section rhythm on a white page: alternate white / subtle neutral band, each
+     with a crisp hairline divider so no two sections merge. */
+  #top > section[id], #top > div > section[id] { border-top: 1px solid var(--line); }
+  #services, #financing, #why, #styles, #care { background: var(--band) !important; }
+  #pricing, #included, #work, #faq { background: var(--bg) !important; }
   a { color: inherit; text-decoration: none; }
   a:hover { color: inherit; }
   input, select, textarea, button { font-family: inherit; }
