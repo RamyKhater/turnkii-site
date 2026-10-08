@@ -425,6 +425,7 @@
               <div style="margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <button onClick="{{ st.onPick }}" style="background: {{ st.btnBg }}; color: {{ st.btnFg }}; border: 1px solid #12130E; border-radius: 999px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="background: #12130E; color: #F6F3EC;">{{ st.btnLabel }}</button>
                 <a href="{{ st.href }}" style="font-size: 12.5px; font-weight: 700; color: #6C7A20; padding: 6px 2px;" style-hover="color: #12130E;">Materials &amp; furniture →</a>
+                <button type="button" data-tk-save data-tk-kind="style" data-tk-ref="{{ st.key }}" data-tk-label="{{ st.name }}" style="display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 13px; font-size: 12.5px; font-weight: 700; color: #12130E; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E; background: #F1F6DC;">♡ Save</button>
                 <button onClick="{{ st.onShare }}" aria-label="Share this style" title="Share" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid #E4E0D5; border-radius: 999px; padding: 9px 13px; font-size: 12.5px; font-weight: 700; color: #12130E; cursor: pointer; font-family: Manrope, sans-serif;" style-hover="border-color: #12130E; background: #F1F6DC;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>Share</button>
               </div>
             </div>
@@ -1198,6 +1199,12 @@
         <a href="Turnkii FAQ.dc.html" style="color: rgba(246,243,236,0.72); font-size: 14px; font-weight: 600;" style-hover="color: #D6F23C;">FAQ</a>
         <a data-track="cta_brief" href="#brief" style="color: #D6F23C; font-size: 14px; font-weight: 700;">Start a brief</a>
       </nav>
+      <form data-tk-subscribe data-tk-source="footer-v3" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-bottom: 26px; margin-bottom: 26px; border-bottom: 1px solid rgba(246,243,236,0.14);">
+        <span style="font-size: 14px; font-weight: 700; flex: 0 0 auto; margin-right: 6px;">Offers, news &amp; updates</span>
+        <input type="email" name="email" placeholder="you@email.com" style="flex: 1 1 220px; min-width: 0; background: rgba(246,243,236,0.06); border: 1px solid rgba(246,243,236,0.2); border-radius: 999px; padding: 11px 16px; font-size: 14px; color: #F6F3EC; outline: none;" />
+        <button type="submit" style="flex: 0 0 auto; cursor: pointer; border: 0; background: #D6F23C; color: #12130E; border-radius: 999px; padding: 11px 20px; font-size: 14px; font-weight: 700;">Subscribe</button>
+        <span data-tk-subscribe-msg style="flex: 1 1 100%; font-size: 13px; color: rgba(246,243,236,0.7);"></span>
+      </form>
       <div style="display: flex; gap: clamp(28px, 5vw, 64px); flex-wrap: wrap; justify-content: space-between;">
         <div style="flex: 1 1 320px; min-width: 260px;">
           <img src="assets/turnkii-logo.png" alt="Turnkii" style="height: 24px; width: auto; display: block;" />
@@ -1811,7 +1818,7 @@ class Component extends DCLogic {
       styleCards: STYLES.map(x => {
         const anchor = ({ warm: 'warm', neoclassic: 'neoclassic', majlis: 'majlis', eclectic: 'eclectic', coastal: 'coastal' }[x.id] || 'warm');
         return {
-        imgStyle: bgImg(x.img), name: x.name, blurb: x.blurb, palette: x.palette,
+        imgStyle: bgImg(x.img), name: x.name, blurb: x.blurb, palette: x.palette, key: x.id,
         href: 'Turnkii Style.dc.html#' + anchor,
         on: s.style === x.id,
         bc: s.style === x.id ? '#D6F23C' : '#E4E0D5',

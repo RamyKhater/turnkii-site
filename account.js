@@ -78,6 +78,42 @@
     }
   } catch (e) {}
 
+  // Save-to-wishlist: any [data-tk-save] element with data-tk-kind / data-tk-ref /
+  // data-tk-label. If signed out, stash the item and send to sign in, then apply.
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-tk-save]') : null;
+    if (!el) return;
+    e.preventDefault();
+    var item = { kind: el.getAttribute('data-tk-kind') || 'style', ref: el.getAttribute('data-tk-ref') || '', label: el.getAttribute('data-tk-label') || '' };
+    if (!api.isSignedIn()) { try { localStorage.setItem('tk_pending_save', JSON.stringify(item)); } catch (e2) {} location.href = 'account.html'; return; }
+    api.wishlistAdd(item.kind, item.ref, item.label).then(function (r) {
+      if (r && r.ok) { try { el.textContent = 'Saved ✓'; el.setAttribute('data-saved', '1'); } catch (e2) {} }
+    });
+  }, true);
+
+  // Newsletter / offers opt-in: <form data-tk-subscribe> with an email input.
+  document.addEventListener('submit', function (e) {
+    var f = e.target;
+    if (!f || !f.hasAttribute || !f.hasAttribute('data-tk-subscribe')) return;
+    e.preventDefault();
+    var inp = f.querySelector('input[type=email], input[name=email]');
+    var email = inp ? inp.value.trim() : '';
+    var msg = f.querySelector('[data-tk-subscribe-msg]');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (msg) msg.textContent = 'Enter a valid email.'; return; }
+    api.subscribe(email, true, f.getAttribute('data-tk-source') || 'footer').then(function (r) {
+      if (msg) msg.textContent = r && r.ok ? 'Thanks — check your inbox.' : 'Something went wrong. Try again.';
+      if (r && r.ok && inp) { try { inp.value = ''; } catch (e2) {} }
+    });
+  }, true);
+
+  // After signing in, apply any wishlist item saved while signed out.
+  try {
+    if (api.isSignedIn()) {
+      var pend = localStorage.getItem('tk_pending_save');
+      if (pend) { localStorage.removeItem('tk_pending_save'); var it = JSON.parse(pend); if (it && it.ref) api.wishlistAdd(it.kind, it.ref, it.label); }
+    }
+  } catch (e) {}
+
   updateNav();
   window.dispatchEvent(new Event('tk-account-ready'));
 })();
