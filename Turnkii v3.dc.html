@@ -1105,8 +1105,20 @@
               </div>
             </div>
 
-            <button type="button" onClick="{{ onPreSubmit }}" style="width: 100%; margin-top: 20px; cursor: pointer; font-family: Manrope, sans-serif; border: 0; border-radius: 14px; padding: 17px; font-size: 16px; font-weight: 700; background: {{ preBtnBg }}; color: {{ preBtnFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ preBtnLabel }}</button>
-            <div style="font-size: 12px; color: #8A8A79; margin-top: 12px; line-height: 1.5;">{{ preHint }}</div>
+            <sc-if value="{{ preNotNeedsCode }}" hint-placeholder-val="{{ true }}">
+              <button type="button" onClick="{{ onPreSubmit }}" style="width: 100%; margin-top: 20px; cursor: pointer; font-family: Manrope, sans-serif; border: 0; border-radius: 14px; padding: 17px; font-size: 16px; font-weight: 700; background: {{ preBtnBg }}; color: {{ preBtnFg }};" style-hover="background: #D6F23C; color: #12130E;">{{ preBtnLabel }}</button>
+              <div style="font-size: 12px; color: #8A8A79; margin-top: 12px; line-height: 1.5;">{{ preHint }}</div>
+              <sc-if value="{{ preAuthErr }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: #9B1C1C; margin-top: 10px;">{{ preAuthErr }}</div></sc-if>
+            </sc-if>
+            <sc-if value="{{ preNeedsCode }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 18px; border-top: 1px solid #E4E0D5; padding-top: 18px;">
+                <div style="font-size: 14.5px; font-weight: 700;">Verify your email to see your limit</div>
+                <div style="font-size: 13px; color: #5E5F52; margin-top: 4px; line-height: 1.5;">We emailed a 6-digit code to {{ preEmailVal }}. Financing needs a verified Turnkii account — this also keeps your pre-approval in your account.</div>
+                <input type="text" inputmode="numeric" maxlength="6" placeholder="● ● ● ● ● ●" value="{{ preCode }}" onInput="{{ onPreCode }}" style="width: 100%; margin-top: 12px; background: #FFFFFF; border: 1px solid #E4E0D5; border-radius: 12px; padding: 13px 15px; font-size: 20px; letter-spacing: 6px; text-align: center; color: #12130E; outline: none;" />
+                <button type="button" onClick="{{ onPreVerify }}" style="width: 100%; margin-top: 12px; cursor: pointer; font-family: Manrope, sans-serif; border: 0; border-radius: 14px; padding: 16px; font-size: 16px; font-weight: 700; background: #D6F23C; color: #12130E;">Verify &amp; see my limit</button>
+                <sc-if value="{{ preAuthErr }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; color: #9B1C1C; margin-top: 10px;">{{ preAuthErr }}</div></sc-if>
+              </div>
+            </sc-if>
           </div>
         </sc-if>
 
@@ -1374,7 +1386,7 @@ class Component extends DCLogic {
     services: [], ptype: '', area: '', units: '', location: '', style: '', pkg: '', materials: [],
     budget: '', timeline: '', name: '', phone: '', phoneCode: '+20', email: '', notes: '', day: '', slot: '', visitMode: 'site',
     careService: '', careScope: '', careRooms: 0, careCategory: '', careSub: '', careUnits: 0, carePlan: 'once', careArea: '', careDay: '', careSlot: '', careMonthOffset: 0, carePhone: '', careDone: false, careTried: false,
-    plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preEmail: '', preIncome: '', preAmount: '', preJob: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, navOpen: false, shot: {}
+    plan: '', files: [], detail: {}, board: [], keepDiscount: false, calc: '', calcAmount: 2000000, calcTerm: 24, preOpen: false, preApproved: false, preName: '', prePhone: '', preEmail: '', preIncome: '', preAmount: '', preJob: '', preNeedsCode: false, preCode: '', preAuthErr: '', phase: 1, submitted: false, openService: '', openFaq: -1, tried: false, finOpen: false, navOpen: false, shot: {}
   };
 
   get shortCopy() {
@@ -1449,6 +1461,41 @@ class Component extends DCLogic {
   }
 
   chip(on) { return { bc: on ? ON_BC : OFF_BC, bg: on ? ON_BG : OFF_BG, fg: '#F6F3EC', on: on }; }
+
+  // Finalise a financing pre-approval once the email is verified (account exists):
+  // show the indicative result and POST it to the admin as a real lead, linked to
+  // the account via the bearer token (also attaches by email server-side).
+  finalizePre() {
+    var s = this.state;
+    var preLimit = finBudget(s.preIncome);
+    this.setState({ preApproved: true, preNeedsCode: false, preCode: '', preAuthErr: '', plan: s.plan || 'Bank instalments' });
+    var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
+    try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'financing', employment: s.preJob || '', value: preLimit }); } catch (e) {}
+    try {
+      var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
+      if (url) {
+        var hdrs = { 'Content-Type': 'application/json' };
+        try { var tk = window.tkAccount && window.tkAccount.token && window.tkAccount.token(); if (tk) hdrs['Authorization'] = 'Bearer ' + tk; } catch (e) {}
+        fetch(url, {
+          method: 'POST', headers: hdrs,
+          body: JSON.stringify({
+            kind: 'financing',
+            contactName: s.preName, phone: s.prePhone, email: s.preEmail.trim() || undefined,
+            expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
+            monthlyIncome: Number(s.preIncome) || undefined,
+            financeAmount: Number(s.preAmount) || undefined,
+            employment: s.preJob || undefined,
+            budgetPlan: s.plan || undefined,
+            channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
+            referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
+            utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
+            utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
+            message: 'Financing pre-approval enquiry'
+          })
+        }).catch(function () {});
+      }
+    } catch (e) {}
+  }
 
   renderVals() {
     const s = this.state;
@@ -1682,33 +1729,28 @@ class Component extends DCLogic {
       preHint: 'Soft check only. We share your details with our partner bank solely to size the limit.',
       onPreSubmit: () => {
         if (!preOk) return;
-        // Optimistic: show the indicative result immediately.
-        this.setState({ preApproved: true, plan: s.plan || 'Bank instalments' });
-        var attrib = (typeof window !== 'undefined' && window.tkAttrib) ? window.tkAttrib() : {};
-        try { if (window.tkTrack) window.tkTrack('generate_lead', { currency: 'EGP', lead_type: 'financing', employment: s.preJob || '', value: preLimit }); } catch (e) {}
-        // Send the pre-approval to the admin as a real, manageable lead.
-        try {
-          var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
-          if (url) {
-            fetch(url, {
-              method: 'POST', headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                kind: 'financing',
-                contactName: s.preName, phone: s.prePhone, email: s.preEmail.trim() || undefined,
-                expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,
-                monthlyIncome: Number(s.preIncome) || undefined,
-                financeAmount: Number(s.preAmount) || undefined,
-                employment: s.preJob || undefined,
-                budgetPlan: s.plan || undefined,
-                channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
-                referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
-                utmSource: attrib.utm_source || undefined, utmMedium: attrib.utm_medium || undefined, utmCampaign: attrib.utm_campaign || undefined,
-                utmTerm: attrib.utm_term || undefined, utmContent: attrib.utm_content || undefined, gclid: attrib.gclid || undefined, fbclid: attrib.fbclid || undefined,
-                message: 'Financing pre-approval enquiry'
-              })
-            }).catch(function () {});
-          }
-        } catch (e) {}
+        var acct = (typeof window !== 'undefined') && window.tkAccount;
+        // Financing collects sensitive data → require a verified account.
+        if (acct && acct.isSignedIn()) { this.finalizePre(); return; }
+        var email = s.preEmail.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.setState({ preNeedsCode: false, preAuthErr: 'Add your email above — financing needs a verified account.' }); return; }
+        this.setState({ preNeedsCode: true, preAuthErr: '' });
+        if (acct) acct.requestCode(email, 'preapproval');
+      },
+      preNeedsCode: s.preNeedsCode,
+      preNotNeedsCode: !s.preNeedsCode,
+      preCode: s.preCode,
+      preAuthErr: s.preAuthErr,
+      preEmailVal: s.preEmail,
+      onPreCode: (e) => this.setState({ preCode: e.target.value }),
+      onPreVerify: () => {
+        var acct = (typeof window !== 'undefined') && window.tkAccount;
+        var code = (s.preCode || '').replace(/\D/g, '');
+        if (!acct || code.length !== 6) { this.setState({ preAuthErr: 'Enter the 6-digit code we emailed you.' }); return; }
+        acct.verifyCode({ email: s.preEmail.trim(), code: code, source: 'preapproval' }).then((res) => {
+          if (res && res.ok) this.finalizePre();
+          else this.setState({ preAuthErr: 'That code is invalid or has expired.' });
+        });
       },
       preResultTitle: (s.preName ? s.preName.split(' ')[0] + ', you' : 'You') + ' can borrow up to EGP ' + preLimit.toLocaleString('en-US') + '.',
       preResultBody: 'Indicative only, based on the income you gave and a ' + Math.round(FIN.preApproval.incomeRatio * 100) + '% instalment-to-income ratio. Our team confirms the final limit with the partner bank once your scope is priced — usually within one working day of the survey.',
