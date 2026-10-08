@@ -44,6 +44,10 @@ CONTENT_URL = os.environ.get("TURNKII_CONTENT_URL", "").strip()
 REFERRAL_URL = os.environ.get("TURNKII_REFERRAL_URL", "").strip() or (
     INTAKE_URL.replace("/requests/intake", "/referrals/register") if INTAKE_URL else ""
 )
+# Customer account API base (passwordless auth + wishlist/properties/subscribe).
+ACCOUNT_URL = os.environ.get("TURNKII_ACCOUNT_URL", "").strip() or (
+    INTAKE_URL.replace("/requests/intake", "/account") if INTAKE_URL else ""
+)
 # WhatsApp click events post here so the admin can count WhatsApp intent
 # separately from real form leads. Derived from the intake host unless set.
 WHATSAPP_EVENTS_URL = os.environ.get("TURNKII_WA_EVENTS_URL", "").strip() or (
@@ -820,7 +824,8 @@ def meta_block(slug, title, desc, ar=False):
 <meta name="twitter:title" content="{t}" />
 <meta name="twitter:description" content="{d}" />
 <meta name="twitter:image" content="{og_img}" />""" + (
-        f'\n<script>window.TURNKII_INTAKE_URL="{INTAKE_URL}";</script>' if INTAKE_URL else ""
+        (f'\n<script>window.TURNKII_INTAKE_URL="{INTAKE_URL}";</script>' if INTAKE_URL else "")
+        + (f'\n<script>window.TURNKII_ACCOUNT_URL="{ACCOUNT_URL}";</script>' if ACCOUNT_URL else "")
     ) + (
         f'\n<script>window.TURNKII_REFERRAL_URL="{REFERRAL_URL}";</script>' if REFERRAL_URL else ""
     ) + (
@@ -1234,6 +1239,11 @@ def build_page(src_name):
     # site-wide: a header-nav + footer link to the dedicated /our-work page
     # (repoints any existing "recent work" link, else inserts one). Skips the
     # noindex consoles and the page itself.
+    # account.js (passwordless sign-in state + wishlist/newsletter hooks) loads
+    # site-wide so any page can read account state and call the account APIs.
+    if ACCOUNT_URL:
+        text = text.replace("</body>", '<script defer src="/account.js"></script>\n</body>', 1)
+
     # worklink.js runs on indexed public pages, plus the thank-you page (so the
     # post-brief "Book your survey" CTA appears there even though it's noindex).
     if (slug not in NOINDEX_PAGES or slug == "thank-you.html") and slug != "our-work.html":
@@ -1473,6 +1483,8 @@ def main():
     for f in os.listdir(os.path.join(ROOT, "vendor", "brand")):
         shutil.copy(os.path.join(ROOT, "vendor", "brand", f), os.path.join(DIST, f))
     shutil.copy(os.path.join(ROOT, "image-slot.js"), os.path.join(DIST, "image-slot.js"))
+    if os.path.exists(os.path.join(ROOT, "account.js")):
+        shutil.copy(os.path.join(ROOT, "account.js"), os.path.join(DIST, "account.js"))
     # projwork.js — the public "our recent work" homepage gallery + deep-zoom viewer.
     if os.path.exists(os.path.join(ROOT, "projwork.js")):
         shutil.copy(os.path.join(ROOT, "projwork.js"), os.path.join(DIST, "projwork.js"))
