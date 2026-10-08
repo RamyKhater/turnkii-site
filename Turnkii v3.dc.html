@@ -75,7 +75,7 @@
         <a data-vertical="facility" href="Turnkii Facility.dc.html" style="color: rgba(255,255,255,0.72); font-weight: 500;" style-hover="color: #D6F23C;">Facility management</a>
         <a data-nav="care" href="Turnkii Care.dc.html" style="color: rgba(255,255,255,0.72); font-weight: 500;" style-hover="color: #D6F23C;">Care &amp; maintenance</a>
         <a data-nav="projects" href="Turnkii Projects.dc.html" style="color: rgba(255,255,255,0.72); font-weight: 500;" style-hover="color: #D6F23C;">Projects &amp; bulk</a>
-        <a data-nav="account" href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
+        <a data-nav="account" data-tk-account-link data-tk-in="My account" data-tk-out="Sign in" href="Turnkii Account.dc.html#account" style="color: rgba(255,255,255,0.72); font-weight: 500;" style-hover="color: #D6F23C;">My account</a>
       </nav>
       <a data-track="cta_brief" href="#brief" class="hdr-cta" style="flex: 0 0 auto; background: #D6F23C; color: #12130E; font-size: 14px; font-weight: 700; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em;" style-hover="background: #E6FF6B; color: #12130E;">Start a brief</a>
       <button type="button" class="nav-burger {{ navOpenClass }}" onClick="{{ toggleNav }}" aria-label="Menu" aria-expanded="{{ navOpen }}"><span></span><span></span><span></span></button>
@@ -1991,9 +1991,11 @@ class Component extends DCLogic {
           try {
             var url = typeof window !== 'undefined' && window.TURNKII_INTAKE_URL;
             if (url) {
+              var hdrs = { 'Content-Type': 'application/json' };
+              try { var tk = window.tkAccount && window.tkAccount.token && window.tkAccount.token(); if (tk) hdrs['Authorization'] = 'Bearer ' + tk; } catch (e) {}
               // keepalive lets the POST finish even as we navigate to the confirmation page
               fetch(url, {
-                method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+                method: 'POST', keepalive: true, headers: hdrs,
                 body: JSON.stringify({
                   contactName: s.name, phone: ((s.phoneCode || '+20') + ' ' + s.phone).trim(), email: s.email.trim() || undefined,
                   expEmail: (typeof window !== 'undefined' && window.TK_EXP_EMAIL) || undefined,

@@ -36,12 +36,12 @@
     requestCode: function (email, source) { return call('/request-code', { method: 'POST', body: { email: email, source: source || 'site' } }); },
     verifyCode: function (opts) {
       return call('/verify-code', { method: 'POST', body: opts }).then(function (res) {
-        if (res.ok && res.data && res.data.token) { setToken(res.data.token); api.owner = res.data.owner || null; }
+        if (res.ok && res.data && res.data.token) { setToken(res.data.token); api.owner = res.data.owner || null; updateNav(); }
         return res;
       });
     },
     me: function () { return call('/me').then(function (res) { api.owner = res.ok && res.data ? res.data.owner : null; return res; }); },
-    logout: function () { return call('/logout', { method: 'POST' }).then(function (r) { setToken(''); api.owner = null; return r; }); },
+    logout: function () { return call('/logout', { method: 'POST' }).then(function (r) { setToken(''); api.owner = null; updateNav(); return r; }); },
     requests: function () { return call('/requests'); },
     wishlist: function () { return call('/wishlist'); },
     wishlistAdd: function (kind, ref, label) { return call('/wishlist', { method: 'POST', body: { kind: kind, ref: ref, label: label } }); },
@@ -50,7 +50,20 @@
     addProperty: function (p) { return call('/properties', { method: 'POST', body: p }); },
     subscribe: function (email, consent, source) { return call('/subscribe', { method: 'POST', body: { email: email, consent: consent !== false, source: source || 'site' } }); }
   };
+  // Nav label: any element with [data-tk-account-link] shows "My account" when
+  // signed in, "Sign in" when signed out (override via data-tk-in / data-tk-out).
+  function updateNav() {
+    try {
+      var signed = api.isSignedIn();
+      var els = document.querySelectorAll('[data-tk-account-link]');
+      for (var i = 0; i < els.length; i++) {
+        els[i].textContent = signed ? (els[i].getAttribute('data-tk-in') || 'My account') : (els[i].getAttribute('data-tk-out') || 'Sign in');
+      }
+    } catch (e) {}
+  }
+  api.updateNav = updateNav;
   window.tkAccount = api;
+  window.addEventListener('tk-account-changed', updateNav);
 
   // Magic-link arrival (?token=… from the sign-in email) → consume it on the
   // account page, then clean the URL and announce the change.
@@ -65,5 +78,6 @@
     }
   } catch (e) {}
 
+  updateNav();
   window.dispatchEvent(new Event('tk-account-ready'));
 })();
