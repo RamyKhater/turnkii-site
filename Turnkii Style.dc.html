@@ -107,7 +107,7 @@
       <sc-for list="{{ closeups }}" as="c" hint-placeholder-count="4">
         <div>
           <div style="border-radius: 16px; overflow: hidden; aspect-ratio: 1 / 1; background: #F2EFE6;">
-            <img src="{{ c.img }}" alt="{{ c.label }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(2.1); transform-origin: {{ c.origin }};" />
+            <img src="{{ c.img }}" alt="{{ c.label }}" style="width: 100%; height: 100%; object-fit: cover; display: block; transform: {{ c.transform }}; transform-origin: {{ c.origin }};" />
           </div>
           <div style="font-size: 13.5px; font-weight: 600; margin-top: 10px;">{{ c.label }}</div>
           <div style="font-size: 12.5px; color: #8A8A79; margin-top: 3px;">{{ c.note }}</div>
@@ -132,7 +132,7 @@
           <div style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); margin-top: 16px;">
             <sc-for list="{{ m.options }}" as="o">
               <button type="button" onClick="{{ o.onPick }}" style="cursor: pointer; text-align: left; font-family: Manrope, sans-serif; display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px; border: 1px solid #EDE9DE; background: #FAF8F2; outline: {{ o.outline }}; outline-offset: -1px;" style-hover="border-color: #12130E;">
-                <span style="width: 34px; height: 34px; border-radius: 9px; flex: 0 0 auto; background: {{ o.hex }}; border: 1px solid rgba(18,19,14,0.12);"></span>
+                <span style="width: 52px; height: 52px; border-radius: 10px; flex: 0 0 auto; background: {{ o.swatchBg }}; border: 1px solid rgba(18,19,14,0.12);"></span>
                 <span style="flex: 1 1 auto; min-width: 0;">
                   <span style="display: flex; gap: 8px; align-items: baseline; justify-content: space-between;">
                     <span style="font-size: 14.5px; font-weight: 600; color: #12130E;">{{ o.name }}</span>
@@ -510,16 +510,17 @@ class Component extends DCLogic {
       if (s.pieceCount) d.pieceCount = s.pieceCount;
       if (window.TK.http(s.image)) d.hero = s.image;
       if (s.palette && s.palette.length) d.swatches = s.palette;
+      // Only admin close-ups with a real uploaded image replace the built-in
+      // hero-crops; each shows at its own framing (no forced zoom). A deleted
+      // close-up is simply absent from the list, so its card disappears.
       if (s.closeups && s.closeups.length) {
-        const defc = d.closeups || [];
-        d.closeups = s.closeups.map(function (c, i) {
-          return {
-            img: window.TK.http(c.image) ? c.image : ((defc[i] && defc[i].img) || d.hero || 'assets/style-warm.jpg'),
-            origin: (defc[i] && defc[i].origin) || 'center',
-            label: c.label || '', note: c.note || ''
-          };
+        const adminc = s.closeups.filter(function (c) { return window.TK.http(c.image); }).map(function (c) {
+          return { img: c.image, origin: 'center', zoom: 1, label: c.label || '', note: c.note || '' };
         });
+        if (adminc.length) d.closeups = adminc;
       }
+      if (s.materials && s.materials.length) d.materials = s.materials;
+      if (s.furniture && s.furniture.length) d.furniture = s.furniture;
     });
     const st = all[this.state.key] || all.warm;
     const picks = this.state.picks;
@@ -539,8 +540,10 @@ class Component extends DCLogic {
         statusColor: p ? (p.avail ? '#6C7A20' : '#A9741F') : '#B6B2A4',
         options: m.options.map(o => {
           const on = p && p.name === o.name;
+          const hasImg = o.image && /^https?:\/\//i.test(o.image);
           return {
             name: o.name, spec: o.spec, hex: o.hex,
+            swatchBg: hasImg ? ("center/cover no-repeat url('" + o.image + "')") : o.hex,
             mark: on ? '✓' : '',
             outline: on ? '2px solid #12130E' : '0px solid transparent',
             badge: o.avail ? 'In stock' : 'On request',
@@ -550,6 +553,13 @@ class Component extends DCLogic {
           };
         })
       };
+    });
+
+    // Built-in close-ups zoom 2.1× into the hero crop; admin-uploaded ones
+    // carry zoom:1 and render at their own framing.
+    const closeups = (st.closeups || []).map(c => {
+      const z = (typeof c.zoom === 'number') ? c.zoom : 2.1;
+      return { img: c.img, label: c.label, note: c.note, origin: c.origin || 'center', transform: z === 1 ? 'none' : ('scale(' + z + ')') };
     });
 
     const keys = Object.keys(picks);
@@ -576,7 +586,7 @@ class Component extends DCLogic {
       onDrop: () => { this.persist('none'); this.setState({ offerOpen: false, noFurniture: true, discount: false }); },
       tabs: tabs,
       name: st.name, hero: st.hero, blurb: st.blurb, leadTime: st.leadTime, pieceCount: st.pieceCount,
-      swatches: st.swatches, closeups: st.closeups, furniture: st.furniture,
+      swatches: st.swatches, closeups: closeups, furniture: st.furniture,
       materials: materials,
       summaryTitle: st.name + (nf ? ' — finishing only' : (this.state.discount ? ' — furniture kept, 5% off' : '')) + ' · ' + keys.length + ' of ' + st.materials.length + ' material choices made',
       summaryLine: keys.length === 0
