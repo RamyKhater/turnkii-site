@@ -441,8 +441,8 @@
   <section id="why" style="scroll-margin-top: 104px;">
     <div style="max-width: 1180px; margin: 0 auto; padding: clamp(44px, 5vw, 80px) clamp(16px, 3vw, 40px);">
       <div style="text-align: center; max-width: 680px; margin: 0 auto;">
-        <div style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">Why Turnkii</div>
-        <h2 style="font-size: clamp(28px, 3.4vw, 40px); line-height: 1.05; letter-spacing: -0.02em; font-weight: 700; margin: 12px 0 0; text-wrap: balance;">Finishing is easy to picture. Hard to manage from afar.</h2>
+        <div style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #6C7A20;">{{ whyEyebrow }}</div>
+        <h2 style="font-size: clamp(28px, 3.4vw, 40px); line-height: 1.05; letter-spacing: -0.02em; font-weight: 700; margin: 12px 0 0; text-wrap: balance;">{{ whyHeadline }}</h2>
       </div>
       <div style="display: flex; flex-direction: column; gap: clamp(28px, 4vw, 56px); margin-top: clamp(32px, 4vw, 56px);">
         <sc-for list="{{ whyRows }}" as="wr" hint-placeholder-count="3">
@@ -1371,10 +1371,23 @@ const ON_BC = '#D6F23C', ON_BG = 'rgba(214,242,60,0.12)', OFF_BC = 'rgba(246,243
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+// Named icon presets for the "Why Turnkii" rows — the admin picks a name; the
+// site maps it to an SVG path here. Keep keys in sync with the admin dropdown.
+const WHY_ICONS = {
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4',
+  link: 'M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4',
+  globe: 'M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z',
+  check: 'M20 6L9 17l-5-5',
+  home: 'M3 10.5L12 3l9 7.5M5 9.5V21h14V9.5',
+  clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 7v5l3 2',
+  camera: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  spark: 'M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z'
+};
+// `icon` on the built-in rows is a raw path; admin rows carry a preset name.
 const WHY = [
-  { title: 'Paying before you see the work feels risky. So you don’t.', body: 'A quantity-backed price, fixed at signature. Each milestone is paid only after you approve the photos and sign off.', img: 'assets/style-neoclassic.png', icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4' },
-  { title: 'Six trades mean six excuses. We take one contract.', body: 'Finishing, kitchens, HVAC, furniture, curtains and styling — handed over to the last detail, ready to live in or let.', img: 'assets/style-eclectic.jpg', icon: 'M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4' },
-  { title: 'You can’t be on site. You don’t need to be.', body: 'Live video survey, weekly photo and video updates and digital sign-off. Supervise every stage from anywhere.', img: 'assets/work-newcairo.jpg', icon: 'M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z' }
+  { title: 'Paying before you see the work feels risky. So you don’t.', body: 'A quantity-backed price, fixed at signature. Each milestone is paid only after you approve the photos and sign off.', img: 'assets/style-neoclassic.png', icon: WHY_ICONS.shield },
+  { title: 'Six trades mean six excuses. We take one contract.', body: 'Finishing, kitchens, HVAC, furniture, curtains and styling — handed over to the last detail, ready to live in or let.', img: 'assets/style-eclectic.jpg', icon: WHY_ICONS.link },
+  { title: 'You can’t be on site. You don’t need to be.', body: 'Live video survey, weekly photo and video updates and digital sign-off. Supervise every stage from anywhere.', img: 'assets/work-newcairo.jpg', icon: WHY_ICONS.globe }
 ];
 
 class Component extends DCLogic {
@@ -1495,6 +1508,8 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
+    // Admin-published "Why Turnkii" content (eyebrow/headline/rows); null = use built-in defaults.
+    const TKWHY = (window.TK && window.TK.content && window.TK.content.why) || null;
     const styleName = (STYLES.find(x => x.id === s.style) || {}).name;
     const pkgName = (PACKAGES.find(x => x.id === s.pkg) || {}).name;
     const budgetName = (BUDGETS.find(x => x.id === s.budget) || {}).title;
@@ -1776,7 +1791,15 @@ class Component extends DCLogic {
       onCloseCalc: () => this.setState({ calc: '' }),
       onCalcSelect: () => this.setState({ plan: s.calc, calc: '', phase: 3 }),
 
-      whyRows: WHY.map((w, i) => Object.assign({ dir: i % 2 ? 'row-reverse' : 'row' }, w)),
+      whyEyebrow: (TKWHY && TKWHY.eyebrow) || 'Why Turnkii',
+      whyHeadline: (TKWHY && TKWHY.headline) || 'Finishing is easy to picture. Hard to manage from afar.',
+      whyRows: (TKWHY && TKWHY.rows && TKWHY.rows.length ? TKWHY.rows : WHY).map((w, i) => {
+        const def = WHY[i] || WHY[WHY.length - 1];
+        const ic = w.icon;
+        const icon = ic ? (WHY_ICONS[ic] || (ic.length > 12 ? ic : def.icon)) : def.icon;
+        const img = (w.image && /^https?:\/\//i.test(w.image)) ? w.image : (w.img || def.img);
+        return { dir: i % 2 ? 'row-reverse' : 'row', title: w.title || def.title, body: w.body || def.body, img: img, icon: icon };
+      }),
       whyCards: [
         { num: '01', tone: 'lime', title: 'One accountable contract',
           body: 'Our contractor and supplier network builds. We scope, price, programme and carry the quality — so you deal with us, not with six trades.',
