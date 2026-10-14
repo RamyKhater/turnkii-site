@@ -67,15 +67,33 @@
 
     function body(d){
       var s = d.summary || {};
+      var pr = d.pricing || {};
+      var currency = pr.currency || s.currency || 'EGP';
+      var net = Number(pr.netToCustomer || 0);
+      function money(n){ return currency + ' ' + Math.round(Number(n)||0).toLocaleString('en-US'); }
+      function pctOf(p){ return parseFloat(String(p).replace(/[^0-9.]/g,'')) || 0; }
+      var showCost = net > 0 || (d.areas||[]).some(function(a){ return typeof a.cost === 'number'; });
+      var costHead = showCost ? '<th style="text-align:right;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:16%">Estimate cost</th>' : '';
       var areas = (d.areas||[]).map(function(a){
+        var costCell = showCost ? '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6;text-align:right;white-space:nowrap">'+(typeof a.cost==='number'?esc(money(a.cost)):'—')+'</td>' : '';
         return '<tr><td style="padding:7px 10px;border-bottom:1px solid #e6e6e6;font-weight:600;vertical-align:top">'+esc(a.area)+'</td>'+
           '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6">'+esc(a.works)+'</td>'+
-          '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6">'+esc(a.qty)+'</td></tr>';
+          '<td style="padding:7px 10px;border-bottom:1px solid #e6e6e6">'+esc(a.qty)+'</td>'+costCell+'</tr>';
       }).join('');
+      if(showCost){ areas += '<tr><td colspan="3" style="padding:8px 10px;border-top:2px solid #0f0f0f;font-weight:700">Total net to customer</td><td style="padding:8px 10px;border-top:2px solid #0f0f0f;text-align:right;font-weight:700;white-space:nowrap">'+esc(money(net))+'</td></tr>'; }
       var miles = (d.milestones||[]).map(function(m){
+        var val = net > 0 ? money(net * pctOf(m.pct) / 100) : '';
         return '<tr><td style="padding:5px 10px 5px 0;border-bottom:1px solid #e6e6e6">'+esc(m.label)+'</td>'+
-          '<td style="padding:5px 0;border-bottom:1px solid #e6e6e6;text-align:right">'+esc(m.pct)+'</td></tr>';
+          '<td style="padding:5px 10px;border-bottom:1px solid #e6e6e6;text-align:right;white-space:nowrap">'+esc(m.pct)+'</td>'+
+          '<td style="padding:5px 0;border-bottom:1px solid #e6e6e6;text-align:right;white-space:nowrap">'+esc(val)+'</td></tr>';
       }).join('');
+      if(net > 0){ miles += '<tr><td style="padding:6px 10px 6px 0;font-weight:700;border-top:1px solid #0f0f0f">Total</td><td style="padding:6px 10px;text-align:right;font-weight:700;border-top:1px solid #0f0f0f">100%</td><td style="padding:6px 0;text-align:right;font-weight:700;border-top:1px solid #0f0f0f;white-space:nowrap">'+esc(money(net))+'</td></tr>'; }
+      var months = Number(pr.installmentMonths || 0);
+      var installmentNote = (net > 0 && months > 0)
+        ? '<p style="margin:10px 0 20px;font-size:9pt;color:#5a5a5a">Indicative monthly installment (reference only): <b style="color:#1a1a1a">'+esc(money(net/months))+' / month over '+months+' months</b>. The milestone schedule above governs; the installment figure is shown for budgeting convenience.</p>'
+        : '';
+      var contractorRow = pr.contractor ? '<tr><td style="'+TD+'">Awarded contractor</td><td colspan="3" style="'+TDV+'">'+esc(pr.contractor)+'</td></tr>' : '';
+      var designPreview = d.designPackUrl ? '<p style="margin:0 0 18px"><a href="'+esc(d.designPackUrl)+'" target="_blank" rel="noreferrer" style="display:inline-block;border:1px solid #0f0f0f;border-radius:6px;padding:7px 14px;font-size:9pt;font-weight:600;color:#0f0f0f;text-decoration:none">↗ Design preview (PDF)</a></p>' : '';
       return ''+
       '<div slot="header" style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:0 0 10px;border-bottom:2px solid #0f0f0f">'+
         '<img src="'+LOGO+'" alt="turnkii" style="height:26px;width:auto;display:block">'+
@@ -90,19 +108,21 @@
         '<div style="position:relative;z-index:1">'+
           '<h1 style="font-size:26pt;line-height:1.1;margin:14px 0 6px;font-weight:700;letter-spacing:-0.02em">Scope of Work — Confirmation for Quotation</h1>'+
           '<p style="margin:0 0 18px;font-size:10pt;color:#5a5a5a;max-width:44em">'+esc(d.intro)+'</p>'+
+          designPreview+
           '<h2 style="'+H2+'">1. Project summary</h2>'+
           '<table class="keep" style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><tbody>'+
             '<tr><td style="width:24%;'+TD+'">Client</td><td style="'+TDV+'">'+esc(s.client)+'</td><td style="width:22%;padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Document ref.</td><td style="'+TDV+'">'+esc(d.docRef)+'</td></tr>'+
             '<tr><td style="'+TD+'">Project</td><td style="'+TDV+'">'+esc(s.project)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Issue date</td><td style="'+TDV+'">'+esc(s.issueDate)+'</td></tr>'+
             '<tr><td style="'+TD+'">Address</td><td style="'+TDV+'">'+esc(s.address)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Revision</td><td style="'+TDV+'">'+esc(s.revision)+'</td></tr>'+
-            '<tr><td style="'+TD+'">Area</td><td style="'+TDV+'">'+esc(s.area)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Currency</td><td style="'+TDV+'">'+esc(s.currency)+'</td></tr>'+
+            '<tr><td style="'+TD+'">Area</td><td style="'+TDV+'">'+esc(s.area)+'</td><td style="padding:6px 10px;border-bottom:1px solid #e6e6e6;color:#6a6a6a">Currency</td><td style="'+TDV+'">'+esc(currency)+'</td></tr>'+
+            contractorRow+
             '<tr><td style="padding:6px 10px 6px 0;color:#6a6a6a">Basis of scope</td><td colspan="3" style="padding:6px 0;font-weight:500">'+esc(s.basis)+'</td></tr>'+
           '</tbody></table>'+
-          '<h2 style="'+H2+'">2. Scope of work by area &amp; trade</h2>'+
+          '<h2 style="'+H2+'">2. Scope of work — scope, details &amp; estimate</h2>'+
           '<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><thead>'+
-            '<tr style="background:#0f0f0f;color:#fff"><th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:20%">Area</th>'+
-            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em">Works included</th>'+
-            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:16%">Qty / unit</th></tr></thead>'+
+            '<tr style="background:#0f0f0f;color:#fff"><th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:20%">Scope</th>'+
+            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em">Details</th>'+
+            '<th style="text-align:left;padding:7px 10px;font-weight:600;letter-spacing:0.04em;width:14%">Qty / unit</th>'+costHead+'</tr></thead>'+
             '<tbody>'+areas+'</tbody></table>'+
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:0 0 20px">'+
             '<div class="keep"><h2 style="'+H2+'">3. Inclusions</h2><ul style="margin:0;padding-left:1.1em;font-size:9.5pt;line-height:1.55">'+li(d.inclusions)+'</ul></div>'+
@@ -113,8 +133,9 @@
           '<p style="margin:0 0 8px;font-size:9.5pt">'+esc(d.commercialNote)+'</p>'+
           '<table class="keep" style="width:100%;border-collapse:collapse;font-size:9.5pt;margin:0 0 20px"><thead>'+
             '<tr><th style="text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid #0f0f0f;font-weight:600">Milestone</th>'+
-            '<th style="text-align:right;padding:5px 0;border-bottom:1px solid #0f0f0f;font-weight:600;width:18%">% of contract</th></tr></thead>'+
-            '<tbody>'+miles+'</tbody></table>'+
+            '<th style="text-align:right;padding:5px 10px;border-bottom:1px solid #0f0f0f;font-weight:600;width:16%">% of contract</th>'+
+            '<th style="text-align:right;padding:5px 0;border-bottom:1px solid #0f0f0f;font-weight:600;width:22%">Value</th></tr></thead>'+
+            '<tbody>'+miles+'</tbody></table>'+installmentNote+
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:0 0 20px">'+
             '<div class="keep"><h2 style="'+H2+'">7. Client responsibilities</h2><ul style="margin:0;padding-left:1.1em;font-size:9.5pt;line-height:1.55">'+li(d.responsibilities)+'</ul></div>'+
             '<div class="keep"><h2 style="'+H2+'">8. Change control</h2><p style="margin:0;font-size:9.5pt;line-height:1.55">'+esc(d.changeControl)+'</p></div></div>'+
