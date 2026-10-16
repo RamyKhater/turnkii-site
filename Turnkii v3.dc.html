@@ -2022,6 +2022,8 @@ class Component extends DCLogic {
                   propertyType: s.ptype || undefined, area: Number(s.area) || undefined, units: Number(s.units) || undefined,
                   location: s.location || undefined, style: s.style || undefined,
                   services: Array.isArray(s.services) ? s.services : [], budgetPlan: s.plan || undefined,
+                  materials: Array.isArray(s.materials) && s.materials.length ? s.materials.map(function (m) { return typeof m === 'string' ? m : (m && m.label) || String(m); }) : undefined,
+                  package: s.pkg || undefined, timeline: s.timeline || undefined,
                   visitDay: s.day || undefined, visitSlot: s.slot || undefined, visitType: s.visitMode || 'site',
                   channel: 'Website', referrer: (typeof document !== 'undefined' && document.referrer) || undefined,
                 referredByCode: (typeof window !== 'undefined' && window.TURNKII_REF) || undefined,
